@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+.idea/
+.vscode/
+
+# 本地资料库及抓取产物不得提交
+data/
+output/
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+raw/
+
