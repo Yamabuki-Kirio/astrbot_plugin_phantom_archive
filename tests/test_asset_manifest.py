@@ -142,6 +142,7 @@ def test_empty_manifest_counts_are_zero():
     assert counts == {
         "characters": 0,
         "characters_with_portrait": 0,
+        "portrait_files": 0,
         "weapons": 0,
         "weapons_with_image": 0,
     }

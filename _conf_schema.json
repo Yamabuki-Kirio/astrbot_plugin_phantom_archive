@@ -113,5 +113,20 @@
     "description": "QQ 头像地址模板，必须含 {user_id} 占位符，例如 https://第三方面板/{user_id}；留空表示只用首字符头像",
     "type": "string",
     "default": ""
+  },
+  "daily_fortune_enabled": {
+    "description": "开启 /p5x每日运势：抽取今日角色与塔罗、灵签、周易，结果按天固定",
+    "type": "bool",
+    "default": true
+  },
+  "daily_fortune_timezone": {
+    "description": "每日运势的刷新时区（IANA 名称，例如 Asia/Shanghai）；非法值回退 Asia/Shanghai",
+    "type": "string",
+    "default": "Asia/Shanghai"
+  },
+  "daily_fortune_image_enabled": {
+    "description": "每日运势输出图片卡片；关闭或渲染失败时改发文字（内容完全相同）",
+    "type": "bool",
+    "default": true
   }
 }

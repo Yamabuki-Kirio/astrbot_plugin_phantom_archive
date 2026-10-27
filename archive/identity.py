@@ -78,6 +78,35 @@ def from_event(event) -> RequesterIdentity:
     return RequesterIdentity(user_id=user_id, display_name=truncate_name(raw_name))
 
 
+UNKNOWN_PLATFORM = "unknown"
+
+
+def platform_id(event) -> str:
+    """平台标识，用于和 sender_id 拼成用户唯一键。
+
+    不同平台上的数字 ID 会撞车（QQ 的 10001 和别的平台 10001 是两个人），
+    所以用户键必须是「平台 + 用户」，不能只用 sender_id。
+    优先取平台实例 id（同一平台多开时也不会混），退到平台名。
+    """
+    if event is None:
+        return UNKNOWN_PLATFORM
+
+    meta = getattr(event, "platform_meta", None)
+    for holder in (meta, event):
+        if holder is None:
+            continue
+        for attr in ("id", "name"):
+            value = getattr(holder, attr, None)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+
+    for method in ("get_platform_name", "get_platform_id"):
+        value = _safe_call(event, method).strip()
+        if value:
+            return value
+    return UNKNOWN_PLATFORM
+
+
 def platform_avatar_url(event) -> str:
     """平台事件里自带的头像地址。
 
@@ -102,6 +131,8 @@ __all__ = [
     "from_event",
     "truncate_name",
     "platform_avatar_url",
+    "platform_id",
     "MAX_DISPLAY_CHARS",
     "FALLBACK_NAME",
+    "UNKNOWN_PLATFORM",
 ]

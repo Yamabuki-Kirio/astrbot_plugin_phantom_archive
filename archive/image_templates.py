@@ -28,6 +28,7 @@ CATEGORY_TEMPLATES: dict[str, str] = {
     "技能": "skill.html",
     "武器": "weapon.html",
     "角色列表": "character_list.html",
+    "每日运势": "daily_fortune.html",
     "评价": "guide.html",
     "养成": "guide.html",
     "操作": "guide.html",
@@ -161,7 +162,7 @@ def build_context(
         "conflict_warning": notices.NUMERIC_CONFLICT_WARNING,
         "source_label": page.source_label,
         "translation_label": page.translation_label,
-        "disclaimer_lines": notices.DISCLAIMER_LINES,
+        "disclaimer_lines": page.disclaimer_lines or notices.DISCLAIMER_LINES,
         "visual": visual_dict,
     }
 

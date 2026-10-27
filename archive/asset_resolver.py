@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -23,6 +24,7 @@ from .asset_manifest import (
     FALLBACK_ARCHIVE,
     FALLBACK_CHARACTER,
     FALLBACK_WEAPON,
+    AssetEntry,
     AssetManifest,
 )
 
@@ -94,22 +96,40 @@ class AssetResolver:
             return None
         return self.manifest.character(*keys)
 
-    def character_art(self, *keys: str) -> tuple[str, str, bool]:
+    @staticmethod
+    def pick_portrait(portraits: tuple[AssetEntry, ...], variant: str) -> AssetEntry:
+        """从多张立绘里挑一张。
+
+        ``variant`` 为空 → 第一张（查询卡片的行为保持不变）。
+        ``variant`` 非空 → 按 ``SHA256(第一张路径|variant)`` 取模，
+        同一 variant 永远同一张：每日运势传日期键，所以同一天不会换图，
+        换一天才换一张。这里刻意不用 ``random``，否则重启就会变。
+        """
+        if not portraits:
+            return AssetEntry()
+        if not variant or len(portraits) == 1:
+            return portraits[0]
+        raw = f"{portraits[0].relative_path}|{variant}".encode("utf-8")
+        index = int.from_bytes(hashlib.sha256(raw).digest()[:8], "big") % len(portraits)
+        return portraits[index]
+
+    def character_art(self, *keys: str, variant: str = "") -> tuple[str, str, bool]:
         """返回 (立绘, 背景, 是否真实素材)。"""
         if not self.show_character_art:
             return "", "", False
         assets = self._character_assets(tuple(key for key in keys if key))
         if assets is None:
             return "", "", False
-        portrait = self._uri(assets.portrait.relative_path)
+        chosen = self.pick_portrait(assets.all_portraits, variant)
+        portrait = self._uri(chosen.relative_path)
         background = self._uri(assets.background.relative_path) or portrait
         return portrait, background, bool(portrait)
 
-    def character_hero(self, *keys: str) -> ResolvedArt:
+    def character_hero(self, *keys: str, variant: str = "") -> ResolvedArt:
         if not self.show_character_art:
             # 明确关掉立绘时不要再退回占位图 —— 用户要的就是无图卡片
             return ResolvedArt()
-        portrait, background, real = self.character_art(*keys)
+        portrait, background, real = self.character_art(*keys, variant=variant)
         if portrait:
             return ResolvedArt(
                 hero=portrait,

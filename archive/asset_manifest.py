@@ -43,10 +43,26 @@ class AssetEntry:
 class CharacterAssets:
     portrait: AssetEntry = field(default_factory=AssetEntry)
     background: AssetEntry = field(default_factory=AssetEntry)
+    # 同一角色的全部立绘（官网一个条目可能给好几张）。
+    # 清单只写单张 portrait 时这里为空，由 all_portraits 兜底。
+    portraits: tuple[AssetEntry, ...] = ()
 
     @property
     def available(self) -> bool:
         return self.portrait.available or self.background.available
+
+    @property
+    def all_portraits(self) -> tuple[AssetEntry, ...]:
+        """去重后的可用立绘列表。至少有一项才会返回非空。"""
+        seen: set[str] = set()
+        items: list[AssetEntry] = []
+        for entry in self.portraits:
+            if entry.available and entry.relative_path not in seen:
+                seen.add(entry.relative_path)
+                items.append(entry)
+        if not items and self.portrait.available:
+            items.append(self.portrait)
+        return tuple(items)
 
 
 @dataclass(frozen=True)
@@ -81,6 +97,7 @@ class AssetManifest:
             "characters_with_portrait": sum(
                 1 for item in self.characters.values() if item.portrait.available
             ),
+            "portrait_files": sum(len(item.all_portraits) for item in self.characters.values()),
             "weapons": len(self.weapons),
             "weapons_with_image": sum(1 for item in self.weapons.values() if item.available),
         }
@@ -129,6 +146,18 @@ def _entry(root: Path, raw: Any, path_keys: tuple[str, ...]) -> AssetEntry:
     )
 
 
+def _entries(root: Path, raw: Any) -> tuple[AssetEntry, ...]:
+    """``portraits`` 数组 → 立绘列表。写错的项直接跳过，不整体放弃。"""
+    if not isinstance(raw, list):
+        return ()
+    entries: list[AssetEntry] = []
+    for item in raw:
+        entry = _entry(root, item, ("path", "portrait", "image"))
+        if entry.available:
+            entries.append(entry)
+    return tuple(entries)
+
+
 def parse_manifest(data: Any, root: str | Path) -> AssetManifest:
     root_path = Path(root)
     if not isinstance(data, dict):
@@ -144,6 +173,7 @@ def parse_manifest(data: Any, root: str | Path) -> AssetManifest:
             characters[key] = CharacterAssets(
                 portrait=_entry(root_path, value, ("portrait", "image")),
                 background=_entry(root_path, value, ("background",)),
+                portraits=_entries(root_path, value.get("portraits")),
             )
 
     weapons: dict[str, AssetEntry] = {}

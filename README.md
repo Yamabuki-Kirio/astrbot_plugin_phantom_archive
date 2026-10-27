@@ -2,9 +2,11 @@
 
 `astrbot_plugin_phantom_archive` 是面向 AstrBot 的《女神异闻录：夜幕魅影》中文资料查询插件。
 
-> **当前为图片卡片阶段**：角色、技能、武器、意识、养成、操作、评价、配队与综合攻略均已开放，
-> 查询成功时把结果渲染成带发起者头像与角色立绘的图片卡片发送，渲染不可用时自动降级为文字。
-> `v0.1.0` 是第一阶段基线，`v0.2.0` 是完整查询阶段，`v0.3.0` 是图片卡片阶段，当前开发版本为 `v0.4.0`。
+> **当前为每日运势阶段**：角色、技能、武器、意识、养成、操作、评价、配队与综合攻略均已开放，
+> 查询成功时把结果渲染成带发起者头像与角色立绘的图片卡片发送，渲染不可用时自动降级为文字；
+> 另有 `/p5x每日运势`，每天抽一名角色配塔罗、灵签与周易，同一用户当天结果固定。
+> `v0.1.0` 是第一阶段基线，`v0.2.0` 是完整查询阶段，`v0.3.0` 是图片卡片阶段，
+> `v0.4.0` 是视觉升级 + 技能加点推荐，当前开发版本为 `v0.5.0`。
 
 ## 验收状态
 
@@ -12,7 +14,9 @@
 AstrBot 4.29.3 本地真实进程：已验证
 本机 T2I 渲染服务（真实 HTTP + Chrome 截图）：已验证
 发起者头像下载 → 转 Data URI → 写入卡片：已验证（本机头像服务替身）
-角色立绘 / 武器图：链路已通，素材覆盖率为 0%（见「素材覆盖率」）
+角色立绘：官网素材已抓取，覆盖率见「素材与覆盖率」
+武器图：链路已通，覆盖率为 0%（官网 roleData 只有角色立绘，没有武器图）
+/p5x每日运势：本地真实进程 + 本机 T2I 已验证出图（见「每日运势」）
 Docker/AstrBot 容器部署：尚未验证
 容器内 T2I 渲染服务：尚未验证
 SnowLuma → OneBot → AstrBot → 夜幕档案：尚未验证
@@ -43,6 +47,7 @@ AstrBot 附件 → WebUI 聊天流。11 条查询指令均收到 1～4 张图片
 /p5x评价 <名称>      角色评价、优点与注意事项
 /p5x配队 <名称>      推荐队友、武器、人格面具与队伍
 /p5x攻略 <名称>      汇总展示该角色现有攻略
+/p5x每日运势         抽取今日P5X角色与每日运势（别名 /p5x运势、/p5x今日角色）
 /p5x抽卡记录         预留入口；鉴权方案完成前只返回开发状态（始终文字）
 /p5x渲染状态         查看图片渲染配置（管理员，不显示令牌）
 /p5x测试渲染         用固定内容试渲染一张卡片（管理员）
@@ -173,15 +178,23 @@ AstrBot 4.29.3 的 `MessageMember` 只有 `user_id` / `nickname`，没有头像�
 ```text
 data/assets/
 ├─ manifest.json                     清单（由脚本生成，可手工补 source_url）
-├─ characters/<slug>/portrait.webp   角色立绘
-├─ characters/<slug>/background.webp 角色背景（可缺）
+├─ characters/<slug>/1.webp          角色立绘（同一角色多张时依次编号）
+├─ characters/<slug>/background.webp 角色背景（由第一张立绘模糊压暗生成）
 ├─ weapons/<owner>/<weapon_key>.webp 武器图
 └─ fallback/{character,weapon,archive}.webp   三张自产占位图
 ```
 
+角色立绘由 `scripts/fetch_official_art.py` 从国服官网 `roleData*.js` 抓取：
+角色名只出现在条目前面的 `// 注释` 里（`name` 字段是名字图片的 URL），
+`role1`～`role6` 是该角色的各张立绘。**一个角色有几张就收几张**，
+清单里记成 `portraits` 数组，主视觉按日期键确定性地挑一张。
+
+图片不进仓库：`.gitignore` 排除了 `data/assets/characters/` 与 `data/assets/weapons/`，
+仓库只保留索引 `manifest.json` 与自绘占位图。
+
 匹配只按标识符，不做模糊猜测：角色 `slug → source_key`，武器 `角色:武器 → 武器`。
 清单里每项都可记 `source_url` 与 `source_status`；**没登记状态的素材一律记为 `unavailable`，
-绝不默认成 `official`**。
+绝不默认成 `official`**。官网抓来的图一律 `official`，并保留每张图的原始 URL。
 
 回退顺序：
 
@@ -196,15 +209,20 @@ data/assets/
 **素材覆盖率（真实数字，`scripts/verify_assets.py` 实测）：**
 
 ```text
-角色立绘覆盖率：0/72  = 0.0%
-武器图片覆盖率：0/142 = 0.0%
+角色立绘覆盖率：69/72  = 95.8%（113 张，人均 1.64 张）
+武器图片覆盖率：0/142  = 0.0%（官网 roleData 只有角色立绘，没有武器图）
+匹配方式：exact 47｜alias 6｜form 12｜inherited 4｜missing 3
 ```
 
-仓库里没有任何第三方图片素材 —— 立绘与武器图的版权不属于本插件。
-当前卡片右侧显示的是**自产占位图**（角色剪影 / 武器剑影 / 档案叠卡），
-用来验证排版与回退链路，不代表已有角色立绘。
-补齐方式：把图片放进上表路径，在清单里登记 `source_url` 与 `source_status`，
-再跑 `python scripts/verify_assets.py` 复核。
+官网 `roleData260924.js` 里没有的 3 名：摩尔加纳星舞、荒垣真次郎、天田乾。
+另有 4 名形态（`joker-starlight`、`류지·댄싱 스타`、`chord-summer`、`panther-starlight`）
+官网未单独出图，按 `inherited` 沿用基础形态的图集，清单里如实记成 `inherited` 而不是 `exact`。
+
+**这些图片不进仓库**：`.gitignore` 排除了 `data/assets/characters/` 与 `data/assets/weapons/`，
+所以仓库本身不含任何第三方图片；立绘版权归游戏发行方，**仅限个人自用，不商用**。
+缺图时按上表回退到自产占位图（角色剪影 / 武器剑影 / 档案叠卡），**缺图不会重新抽角色**。
+补齐方式：跑 `python scripts/fetch_official_art.py` 抓图，或把图片放进上表路径、
+在清单里登记 `source_url` 与 `source_status`，再跑 `python scripts/verify_assets.py` 复核。
 
 ### 技能加点推荐
 
@@ -313,6 +331,141 @@ templates/
 
 错误提示里不会出现令牌；`/p5x渲染状态` 只显示「访问令牌：已设置 / 未设置」。
 
+## 每日运势
+
+```text
+/p5x每日运势     /p5x运势     /p5x今日角色
+```
+
+三条指令等价，返回一张图片（或渲染失败时一段文字）：
+
+```text
+左上      发起者头像 + 昵称
+主视觉    今日角色立绘（背景是同图暗化模糊）
+最大字号  角色名
+副标题    5★｜属性｜定位（取自 zh_characters）
+高亮行    2026 年 10 月 27 日 · 甲戌日 · 今日角色
+面板      塔罗指引 / 观音灵签 / 周易卦象 / 综合建议
+页脚      娱乐性质说明 + 立绘版权说明
+```
+
+### 抽取规则
+
+| 项 | 规则 |
+| --- | --- |
+| 候选范围 | `zh_characters` 全部 72 名，含联动角色与不同形态（`YUI` 与 `YUI·星舞` 是两个角色） |
+| 每人每天 | 只抽一名，同日重复查询结果完全一致 |
+| 排序 | 候选按稳定键 `source_key` 排序后再抽，**不依赖数据库物理行序** |
+| 随机源 | `random.Random(SHA256(...))`；不用 `random.random()`、不用 `hash()`、不用 MD5 |
+| 次日 | 按配置时区跨日刷新；允许再次抽到同一角色 |
+| 多张立绘 | 官网同一角色有多张图时全部收下，按日期键确定性地挑一张（同一天不换图） |
+
+### 用户唯一标识
+
+```text
+user_key = platform_id + sender_id
+```
+
+不使用群号，也不使用昵称。因此：
+
+- 同一个人在 A 群和 B 群看到的是同一份结果；
+- 改名不影响结果；
+- 跨平台相同的数字 ID 不会串号（`aiocqhttp` 的 `10001` 与别的平台的 `10001` 是两个人）。
+
+### 随机数隔离
+
+```text
+fortune_seed   = SHA256("fortune|日期|平台|用户ID")
+character_seed = SHA256("character|日期|平台|用户ID")
+```
+
+两把种子分开，「今日角色」和「塔罗 / 灵签 / 卦象」互不影响。
+抽的顺序固定为：角色 → 塔罗 → 灵签 → 周易。
+
+### 持久化
+
+每日运势写进**独立**的 `data/p5x_daily.sqlite3`，不写 `p5x_zh.sqlite3`：
+
+```sql
+CREATE TABLE daily_fortunes (
+    date_key      TEXT NOT NULL,   -- 2026-10-27
+    timezone      TEXT NOT NULL,   -- Asia/Shanghai
+    platform_id   TEXT NOT NULL,
+    user_id       TEXT NOT NULL,
+    display_name  TEXT NOT NULL DEFAULT '',
+    character_key TEXT NOT NULL,
+    fortune_json  TEXT NOT NULL,   -- 角色 + 塔罗 + 灵签 + 周易 + 建议
+    created_at    TEXT NOT NULL,
+    PRIMARY KEY (date_key, timezone, platform_id, user_id)
+);
+```
+
+流程：算日期 → 查当天 → 有则直接返回 → 无则生成 → 事务写入 → 冲突读回 → 渲染。
+
+写入用 `INSERT OR IGNORE` 再读回，所以两个人同时第一次查同一天时，
+最终都拿到**先落库的那一份**，不会出现同一天两份不同结果。
+写入失败只记日志，仍然返回结果 —— 运势不该因为存不下来就不给看。
+
+### 时区
+
+`zoneinfo.ZoneInfo`，默认 `Asia/Shanghai`。配置非法时回退默认值并在日志里警告，
+不会因为一个时区名打错就让功能不可用。Windows 与精简镜像需要 `tzdata`（已写进 `requirements.txt`）。
+
+### 文字降级
+
+T2I 不可用、返回非图片、或出图抛错时，返回：
+
+```text
+【P5X 每日运势】2026 年 10 月 27 日 · 甲戌日
+
+今日角色：YUI（5★｜电击属性｜优越）
+塔罗指引：XIII 死神（正位）
+  → 结束、蜕变、放下、新生
+观音灵签：第 12 签 · 中签
+  签诗：半开半合花千朵，欲进欲退意如何； 守旧待时休妄动，自然时雨润新禾。
+  解曰：宜静守待时，不宜妄动。
+周易卦象：䷀ 乾卦（乾上乾下）
+  卦辞：元亨利贞。
+  简解：至刚至健，自强不息。谋事宜主动进取，但须守持正道。
+  动爻：第3、5爻，变蒙卦
+
+综合建议：平稳中有小波折，宜稳扎稳打、量力而行。抽到死神正位，可以借这股劲往前走一步。
+
+※ 同一用户当天结果固定，次日刷新，仅供娱乐参考。
+```
+
+文字和图片**来自同一个 `DailyFortune` 对象**，不存在「图里是 A、文字是 B」。
+
+### 异常处理
+
+| 情况 | 表现 |
+| --- | --- |
+| 功能关闭 | `P5X每日运势当前未开启。` |
+| 角色库不可用 | `夜幕档案数据库暂时不可用，无法抽取今日角色。` |
+| 每日库写入失败 | 仍然返回结果，日志提示 |
+| 头像获取失败 | 用首字符头像，不影响结果 |
+| 立绘缺失 | 角色占位图 → 纯色档案背景，**不会重新抽角色** |
+| 出图失败 | 改发文字，内容不变 |
+
+### 配置
+
+| 键 | 类型 | 默认 | 说明 |
+| --- | --- | --- | --- |
+| `daily_fortune_enabled` | bool | `true` | 是否开放 `/p5x每日运势` |
+| `daily_fortune_timezone` | string | `Asia/Shanghai` | 刷新时区（IANA 名称） |
+| `daily_fortune_image_enabled` | bool | `true` | 出图开关；关闭后只发文字 |
+
+渲染地址复用 `t2i_endpoint`，不新建任何渲染配置。
+
+### 第三方声明
+
+塔罗牌义、观音灵签、六十四卦数据与起卦算法来自 MIT 许可的
+[`astrbot_plugin_cyber_divination`](https://github.com/ruoyuxian20-sys/astrbot_plugin_cyber_divination)。
+本仓库只借用 `daily / tarot / lingqian / zhouyi / ganzhi` 五个模块的数据与算法，
+去掉了奇门遁甲、占卜历史、LLM 润色、原插件 T2I、命令树与配置管理，
+并把随机种子从 MD5 改为 SHA-256。
+完整声明与实际改动见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+
 ## 数据来源与可信度
 
 **数据来源是 Lufel 社区资料，不是国服官方数据库。**
@@ -390,6 +543,7 @@ astrbot/data/plugins/astrbot_plugin_phantom_archive/
 └─ data/
    ├─ p5x_zh.sqlite3        ← 必须
    ├─ display_notices.json  ← 可选，仅用于文案一致性自检
+   ├─ p5x_daily.sqlite3     ← 插件自动创建，每日运势记录
    ├─ assets/               ← 可选，缺省时卡片使用占位图
    │  ├─ manifest.json
    │  ├─ characters/…  weapons/…  fallback/…
@@ -425,7 +579,12 @@ services:
 # 生成三张占位图（仓库已带，改版式时才需要重跑）
 python scripts/make_placeholders.py
 
-# 扫描素材目录，生成 manifest.json 与 coverage.json
+# 从国服官网抓取角色立绘（一个角色有几张收几张，生成背景并写清单）
+python scripts/fetch_official_art.py            # 中断后重跑会自动跳过已下载的
+python scripts/fetch_official_art.py --dry-run  # 只看映射，不下载
+python scripts/fetch_official_art.py --force    # 全部重新下载
+
+# 扫描素材目录，生成 manifest.json 与 coverage.json（不抓图时用）
 python scripts/build_asset_manifest.py
 
 # 校验清单与图片，并打印真实覆盖率
@@ -435,12 +594,13 @@ python scripts/verify_assets.py
 python scripts/verify_recommendation.py
 ```
 
-四个脚本都只读数据库（`mode=ro`），不会修改 `p5x_zh.sqlite3`。
+`fetch_official_art.py` 会下载图片，其余脚本只读数据库（`mode=ro`），
+都不会修改 `p5x_zh.sqlite3`。
 
 ### 4. 配置项
 
-`_conf_schema.json` 共 23 项：2 项数据与文字、11 项图片输出、10 项卡片视觉
-（见「图片卡片 · 配置项」）。
+`_conf_schema.json` 共 26 项：2 项数据与文字、11 项图片输出、10 项卡片视觉、3 项每日运势
+（见「图片卡片 · 配置项」与「每日运势 · 配置」）。
 
 ```json
 {
@@ -568,6 +728,30 @@ pytest                  409 passed
 数据库 SHA-256          查询前后一致（c739a23e943c8ad7…）
 ```
 
+`v0.5.0` 官方素材 + 每日运势实测：
+
+```text
+pytest                  495 passed（v0.4.0 是 409，新增 86 条）
+角色立绘                69/72 = 95.8%，113 张，人均 1.64 张
+武器图片                0/142 = 0.0%（官网无武器图，走占位图）
+素材校验                254 个文件全部通过，无 generated 残留
+每日运势端到端          真实插件 + 本机 T2I，首次 8122 ms
+单张卡片                820×1000，287 KB
+同日重复查询            字节完全一致
+别名 /p5x运势           与主指令字节完全一致
+/p5x今日角色            与主指令字节完全一致（同一 sender）
+跨会话（不同 session）  字节完全一致（用户标识不含会话号）
+进程重启后              字节完全一致（先落库再渲染，不依赖内存）
+另一用户                结果不同（符合预期）
+改名后                  字节完全一致（用户标识不含昵称）
+每日库                  唯一约束生效，同一用户同一天只有 1 行
+真实进程日志            每日运势已就绪：时区 Asia/Shanghai，图片输出 已启用
+数据库 SHA-256          查询前后一致（p5x_zh.sqlite3 未被写入）
+```
+
+真实进程侧的证据来自 `/api/v1/chat` 的 SSE 流：每次 `/p5x每日运势` 收到 1 个 `image` 事件，
+附件落在 `data/attachments/`，四次的 SHA-256 完全相同。
+
 「不同用户头像与昵称分别正确」这一条由 `test_plugin_image.py` 的
 `test_different_users_get_different_header` 覆盖 —— 真实进程里 WebUI 只有一个登录用户，
 无法在同一进程内换人，因此没有把它写成「真实链路已验证」。
@@ -591,12 +775,22 @@ archive/
 ├─ avatar_provider.py   头像下载、校验、缓存、回退
 ├─ image_codec.py       Data URI 编解码 + 首字符头像
 ├─ asset_manifest.py    素材清单解析（路径安全、来源状态白名单）
-├─ asset_resolver.py    素材匹配与逐级回退
+├─ asset_resolver.py    素材匹配与逐级回退（含多张立绘的确定性挑选）
 ├─ visual_context.py    页面 + 素材 + 用户 → 模板视觉上下文
 ├─ image_templates.py   模板读取与渲染上下文
-└─ image_renderer.py    T2I HTTP 客户端与响应校验
-templates/              6 个纯 HTML+CSS 模板
-scripts/                占位图生成、清单构建、素材校验、推荐覆盖率统计
+├─ image_renderer.py    T2I HTTP 客户端与响应校验
+└─ daily/               每日运势
+   ├─ models.py         纯数据结构（含 JSON 序列化）
+   ├─ engine.py         种子、时区、抽取编排、综合建议
+   ├─ tarot.py          78 张塔罗与单张抽取
+   ├─ lingqian.py       一百签与抽签
+   ├─ zhouyi.py         六十四卦与六爻起卦
+   ├─ ganzhi.py         天干地支与日干支
+   ├─ character_draw.py 今日角色（确定性、与行序无关）
+   ├─ repository.py     独立每日库读写（唯一约束 + 冲突读回）
+   └─ presenter.py      一份结果 → 卡片 / 文字
+templates/              7 个纯 HTML+CSS 模板
+scripts/                占位图生成、官网立绘抓取、清单构建、素材校验、推荐覆盖率统计
 ```
 
 几个刻意的取舍：
@@ -648,13 +842,31 @@ scripts/                占位图生成、清单构建、素材校验、推荐�
 - [x] 独立素材清单与三张自产占位图，缺图逐级回退
 - [x] 角色卡新增「技能加点推荐」（68 有 / 4 无 / 0 待核对）
 - [x] 10 项卡片视觉配置
-- [ ] 真实角色立绘与武器图（需先解决素材来源与授权，当前覆盖率 0%）
+- [x] 真实角色立绘（官网素材，个人自用）
+
+每日运势阶段（`v0.5.0`）：
+
+- [x] `/p5x每日运势`（别名 `/p5x运势`、`/p5x今日角色`）
+- [x] 官网角色立绘按角色名全量抓取（113 张，人均 1.64 张，覆盖 69/72）
+- [x] 一个角色多张立绘时按日期键确定性挑一张，同日不变、次日可能换图
+- [x] 今日角色从 `zh_characters` 全量抽取，含联动与不同形态
+- [x] 同日同人结果固定、次日刷新、跨群一致、改名不变、重启不变
+- [x] 用户键 = `platform_id + sender_id`，跨平台不串号
+- [x] 独立 `p5x_daily.sqlite3`，唯一约束 + 冲突读回，并发只落一份
+- [x] 塔罗 / 观音灵签 / 周易卦象 / 综合建议
+- [x] 每日运势卡片模板（角色名最大字号、日期高亮、半透明面板）
+- [x] 文字降级与图片同源，缺图不重抽角色
+- [x] 3 项每日运势配置
+- [x] `THIRD_PARTY_NOTICES.md` 记录 MIT 来源与实际使用模块
+- [ ] 武器图（官网 `roleData` 只提供角色立绘，暂无可靠来源）
+- [ ] 腾讯云 Docker 部署验收
+- [ ] 容器内 T2I 渲染服务验收
 
 后续：
 
 - [ ] Docker / 腾讯云部署
 - [ ] SnowLuma → OneBot → AstrBot 链路
-- [ ] 素材来源登记与授权确认
+- [ ] 武器图来源登记与授权确认
 
 ## 许可与免责
 

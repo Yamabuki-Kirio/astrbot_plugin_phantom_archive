@@ -4,4 +4,9 @@ httpx>=0.27
 Pillow>=10.0
 Jinja2>=3.1
 
+# 每日运势按配置时区刷新，需要 IANA 时区库。
+# Linux 一般自带 /usr/share/zoneinfo；Windows 与精简镜像没有，必须显式安装，
+# 否则 zoneinfo.ZoneInfo("Asia/Shanghai") 会抛 ZoneInfoNotFoundError。
+tzdata>=2024.1
+
 # AstrBot 本身由宿主提供，不在插件里声明

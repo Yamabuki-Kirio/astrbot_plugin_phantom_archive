@@ -544,10 +544,12 @@ def render_help() -> str:
             "/p5x评价 <名称>",
             "/p5x配队 <名称>",
             "/p5x攻略 <名称>",
+            "/p5x每日运势       抽取今日P5X角色与每日运势",
             "/p5x抽卡记录（待实现）",
             "",
             "支持中文名、原名、英文代号和 slug 查询。",
             "支持角色、技能、武器、意识、养成、操作、评价、配队和综合攻略查询。",
+            "同一用户当天结果固定，次日刷新，仅供娱乐。",
             "查询成功时发送图片卡片；图片不可用时自动改发文字。",
             "",
             "管理员指令：",
@@ -674,6 +676,11 @@ def render_image_status(info: dict) -> str:
         f"角色立绘：{'显示' if info.get('character_art') else '关闭'}"
         f"｜武器图：{'显示' if info.get('weapon_art') else '关闭'}",
         _manifest_line(info),
+        "",
+        f"每日运势：{'已开启' if info.get('daily_enabled') else '未开启'}"
+        f"｜图片：{'启用' if info.get('daily_image') else '关闭'}",
+        f"刷新时区：{info.get('daily_timezone') or 'Asia/Shanghai'}"
+        f"｜已记录：{info.get('daily_records', 0)} 条",
     ]
     if not info.get("configured"):
         lines += ["", "在插件配置里填写 t2i_endpoint 后重启即可启用图片卡片。"]

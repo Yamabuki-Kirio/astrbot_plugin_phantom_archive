@@ -124,7 +124,9 @@ def _hero_for_page(page: cards.CardPage, resolver: AssetResolver):
     if kind == asset_resolver.HERO_WEAPON:
         return resolver.weapon_hero(page.owner_key, page.hero_key)
     if kind == asset_resolver.HERO_CHARACTER:
-        return resolver.character_hero(page.hero_key, page.owner_key)
+        return resolver.character_hero(
+            page.hero_key, page.owner_key, variant=page.hero_variant
+        )
     if kind == asset_resolver.HERO_ARCHIVE:
         return resolver.archive_hero()
     return None

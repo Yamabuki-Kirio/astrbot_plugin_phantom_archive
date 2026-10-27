@@ -87,6 +87,12 @@ class CardPage:
     hero_kind: str = ""  # character | weapon | archive
     hero_key: str = ""  # 角色 slug / 武器 key
     owner_key: str = ""  # 武器缺图时回退到哪个角色
+    # 同一角色有多张立绘时，用这个值确定性地挑一张（每日运势传日期键）。
+    # 留空 = 用清单里的第一张，保持查询卡片的行为不变。
+    hero_variant: str = ""
+    # 该卡片自带的免责声明。留空时用 notices.DISCLAIMER_LINES ——
+    # 每日运势讲的是随机结果，不能套「社区资料 / 机器翻译」那三行。
+    disclaimer_lines: tuple[str, ...] = ()
 
     @property
     def page_label(self) -> str:

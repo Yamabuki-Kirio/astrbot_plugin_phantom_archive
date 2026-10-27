@@ -7,11 +7,14 @@
     /p5x武器 <名称>
     /p5x角色列表
     /p5x意识 /p5x属性意识 /p5x养成 /p5x操作 /p5x评价 /p5x配队 /p5x攻略
+    /p5x每日运势（别名 /p5x运势、/p5x今日角色）
     /p5x抽卡记录（预留功能）
     /p5x渲染状态（管理员）
     /p5x测试渲染（管理员）
 
-只读，不写库；只读 p5x_zh.sqlite3，绝不碰原始库 p5x.sqlite3。
+资料查询只读，不写库；只读 p5x_zh.sqlite3，绝不碰原始库 p5x.sqlite3。
+每日运势另开一个可写的 p5x_daily.sqlite3，只存「谁在哪天抽到了什么」，
+资料库本身仍然只读。
 
 图片输出：查询成功时把结构化结果渲染成卡片图片发送；
 渲染服务不可用、返回非图片、或校验不通过时，按配置降级为文字。
@@ -38,6 +41,11 @@ from .archive import (
     renderer,
     visual_context,
 )
+from .archive.daily import character_draw as daily_character_draw
+from .archive.daily import engine as daily_engine
+from .archive.daily import models as daily_models
+from .archive.daily import presenter as daily_presenter
+from .archive.daily import repository as daily_repository
 from .archive.database import DatabaseMissingError, SchemaMismatchError
 from .archive.image_renderer import (
     DEFAULT_MAX_CONCURRENT,
@@ -61,9 +69,10 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.4.0"
+PLUGIN_VERSION = "0.5.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
+DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME
 ASSETS_DIRNAME = "assets"
 MANIFEST_FILENAME = "manifest.json"
 IMAGE_CACHE_DIRNAME = "image_cache"
@@ -71,6 +80,11 @@ IMAGE_CACHE_DIRNAME = "image_cache"
 FALLBACK_TEXT = "text"
 FALLBACK_ERROR = "error"
 FALLBACK_MODES: tuple[str, ...] = (FALLBACK_TEXT, FALLBACK_ERROR)
+
+# 每日运势的三条固定文案。写在常量里，测试与文档都引用同一份。
+DAILY_DISABLED_TEXT = "P5X每日运势当前未开启。"
+DAILY_UNAVAILABLE_TEXT = "夜幕档案数据库暂时不可用，无法抽取今日角色。"
+DAILY_FAILED_TEXT = "今日运势生成失败，请稍后再试。"
 
 # 测试渲染用的固定内容：包含需要转义的尖括号，用来验证模板的自动转义是否生效
 PROBE_SECTION = cards.Section(
@@ -172,6 +186,12 @@ class PhantomArchivePlugin(Star):
             lambda key, default: _conf_get(self.config, key, default)
         )
         self.asset_manifest_path = self._read_manifest_path()
+        self.daily_enabled = _conf_bool(self.config, "daily_fortune_enabled", True)
+        self.daily_image_enabled = _conf_bool(self.config, "daily_fortune_image_enabled", True)
+        self.daily_timezone = str(
+            _conf_get(self.config, "daily_fortune_timezone", daily_engine.DEFAULT_TIMEZONE)
+            or daily_engine.DEFAULT_TIMEZONE
+        ).strip()
 
         self.database_path: Path | None = None
         self._service: ArchiveService | None = None
@@ -184,9 +204,13 @@ class PhantomArchivePlugin(Star):
             show_weapon_art=self.visual_settings.show_weapon_art,
         )
         self._avatar_provider: avatar_provider.AvatarProvider | None = None
+        self._daily_store: daily_repository.DailyFortuneStore | None = None
+        self._daily_store_error: Exception | None = None
+        self._daily_timezone_label = daily_engine.DEFAULT_TIMEZONE
 
         self._open_service()
         self._load_assets()
+        self._init_daily()
 
     # ------------------------------------------------------------ 初始化
 
@@ -299,6 +323,160 @@ class PhantomArchivePlugin(Star):
                 self.avatar_settings,
             )
         return self._avatar_provider
+
+    # ------------------------------------------------------------ 每日运势
+
+    def _init_daily(self) -> None:
+        """只解析时区，不建库 —— 功能关掉时不该留下任何文件。"""
+        _, self._daily_timezone_label = daily_engine.resolve_timezone(self.daily_timezone)
+        if not self.daily_enabled:
+            logger.info("每日运势未开启（daily_fortune_enabled=false）")
+            return
+        logger.info(
+            "每日运势已就绪：时区 %s，图片输出 %s",
+            self._daily_timezone_label,
+            "已启用" if (self.daily_image_enabled and self.image_ready) else "未启用",
+        )
+
+    def _daily_store_instance(self) -> daily_repository.DailyFortuneStore | None:
+        """懒建每日库。建不出来就返回 None —— 运势照样生成，只是不落库。"""
+        if self._daily_store is not None:
+            return self._daily_store
+        if self._daily_store_error is not None:
+            return None
+        try:
+            self._daily_store = daily_repository.DailyFortuneStore(
+                DATA_DIR / DAILY_DATABASE_FILENAME
+            )
+        except daily_repository.DailyStoreError as exc:
+            self._daily_store_error = exc
+            logger.error("每日运势库不可用，本次仍会返回结果但不做持久化：%s", exc)
+            return None
+        return self._daily_store
+
+    @staticmethod
+    def _daily_candidates(characters) -> list:
+        return [daily_character_draw.from_character(item) for item in characters]
+
+    def _load_or_create_fortune(
+        self,
+        *,
+        date_key: str,
+        timezone_name: str,
+        platform: str,
+        user_id: str,
+        display_name: str,
+    ) -> daily_models.DailyFortune:
+        """算日期 → 查当天 → 有则返回 → 无则生成 → 写库 → 冲突读回。"""
+        identity_kwargs = {
+            "date_key": date_key,
+            "timezone": timezone_name,
+            "platform_id": platform,
+            "user_id": user_id,
+            "display_name": display_name,
+        }
+
+        store = self._daily_store_instance()
+        if store is not None:
+            try:
+                record = store.get(
+                    date_key=date_key,
+                    timezone=timezone_name,
+                    platform_id=platform,
+                    user_id=user_id,
+                )
+            except Exception as exc:  # noqa: BLE001 - 读失败按「没存过」处理
+                logger.warning("每日运势读取失败（%s），本次重新生成", type(exc).__name__)
+                record = None
+            if record is not None:
+                return daily_models.DailyFortune.from_payload(record.payload, **identity_kwargs)
+
+        if self._service is None:
+            raise daily_engine.FortuneUnavailableError("资料库不可用")
+
+        fortune = daily_engine.generate(
+            date_key=date_key,
+            timezone=timezone_name,
+            platform_id=platform,
+            user_id=user_id,
+            display_name=display_name,
+            characters=self._daily_candidates(self._service.list_characters()),
+        )
+
+        if store is None:
+            return fortune
+
+        try:
+            store.insert(
+                date_key=date_key,
+                timezone=timezone_name,
+                platform_id=platform,
+                user_id=user_id,
+                display_name=display_name,
+                character_key=fortune.character_key,
+                payload=fortune.to_payload(),
+            )
+            # 并发场景下可能是别人先写进去了，读回库里那一份才是唯一结果
+            again = store.get(
+                date_key=date_key,
+                timezone=timezone_name,
+                platform_id=platform,
+                user_id=user_id,
+            )
+        except daily_repository.DailyStoreError as exc:
+            logger.warning("每日运势写入失败，本次仍返回结果：%s", exc)
+            return fortune
+        except Exception as exc:  # noqa: BLE001 - 兜底，不让持久化问题影响出图
+            logger.warning("每日运势持久化异常（%s），本次仍返回结果", type(exc).__name__)
+            return fortune
+
+        if again is None:
+            return fortune
+        return daily_models.DailyFortune.from_payload(again.payload, **identity_kwargs)
+
+    async def _daily_fortune_result(self, event: AstrMessageEvent) -> list:
+        """接收指令 → 取身份 → 取/建结果 → 出图或出文字。"""
+        if not self.daily_enabled:
+            return [event.plain_result(DAILY_DISABLED_TEXT)]
+        if self._service is None:
+            return [event.plain_result(DAILY_UNAVAILABLE_TEXT)]
+
+        try:
+            requester = identity.from_event(event)
+            platform = identity.platform_id(event)
+            zone, zone_name = daily_engine.resolve_timezone(self.daily_timezone)
+            date_key = daily_engine.date_key_of(daily_engine.today_in(zone))
+            fortune = await asyncio.to_thread(
+                self._load_or_create_fortune,
+                date_key=date_key,
+                timezone_name=zone_name,
+                platform=platform,
+                user_id=requester.user_id,
+                display_name=requester.display_name,
+            )
+        except daily_engine.FortuneUnavailableError as exc:
+            logger.warning("每日运势不可用：%s", exc)
+            return [event.plain_result(DAILY_UNAVAILABLE_TEXT)]
+        except Exception:  # noqa: BLE001 - 兜底，不让异常冒到群聊
+            logger.exception("每日运势生成失败")
+            return [event.plain_result(DAILY_FAILED_TEXT)]
+
+        if self.daily_image_enabled and self.image_ready:
+            try:
+                page = daily_presenter.build_page(fortune)
+                visuals = await self._visuals(event, [page])
+                html = await asyncio.to_thread(
+                    image_templates.render_page, page, theme=self.theme, visual=visuals[0]
+                )
+                image = await self._renderer_instance().render(html)
+                return [event.chain_result([Image.fromBytes(image.data)])]
+            except RenderError as exc:
+                logger.warning("每日运势出图失败：%s", self._sanitize(str(exc)))
+            except Exception:  # noqa: BLE001 - 出图失败就降级文字，内容一致
+                logger.exception("每日运势出图出现未预期错误")
+
+        # 文字与图片来自同一个 fortune 对象，内容不会漂移
+        return [event.plain_result(daily_presenter.render_text(fortune))]
 
     # ------------------------------------------------------------ 图片输出
 
@@ -490,6 +668,24 @@ class PhantomArchivePlugin(Star):
         """预留抽卡记录入口，鉴权方案完成前不读取任何用户数据。"""
         yield event.plain_result(renderer.render_gacha_history_placeholder())
 
+    @filter.command("p5x每日运势")
+    async def daily_fortune_command(self, event: AstrMessageEvent):
+        """抽取今日角色与每日运势（同日同人结果固定）。"""
+        for result in await self._daily_fortune_result(event):
+            yield result
+
+    @filter.command("p5x运势")
+    async def daily_fortune_alias_command(self, event: AstrMessageEvent):
+        """``/p5x每日运势`` 的别名。"""
+        for result in await self._daily_fortune_result(event):
+            yield result
+
+    @filter.command("p5x今日角色")
+    async def daily_character_command(self, event: AstrMessageEvent):
+        """``/p5x每日运势`` 的别名。"""
+        for result in await self._daily_fortune_result(event):
+            yield result
+
     # ------------------------------------------------------------ 管理员指令
 
     @filter.command("p5x渲染状态")
@@ -560,14 +756,29 @@ class PhantomArchivePlugin(Star):
                 "manifest_loaded": self._manifest.loaded,
                 "manifest_path": str(self.asset_manifest_path),
                 "manifest_counts": counts,
+                "daily_enabled": self.daily_enabled,
+                "daily_image": self.daily_image_enabled,
+                "daily_timezone": self._daily_timezone_label,
+                "daily_records": self._daily_record_count(),
             }
         )
         return info
 
+    def _daily_record_count(self) -> int:
+        if self._daily_store is None:
+            return 0
+        try:
+            return self._daily_store.count()
+        except Exception:  # noqa: BLE001 - 自检信息不该因库异常而失败
+            return 0
+
     # ------------------------------------------------------------ 生命周期
 
     async def terminate(self):
-        """插件卸载时释放只读连接、渲染客户端与头像客户端。"""
+        """插件卸载时释放只读连接、渲染客户端、头像客户端与每日库。"""
+        if self._daily_store is not None:
+            self._daily_store.close()
+            self._daily_store = None
         if self._avatar_provider is not None:
             await self._avatar_provider.aclose()
             self._avatar_provider = None

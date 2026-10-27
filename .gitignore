@@ -19,7 +19,10 @@ raw/
 # data/ 目录本身要保留（部署时把数据库放进去），只忽略内容
 !data/.gitkeep
 
-# 素材清单与自产占位图要进仓库：它们是插件自己生成的，不含第三方素材
-# 若日后放入真实角色立绘 / 武器图，请先确认授权，再把 data/assets/characters
-# 与 data/assets/weapons 加回忽略列表
+# 素材清单与占位图要进仓库：占位图是插件自己画的，清单只是索引，都不含第三方素材
 !data/assets/
+
+# 官网角色立绘 / 武器图**不进仓库**：版权归游戏发行方，仓库只放索引（manifest.json）
+# 与自绘占位图，实际图片由使用者自己跑 scripts/fetch_official_art.py 下载到本地。
+data/assets/characters/
+data/assets/weapons/

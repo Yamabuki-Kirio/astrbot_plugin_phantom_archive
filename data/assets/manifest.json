@@ -2,436 +2,1584 @@
   "_comment": "由 scripts/build_asset_manifest.py 生成；路径相对本文件所在目录",
   "characters": {
     "j-c": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/j-c/1.webp",
+      "portraits": [
+        {
+          "path": "characters/j-c/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main251225/type2_role11_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/j-c/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main251225/type2_role11_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "bui": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/bui/1.webp",
+      "portraits": [
+        {
+          "path": "characters/bui/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role12_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/bui/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role12_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/bui/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250925/type1_role12_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/bui/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role12_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "bui-cosmic": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/bui-cosmic/1.webp",
+      "portraits": [
+        {
+          "path": "characters/bui-cosmic/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250925/type1_role12_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/bui-cosmic/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250925/type1_role12_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "pinky": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/pinky/1.webp",
+      "portraits": [
+        {
+          "path": "characters/pinky/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260205/type1_role25_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/pinky/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260205/type1_role25_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/pinky/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260205/type1_role25_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "leon": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/leon/1.webp",
+      "portraits": [
+        {
+          "path": "characters/leon/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role3_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/leon/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role3_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "joker": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/joker/1.webp",
+      "portraits": [
+        {
+          "path": "characters/joker/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260514/type2_role1_bg_new.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/joker/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role1_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/joker/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260514/type2_role1_bg_new.png",
+      "source_status": "official",
+      "matched_by": "alias",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "joker-starlight": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/joker-starlight/1.webp",
+      "portraits": [
+        {
+          "path": "characters/joker-starlight/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260514/type2_role1_bg_new.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/joker-starlight/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role1_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/joker-starlight/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260514/type2_role1_bg_new.png",
+      "source_status": "official",
+      "matched_by": "inherited",
+      "form_inherited": true,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "howler": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/howler/1.webp",
+      "portraits": [
+        {
+          "path": "characters/howler/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241205/type1_role19_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/howler/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241205/type1_role19_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/howler/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main241205/type1_role19_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "cattle": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/cattle/1.webp",
+      "portraits": [
+        {
+          "path": "characters/cattle/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role2_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/cattle/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role2_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/cattle/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role2_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "skull": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/skull/1.webp",
+      "portraits": [
+        {
+          "path": "characters/skull/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role3_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/skull/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type2_role3_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "류지·댄싱 스타": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/류지·댄싱 스타/1.webp",
+      "portraits": [
+        {
+          "path": "characters/류지·댄싱 스타/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role3_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/류지·댄싱 스타/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type2_role3_2.png",
+      "source_status": "official",
+      "matched_by": "inherited",
+      "form_inherited": true,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "wind": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/wind/1.webp",
+      "portraits": [
+        {
+          "path": "characters/wind/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main2407/box3_role5_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/wind/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main2407/box3_role5_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/wind/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241228/box3_role5_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/wind/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main2407/box3_role5_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "wind-tempest": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/wind-tempest/1.webp",
+      "portraits": [
+        {
+          "path": "characters/wind-tempest/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241228/box3_role5_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/wind-tempest/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main241228/box3_role5_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "ange": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/ange/1.webp",
+      "portraits": [
+        {
+          "path": "characters/ange/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250410/type1_role22_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/ange/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250410/type1_role22_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/ange/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250410/type1_role22_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "cherish": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/cherish/1.webp",
+      "portraits": [
+        {
+          "path": "characters/cherish/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241009/type1_role18_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/cherish/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241009/type1_role18_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/cherish/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main241009/type1_role18_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "turbo": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/turbo/1.webp",
+      "portraits": [
+        {
+          "path": "characters/turbo/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250327/type1_role21_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/turbo/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250327/type1_role21_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/turbo/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250327/type1_role21_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "queen": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/queen/1.webp",
+      "portraits": [
+        {
+          "path": "characters/queen/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role6_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/queen/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type2_role6_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "mona": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/mona/1.webp",
+      "portraits": [
+        {
+          "path": "characters/mona/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260604/type2_role2_bg_new.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/mona/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role2_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/mona/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260604/type2_role2_bg_new.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "mona-starlight": {
       "portrait": null,
+      "portraits": [],
       "background": null,
       "source_url": null,
-      "source_status": "unavailable"
+      "source_status": "unavailable",
+      "matched_by": "missing",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "closer": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/closer/1.webp",
+      "portraits": [
+        {
+          "path": "characters/closer/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role3_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/closer/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role3_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/closer/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240801/box3_role3_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/closer/4.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260402/box3_role3_3.png",
+          "source_status": "official",
+          "role_key": "role4",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/closer/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role3_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "closer-tropical": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/closer-tropical/1.webp",
+      "portraits": [
+        {
+          "path": "characters/closer-tropical/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240801/box3_role3_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/closer-tropical/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240801/box3_role3_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "closer-radiance": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/closer-radiance/1.webp",
+      "portraits": [
+        {
+          "path": "characters/closer-radiance/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260402/box3_role3_3.png",
+          "source_status": "official",
+          "role_key": "role4",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/closer-radiance/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260402/box3_role3_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "mont": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/mont/1.webp",
+      "portraits": [
+        {
+          "path": "characters/mont/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241121/type1_role4_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/mont/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role4_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/mont/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241121/type1_role4_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/mont/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main241121/type1_role4_1.png",
+      "source_status": "official",
+      "matched_by": "alias",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "mont-frostgale": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/mont-frostgale/1.webp",
+      "portraits": [
+        {
+          "path": "characters/mont-frostgale/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main241121/type1_role4_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/mont-frostgale/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main241121/type1_role4_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "marian": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/marian/1.webp",
+      "portraits": [
+        {
+          "path": "characters/marian/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role13_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/marian/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role13_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/marian/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250724/type1_role13_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/marian/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role13_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "marian-beachflower": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/marian-beachflower/1.webp",
+      "portraits": [
+        {
+          "path": "characters/marian-beachflower/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250724/type1_role13_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/marian-beachflower/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250724/type1_role13_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "matoi": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/matoi/1.webp",
+      "portraits": [
+        {
+          "path": "characters/matoi/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250225/type1_role20_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/matoi/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250225/type1_role20_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/matoi/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250225/type1_role20_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "puppet": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/puppet/1.webp",
+      "portraits": [
+        {
+          "path": "characters/puppet/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role9_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/puppet/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role9_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/puppet/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250814/type1_role9_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/puppet/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role9_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "puppet-wavecatcher": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/puppet-wavecatcher/1.webp",
+      "portraits": [
+        {
+          "path": "characters/puppet-wavecatcher/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250814/type1_role9_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/puppet-wavecatcher/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250814/type1_role9_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "kirijo": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/kirijo/1.webp",
+      "portraits": [
+        {
+          "path": "characters/kirijo/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main251016/type3_role4_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/kirijo/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main251016/type3_role4_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "miku": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/miku/1.webp",
+      "portraits": [
+        {
+          "path": "characters/miku/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260625/box3_type4_role1_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/miku/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260625/box3_type4_role1_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "akihiko": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/akihiko/1.webp",
+      "portraits": [
+        {
+          "path": "characters/akihiko/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250612/type3_role3_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/akihiko/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250612/type3_role3_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "fleuret": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/fleuret/1.webp",
+      "portraits": [
+        {
+          "path": "characters/fleuret/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role1_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/fleuret/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role1_2.png",
+      "source_status": "official",
+      "matched_by": "alias",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "luce": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/luce/1.webp",
+      "portraits": [
+        {
+          "path": "characters/luce/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250410/box3_role6_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/luce/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250410/box3_role6_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/luce/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main251127/box3_role6_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/luce/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250410/box3_role6_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "luce-notte": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/luce-notte/1.webp",
+      "portraits": [
+        {
+          "path": "characters/luce-notte/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main251127/box3_role6_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/luce-notte/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main251127/box3_role6_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "soy": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/soy/1.webp",
+      "portraits": [
+        {
+          "path": "characters/soy/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230814/box3_role4_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/soy/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230814/box3_role4_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/soy/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main251205/box3_role4_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/soy/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/cover230814/box3_role4_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "soy-pioneer": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/soy-pioneer/1.webp",
+      "portraits": [
+        {
+          "path": "characters/soy-pioneer/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main251205/box3_role4_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/soy-pioneer/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main251205/box3_role4_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "아라가키": {
       "portrait": null,
+      "portraits": [],
       "background": null,
       "source_url": null,
-      "source_status": "unavailable"
+      "source_status": "unavailable",
+      "matched_by": "missing",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "anri": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/anri/1.webp",
+      "portraits": [
+        {
+          "path": "characters/anri/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260402/box3_role7_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/anri/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260402/box3_role7_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/anri/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260402/box3_role7_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "아마다": {
       "portrait": null,
+      "portraits": [],
       "background": null,
       "source_url": null,
-      "source_status": "unavailable"
+      "source_status": "unavailable",
+      "matched_by": "missing",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "chord": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/chord/1.webp",
+      "portraits": [
+        {
+          "path": "characters/chord/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260813/type1_role16_3.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/chord/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main2407/type1_role16_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/chord/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260813/type1_role16_3.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "chord-summer": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/chord-summer/1.webp",
+      "portraits": [
+        {
+          "path": "characters/chord-summer/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260813/type1_role16_3.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/chord-summer/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main2407/type1_role16_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/chord-summer/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260813/type1_role16_3.png",
+      "source_status": "official",
+      "matched_by": "inherited",
+      "form_inherited": true,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "aegis": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/aegis/1.webp",
+      "portraits": [
+        {
+          "path": "characters/aegis/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260423/type3_role8_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/aegis/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260423/type3_role8_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "crow": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/crow/1.webp",
+      "portraits": [
+        {
+          "path": "characters/crow/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role9_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/crow/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type2_role9_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "panther": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/panther/1.webp",
+      "portraits": [
+        {
+          "path": "characters/panther/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260716/type2_role12_bg_new.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/panther/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role4_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/panther/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260716/type2_role12_bg_new.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "panther-starlight": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/panther-starlight/1.webp",
+      "portraits": [
+        {
+          "path": "characters/panther-starlight/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260716/type2_role12_bg_new.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/panther-starlight/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role4_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/panther-starlight/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260716/type2_role12_bg_new.png",
+      "source_status": "official",
+      "matched_by": "inherited",
+      "form_inherited": true,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "rin": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/rin/1.webp",
+      "portraits": [
+        {
+          "path": "characters/rin/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role5_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/rin/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role5_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/rin/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250123/type1_role5_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/rin/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role5_1.png",
+      "source_status": "official",
+      "matched_by": "alias",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "rin-firecracker": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/rin-firecracker/1.webp",
+      "portraits": [
+        {
+          "path": "characters/rin-firecracker/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250123/type1_role5_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/rin-firecracker/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250123/type1_role5_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "원더": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/원더/1.webp",
+      "portraits": [
+        {
+          "path": "characters/원더/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role1_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/원더/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role1_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/원더/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/cover230301/box3_role1_1.png",
+      "source_status": "official",
+      "matched_by": "alias",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "fox": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/fox/1.webp",
+      "portraits": [
+        {
+          "path": "characters/fox/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role5_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/fox/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type2_role5_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "phoebe": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/phoebe/1.webp",
+      "portraits": [
+        {
+          "path": "characters/phoebe/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240701/type1_role15_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/phoebe/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240701/type1_role15_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "yukari": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/yukari/1.webp",
+      "portraits": [
+        {
+          "path": "characters/yukari/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250522/type3_role2_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/yukari/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250522/type3_role2_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "makoto": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/makoto/1.webp",
+      "portraits": [
+        {
+          "path": "characters/makoto/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250429/type3_role1_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/makoto/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250429/type3_role1_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "yuki": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/yuki/1.webp",
+      "portraits": [
+        {
+          "path": "characters/yuki/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role2_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/yuki/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role2_2.png",
+      "source_status": "official",
+      "matched_by": "alias",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "berry": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/berry/1.webp",
+      "portraits": [
+        {
+          "path": "characters/berry/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250703/type1_role23_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/berry/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250703/type1_role23_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/berry/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260903/type1_role23_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/berry/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250703/type1_role23_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "berry-summer": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/berry-summer/1.webp",
+      "portraits": [
+        {
+          "path": "characters/berry-summer/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260903/type1_role23_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/berry-summer/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260903/type1_role23_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "junpei": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/junpei/1.webp",
+      "portraits": [
+        {
+          "path": "characters/junpei/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260115/type3_role6_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/junpei/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260115/type3_role6_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "vino": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/vino/1.webp",
+      "portraits": [
+        {
+          "path": "characters/vino/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240617/type1_role14_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/vino/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240617/type1_role14_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "violet": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/violet/1.webp",
+      "portraits": [
+        {
+          "path": "characters/violet/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/cover241220/box3_role6_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/violet/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/cover241220/box3_role6_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "okyann": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/okyann/1.webp",
+      "portraits": [
+        {
+          "path": "characters/okyann/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role8_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/okyann/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role8_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/okyann/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role8_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "blitz": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/blitz/1.webp",
+      "portraits": [
+        {
+          "path": "characters/blitz/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250902/type1_role24_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/blitz/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main250902/type1_role24_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/blitz/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main250902/type1_role24_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "koromaru": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/koromaru/1.webp",
+      "portraits": [
+        {
+          "path": "characters/koromaru/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260305/type3_role7_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/koromaru/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260305/type3_role7_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "kotone": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/kotone/1.webp",
+      "portraits": [
+        {
+          "path": "characters/kotone/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main260924/type3_role9_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/kotone/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main260924/type3_role9_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "messa": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/messa/1.webp",
+      "portraits": [
+        {
+          "path": "characters/messa/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240911/type1_role17_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/messa/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240911/type1_role17_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/messa/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240911/type1_role17_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "key": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/key/1.webp",
+      "portraits": [
+        {
+          "path": "characters/key/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role6_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/key/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role6_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/key/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role6_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "moko": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/moko/1.webp",
+      "portraits": [
+        {
+          "path": "characters/moko/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role7_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/moko/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role7_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/moko/3.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240812/type1_role7_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/moko/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role7_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "moko-seaside": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/moko-seaside/1.webp",
+      "portraits": [
+        {
+          "path": "characters/moko-seaside/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240812/type1_role7_3.png",
+          "source_status": "official",
+          "role_key": "role3",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/moko-seaside/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240812/type1_role7_3.png",
+      "source_status": "official",
+      "matched_by": "form",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "sepia": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/sepia/1.webp",
+      "portraits": [
+        {
+          "path": "characters/sepia/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role11_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/sepia/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role11_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "noir": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/noir/1.webp",
+      "portraits": [
+        {
+          "path": "characters/noir/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240422/type2_role8_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/noir/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240422/type2_role8_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "riddle": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/riddle/1.webp",
+      "portraits": [
+        {
+          "path": "characters/riddle/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role10_1.png",
+          "source_status": "official",
+          "role_key": "role1",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        },
+        {
+          "path": "characters/riddle/2.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type1_role10_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/riddle/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type1_role10_1.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "fuka": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/fuka/1.webp",
+      "portraits": [
+        {
+          "path": "characters/fuka/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main251106/type3_role5_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/fuka/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main251106/type3_role5_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     },
     "navi": {
-      "portrait": null,
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "portrait": "characters/navi/1.webp",
+      "portraits": [
+        {
+          "path": "characters/navi/1.webp",
+          "source_url": "https://p5x.wanmei.com/images/main240312/type2_role7_2.png",
+          "source_status": "official",
+          "role_key": "role2",
+          "fetched_at": "2026-10-27T14:12:56Z"
+        }
+      ],
+      "background": "characters/navi/background.webp",
+      "source_url": "https://p5x.wanmei.com/images/main240312/type2_role7_2.png",
+      "source_status": "official",
+      "matched_by": "exact",
+      "form_inherited": false,
+      "fetched_at": "2026-10-27T14:12:56Z"
     }
   },
   "weapons": {

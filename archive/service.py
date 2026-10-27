@@ -244,6 +244,16 @@ class ArchiveService:
 
     # ---- 只读自检 ----
 
+    def list_characters(self) -> tuple:
+        """全部角色，按 source_key 稳定排序。
+
+        每日运势要用它当候选池：**必须**按稳定键排序，
+        否则 SQLite 换个查询计划、库被 VACUUM 过，抽到的人就变了。
+        """
+        with self._lock:
+            characters = self._repo.list_characters()
+        return tuple(sorted(characters, key=lambda item: item.source_key or ""))
+
     def count_characters(self) -> int:
         with self._lock:
             return int(self._db.scalar("SELECT COUNT(*) FROM zh_characters", default=0))

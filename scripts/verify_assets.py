@@ -145,6 +145,9 @@ def main() -> int:
 
     char_with_portrait = 0
     char_with_source = 0
+    portrait_files = 0
+    matched_by: dict[str, int] = {}
+    inherited: list[str] = []
     for key, entry in characters.items():
         if not isinstance(entry, dict):
             checker.error(f"角色 {key}: 条目不是对象")
@@ -156,6 +159,24 @@ def main() -> int:
                 char_with_source += 1
         if entry.get("background"):
             checker.check_file(entry["background"], f"角色 {key} 背景")
+
+        label = entry.get("matched_by") or "unknown"
+        matched_by[label] = matched_by.get(label, 0) + 1
+        if entry.get("form_inherited"):
+            inherited.append(key)
+
+        # 同一角色的全部立绘都要能打开，否则「多图随机取用」会取到坏图
+        portraits = entry.get("portraits")
+        if isinstance(portraits, list):
+            for index, item in enumerate(portraits, start=1):
+                if not isinstance(item, dict):
+                    checker.error(f"角色 {key}: portraits[{index}] 不是对象")
+                    continue
+                checker.check_entry(item, f"角色 {key} 立绘 {index}")
+                if checker.check_file(
+                    item.get("path") or "", f"角色 {key} 立绘 {index}"
+                ):
+                    portrait_files += 1
 
     weapon_with_image = 0
     weapon_with_source = 0
@@ -175,9 +196,21 @@ def main() -> int:
     print("─" * 46)
     print(f"角色映射 {total_char:>4} 项｜有立绘 {char_with_portrait:>4} 项"
           f"｜已登记来源 {char_with_source:>4} 项")
+    print(f"立绘文件 {portrait_files:>4} 张")
     print(f"武器映射 {total_weapon:>4} 项｜有图片 {weapon_with_image:>4} 项"
           f"｜已登记来源 {weapon_with_source:>4} 项")
     print(f"已校验文件 {checker.files} 个")
+
+    if matched_by:
+        order = ("exact", "alias", "form", "inherited", "missing", "unknown")
+        parts = [
+            f"{label} {matched_by[label]}"
+            for label in order
+            if matched_by.get(label)
+        ]
+        print(f"匹配方式 {'｜'.join(parts)}")
+    if inherited:
+        print(f"形态沿用基础图集 {len(inherited)} 名：{'、'.join(inherited)}")
 
     def pct(part: int, whole: int) -> str:
         return f"{part / whole * 100:.1f}%" if whole else "n/a"
@@ -185,6 +218,8 @@ def main() -> int:
     print()
     print(f"角色立绘覆盖率：{char_with_portrait}/{total_char} = {pct(char_with_portrait, total_char)}")
     print(f"武器图片覆盖率：{weapon_with_image}/{total_weapon} = {pct(weapon_with_image, total_weapon)}")
+    if char_with_portrait:
+        print(f"人均立绘张数：{portrait_files / char_with_portrait:.2f} 张")
 
     if checker.warnings:
         print()
