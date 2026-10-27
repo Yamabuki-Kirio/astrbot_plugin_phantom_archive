@@ -13,7 +13,7 @@ from __future__ import annotations
 import re
 
 from . import notices
-from .models import Character, CharacterProfile, SearchResult, Skill, Weapon
+from .models import Character, CharacterProfile, Guide, GuideProfile, SearchResult, Skill, Weapon
 
 SEPARATOR = "—" * 12
 
@@ -27,6 +27,9 @@ TRUNCATION_SLACK = 24
 
 _SENTENCE_END = "。；！？!?;"
 _WHITESPACE = re.compile(r"\s+")
+_HTML_BREAK = re.compile(r"<br\s*/?>", re.IGNORECASE)
+_HTML_TAG = re.compile(r"<[^>]+>")
+_HANGUL_RUN = re.compile(r"[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]+")
 
 
 def _clip_sentence(text: str | None, limit: int) -> str:
@@ -46,6 +49,15 @@ def _clip_sentence(text: str | None, limit: int) -> str:
         # 没有句末标点：不切，交给预算决定是否整块显示
         return flat
     return window[: cut + 1] + "…"
+
+
+def _plain(text) -> str:
+    if text is None:
+        return ""
+    value = _HTML_BREAK.sub("\n", str(text))
+    value = _HTML_TAG.sub("", value).replace("**", "").replace("> ", "")
+    value = _HANGUL_RUN.sub("〔待译术语〕", value)
+    return _WHITESPACE.sub(" ", value).strip()
 
 
 def _fmt_num(value) -> str | None:
@@ -285,6 +297,203 @@ def render_weapons(profile: CharacterProfile, max_chars: int) -> str:
     return builder.build()
 
 
+# ------------------------------------------------------------------ 攻略 / 意识 / 配队
+
+GUIDE_TITLES = {
+    "review": "评价",
+    "setting": "养成",
+    "operation": "操作",
+    "party": "配队",
+    "ritual": "意识",
+    "innate": "属性意识",
+}
+
+
+def _guide_tail(profile: GuideProfile) -> list[str]:
+    statuses = [profile.character.translation_status]
+    statuses.extend(guide.translation_status for guide in profile.guides)
+    return _tail_lines(profile, statuses)
+
+
+def _guide(profile: GuideProfile, guide_type: str) -> Guide | None:
+    return next((item for item in profile.guides if item.guide_type == guide_type), None)
+
+
+def _add_blocks(builder: MessageBuilder, blocks: list[list[str]]) -> int:
+    shown = 0
+    for block in blocks:
+        if not builder.try_add(block):
+            break
+        shown += 1
+    if shown < len(blocks):
+        builder.try_add([f"另有 {len(blocks) - shown} 项未显示"])
+    return shown
+
+
+def _render_review(data: dict) -> list[list[str]]:
+    blocks: list[list[str]] = []
+    review = _clip_sentence(_plain(data.get("review")), 420)
+    if review:
+        blocks.append([review])
+    for label, key in (("优点", "pros"), ("注意", "cons")):
+        values = [_plain(item) for item in data.get(key, []) if _plain(item)]
+        if values:
+            blocks.append([f"■ {label}", *[f"· {item}" for item in values]])
+    return blocks
+
+
+def _render_setting(data: dict) -> list[list[str]]:
+    blocks: list[list[str]] = []
+    role = _plain(data.get("role"))
+    if role:
+        blocks.append([f"定位：{role}"])
+    pairs = [
+        ("主启示", data.get("main_revelation")),
+        ("副启示", data.get("sub_revelation")),
+        ("技能优先级", data.get("skill_priority")),
+        ("心象属性", [data.get("mind_stats1"), data.get("mind_stats2")]),
+        ("心象技能", [data.get("mind_skill1"), data.get("mind_skill2")]),
+    ]
+    for label, value in pairs:
+        if isinstance(value, list):
+            text = " / ".join(_plain(item) for item in value if _plain(item))
+        else:
+            text = _plain(value)
+        if text:
+            blocks.append([f"{label}：{text}"])
+    minimum = data.get("minimum_stats") or {}
+    stats = [f"{key} {value}" for key, value in minimum.items() if value not in (None, False, "")]
+    if stats:
+        blocks.append(["最低属性：" + "；".join(stats)])
+    battle = _plain(data.get("battle_plus_stats"))
+    if battle and battle.lower() != "nan":
+        blocks.append([f"战斗加成：{battle}"])
+    return blocks
+
+
+def _render_operation(data: dict) -> list[list[str]]:
+    blocks: list[list[str]] = []
+    notes = [_plain(item).lstrip("· ") for item in data.get("note", []) if _plain(item)]
+    if notes:
+        blocks.append(["■ 操作说明", *[f"· {item}" for item in notes[:4]]])
+    for plan in data.get("basic", []):
+        if not isinstance(plan, dict):
+            continue
+        label = _plain(plan.get("label")) or "推荐循环"
+        skills = [str(item).strip() for item in plan.get("skills", []) if str(item).strip()]
+        value = _plain(plan.get("value"))
+        sequence = " → ".join(skills) if skills else value
+        if sequence:
+            blocks.append([f"· {label}：{sequence}"])
+    return blocks
+
+
+def _render_party(data: dict) -> list[list[str]]:
+    blocks: list[list[str]] = []
+    for key, label in (("weapon", "推荐武器"), ("persona", "推荐人格面具"), ("party", "推荐队伍")):
+        for item in data.get(key, []):
+            if isinstance(item, str):
+                text = _plain(item)
+            elif isinstance(item, dict):
+                names = item.get("members") or item.get("list") or item.get("name") or []
+                if isinstance(names, str):
+                    names = [names]
+                text = " + ".join(_plain(name) for name in names if _plain(name))
+                comment = _plain(item.get("comment"))
+                if comment:
+                    text += ("：" if text else "") + comment
+            else:
+                text = ""
+            if text:
+                blocks.append([f"· {label}：{text}"])
+    for item in data.get("friends", []):
+        if isinstance(item, dict):
+            name, comment = _plain(item.get("name")), _plain(item.get("comment"))
+            if name or comment:
+                blocks.append([f"· {name or '推荐队友'}" + (f"：{comment}" if comment else "")])
+    return blocks
+
+
+def _render_ritual(data: dict) -> list[list[str]]:
+    blocks: list[list[str]] = []
+    for item in data.get("entries", []):
+        if not isinstance(item, dict):
+            continue
+        key = _plain(item.get("key")).upper()
+        name = _plain(item.get("name")) or "未收录名称"
+        detail = _clip_sentence(_plain(item.get("detail")), 230)
+        block = [f"· {key} {name}".strip()]
+        if detail:
+            block.append(f"  {detail}")
+        blocks.append(block)
+    return blocks
+
+
+def _render_innate(data: dict) -> list[list[str]]:
+    blocks: list[list[str]] = []
+    for group in data.get("final_innate", []):
+        for item in group if isinstance(group, list) else []:
+            if not isinstance(item, dict):
+                continue
+            desc = _plain(item.get("desc"))
+            value = _plain(item.get("value"))
+            if desc:
+                blocks.append([f"· {desc}" + (f"（{value}）" if value else "")])
+    for item in data.get("innate_awake_skill", []):
+        if not isinstance(item, dict):
+            continue
+        name = _plain(item.get("name")) or "未收录名称"
+        desc = _clip_sentence(_plain(item.get("desc")), 240)
+        block = [f"· {name}"]
+        if desc:
+            block.append(f"  {desc}")
+        blocks.append(block)
+    return blocks
+
+
+_GUIDE_RENDERERS = {
+    "review": _render_review,
+    "setting": _render_setting,
+    "operation": _render_operation,
+    "party": _render_party,
+    "ritual": _render_ritual,
+    "innate": _render_innate,
+}
+
+
+def render_guide(profile: GuideProfile, guide_type: str, max_chars: int) -> str:
+    title = GUIDE_TITLES.get(guide_type, "攻略")
+    builder = MessageBuilder(max_chars, _guide_tail(profile))
+    builder.add([f"【{profile.character.display_name}】{title}"])
+    guide = _guide(profile, guide_type)
+    if guide is None:
+        builder.add(["", f"该角色暂无可显示的{title}资料。"])
+        return builder.build()
+    blocks = _GUIDE_RENDERERS[guide_type](guide.content)
+    if not blocks:
+        builder.add(["", f"该角色的{title}资料暂未收录有效内容。"])
+    else:
+        _add_blocks(builder, blocks)
+    return builder.build()
+
+
+def render_all_guides(profile: GuideProfile, max_chars: int) -> str:
+    builder = MessageBuilder(max_chars, _guide_tail(profile))
+    builder.add([f"【{profile.character.display_name}】综合攻略"])
+    for guide in profile.guides:
+        blocks = _GUIDE_RENDERERS.get(guide.guide_type, lambda _: [])(guide.content)
+        if not blocks:
+            continue
+        section = [["", f"■ {GUIDE_TITLES.get(guide.guide_type, guide.guide_type)}"]] + blocks
+        for block in section:
+            if not builder.try_add(block):
+                builder.try_add(["另有攻略内容未显示，请使用分类指令查看。"])
+                return builder.build()
+    if len(builder.lines) == 1:
+        builder.add(["", "该角色暂无可显示的攻略资料。"])
+    return builder.build()
+
+
 # ------------------------------------------------------------------ 非数据回复
 
 
@@ -298,9 +507,16 @@ def render_help() -> str:
             "/p5x技能 <名称>",
             "/p5x武器 <名称>",
             "/p5x角色列表",
+            "/p5x意识 <名称>",
+            "/p5x属性意识 <名称>",
+            "/p5x养成 <名称>",
+            "/p5x操作 <名称>",
+            "/p5x评价 <名称>",
+            "/p5x配队 <名称>",
+            "/p5x攻略 <名称>",
             "",
             "支持中文名、原名、英文代号和 slug 查询。",
-            "当前仅开放角色、技能和武器资料。",
+            "支持角色、技能、武器、意识、养成、操作、评价、配队和综合攻略查询。",
             "",
             notices.HELP_SOURCE_NOTE,
         ]

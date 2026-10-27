@@ -38,6 +38,10 @@ REQUIRED_SCHEMA: dict[str, tuple[str, ...]] = {
         "character_key", "weapon_key", "name_zh", "rarity", "health",
         "attack", "defense", "skill_name_zh", "description_zh", "translation_status",
     ),
+    "zh_guides": (
+        "character_key", "guide_type", "content_json", "source_status",
+        "translation_status", "source_url",
+    ),
     "numeric_conflicts": ("character_key", "resource_type", "numeric_conflict"),
 }
 

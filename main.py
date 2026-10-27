@@ -1,4 +1,4 @@
-"""夜幕档案 —— AstrBot 第一阶段查询插件。
+"""夜幕档案 —— AstrBot P5X 综合资料查询插件。
 
 开放指令：
     /夜幕帮助
@@ -6,6 +6,7 @@
     /p5x技能 <名称>
     /p5x武器 <名称>
     /p5x角色列表
+    /p5x意识 /p5x属性意识 /p5x养成 /p5x操作 /p5x评价 /p5x配队 /p5x攻略
 
 只读，不写库；只读 p5x_zh.sqlite3，绝不碰原始库 p5x.sqlite3。
 """
@@ -30,8 +31,8 @@ DATA_DIR = PLUGIN_DIR / "data"
 
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
-PLUGIN_DESC = "夜幕档案：角色、技能、武器只读查询（第一阶段）"
-PLUGIN_VERSION = "0.1.0"
+PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
+PLUGIN_VERSION = "0.2.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 
@@ -62,7 +63,7 @@ def _extract_arg(event: AstrMessageEvent, command: str) -> str:
 
 @register(PLUGIN_NAME, PLUGIN_AUTHOR, PLUGIN_DESC, PLUGIN_VERSION)
 class PhantomArchivePlugin(Star):
-    """夜幕档案中文资料查询插件（第一阶段）。"""
+    """夜幕档案中文综合资料查询插件。"""
 
     def __init__(self, context: Context, config=None):
         super().__init__(context, config)
@@ -167,6 +168,39 @@ class PhantomArchivePlugin(Star):
     async def character_list_command(self, event: AstrMessageEvent):
         """列出当前收录的角色。"""
         yield event.plain_result(await self._run("character_list_message"))
+
+    async def _guide_command(self, event: AstrMessageEvent, command: str, guide_type: str):
+        name = _extract_arg(event, command)
+        return await self._run("guide_message", name, guide_type)
+
+    @filter.command("p5x意识")
+    async def ritual_command(self, event: AstrMessageEvent):
+        yield event.plain_result(await self._guide_command(event, "p5x意识", "ritual"))
+
+    @filter.command("p5x属性意识")
+    async def innate_command(self, event: AstrMessageEvent):
+        yield event.plain_result(await self._guide_command(event, "p5x属性意识", "innate"))
+
+    @filter.command("p5x养成")
+    async def setting_command(self, event: AstrMessageEvent):
+        yield event.plain_result(await self._guide_command(event, "p5x养成", "setting"))
+
+    @filter.command("p5x操作")
+    async def operation_command(self, event: AstrMessageEvent):
+        yield event.plain_result(await self._guide_command(event, "p5x操作", "operation"))
+
+    @filter.command("p5x评价")
+    async def review_command(self, event: AstrMessageEvent):
+        yield event.plain_result(await self._guide_command(event, "p5x评价", "review"))
+
+    @filter.command("p5x配队")
+    async def party_command(self, event: AstrMessageEvent):
+        yield event.plain_result(await self._guide_command(event, "p5x配队", "party"))
+
+    @filter.command("p5x攻略")
+    async def guides_command(self, event: AstrMessageEvent):
+        name = _extract_arg(event, "p5x攻略")
+        yield event.plain_result(await self._run("all_guides_message", name))
 
     # ------------------------------------------------------------ 生命周期
 

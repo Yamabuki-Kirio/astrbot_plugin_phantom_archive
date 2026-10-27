@@ -11,6 +11,7 @@ from archive import notices
 HANGUL = re.compile(r"[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]")
 
 COMMANDS = ("character_message", "skills_message", "weapons_message")
+GUIDE_TYPES = ("review", "setting", "operation", "party", "ritual", "innate")
 
 
 @pytest.fixture(scope="module")
@@ -83,3 +84,15 @@ def test_no_unhandled_exception_on_odd_terms(service):
         for command in COMMANDS:
             text = getattr(service, command)(term)
             assert isinstance(text, str) and text
+
+
+def test_all_guide_queries_render(service, characters):
+    for character in characters:
+        for guide_type in GUIDE_TYPES:
+            text = service.guide_message(character.source_key, guide_type)
+            assert text
+            assert notices.DISCLAIMER in text
+            assert len(text) <= service.max_chars
+        text = service.all_guides_message(character.source_key)
+        assert notices.DISCLAIMER in text
+        assert len(text) <= service.max_chars

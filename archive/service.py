@@ -107,6 +107,41 @@ class ArchiveService:
             characters = self._repo.list_characters()
             return renderer.render_character_list(characters, self.max_chars)
 
+    def guide_message(self, term: str | None, guide_type: str) -> str:
+        command_map = {
+            "review": "/p5x评价",
+            "setting": "/p5x养成",
+            "operation": "/p5x操作",
+            "party": "/p5x配队",
+            "ritual": "/p5x意识",
+            "innate": "/p5x属性意识",
+        }
+        if guide_type not in command_map:
+            raise ValueError(f"不支持的攻略类型：{guide_type}")
+        with self._lock:
+            result, normalized = self._resolve(term)
+            if not normalized:
+                return renderer.render_usage(command_map[guide_type], "汐见琴音")
+            if result.kind == "none":
+                return renderer.render_not_found(normalized)
+            if result.kind == "many":
+                return renderer.render_multiple(result)
+            profile = self._repo.build_guide_profile(result.character, (guide_type,))
+            return renderer.render_guide(profile, guide_type, self.max_chars)
+
+    def all_guides_message(self, term: str | None) -> str:
+        guide_types = ("review", "setting", "operation", "party", "ritual", "innate")
+        with self._lock:
+            result, normalized = self._resolve(term)
+            if not normalized:
+                return renderer.render_usage("/p5x攻略", "汐见琴音")
+            if result.kind == "none":
+                return renderer.render_not_found(normalized)
+            if result.kind == "many":
+                return renderer.render_multiple(result)
+            profile = self._repo.build_guide_profile(result.character, guide_types)
+            return renderer.render_all_guides(profile, self.max_chars)
+
     # ---- 只读自检 ----
 
     def count_characters(self) -> int:

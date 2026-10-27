@@ -8,19 +8,20 @@ from __future__ import annotations
 from typing import Sequence
 
 from .database import ArchiveDatabase
-from .models import Character, CharacterProfile, Skill, Weapon
+from .models import Character, CharacterProfile, Guide, GuideProfile, Skill, Weapon
 
 # 数值冲突的作用域（§12）：
 # 角色查询汇总「技能 + 武器」，技能查询只看技能，武器查询只看武器。
 # 意识（ritual）与角色评价（review）本阶段不对外展示，因此不计入。
 #
 # 两个数字含义不同，别混用：
-#   查询层冲突角色 33 名 —— 本阶段用户可见（技能 + 武器）
+#   角色总览冲突角色 33 名 —— 总览只展示技能 + 武器
 #   数据库全类型冲突角色 55 名 —— 含 review / ritual，本阶段不展示
 # 用 55 去断言展示逻辑会误伤 YUI 这类只有评价冲突的角色，产生无上下文警告。
 CONFLICT_SCOPE_CHARACTER: tuple[str, ...] = ("skill", "weapon")
 CONFLICT_SCOPE_SKILL: tuple[str, ...] = ("skill",)
 CONFLICT_SCOPE_WEAPON: tuple[str, ...] = ("weapon",)
+GUIDE_TYPES: tuple[str, ...] = ("review", "setting", "operation", "party", "ritual", "innate")
 
 _CHARACTER_COLUMNS = """
     source_key, name_zh, codename_zh, slug, element_zh, position_zh,
@@ -124,6 +125,20 @@ class ArchiveRepository:
         )
         return tuple(Weapon.from_row(r) for r in rows)
 
+    def guides(
+        self, character_key: str, guide_types: Sequence[str] = GUIDE_TYPES
+    ) -> tuple[Guide, ...]:
+        types = tuple(guide_types)
+        if not types:
+            return ()
+        rows = self._db.fetch_all(
+            "SELECT character_key, guide_type, content_json, source_status, translation_status "
+            f"FROM zh_guides WHERE character_key = ? AND guide_type IN ({_placeholders(len(types))}) "
+            "ORDER BY id",
+            (character_key, *types),
+        )
+        return tuple(Guide.from_row(r) for r in rows)
+
     # ---- 数值冲突 ----
 
     def conflict_count(self, character_key: str, resource_types: Sequence[str]) -> int:
@@ -151,4 +166,17 @@ class ArchiveRepository:
             weapons=self.weapons(character.source_key),
             conflict_count=self.conflict_count(character.source_key, scope),
             conflict_scope="+".join(scope),
+        )
+
+    def build_guide_profile(
+        self,
+        character: Character,
+        guide_types: Sequence[str],
+    ) -> GuideProfile:
+        types = tuple(guide_types)
+        return GuideProfile(
+            character=character,
+            guides=self.guides(character.source_key, types),
+            conflict_count=self.conflict_count(character.source_key, types),
+            conflict_scope="+".join(types),
         )

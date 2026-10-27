@@ -73,7 +73,11 @@ def run_command(handler, event) -> str:
 
 
 def test_plugin_registers_four_commands(plugin):
-    for name in ("help_command", "character_command", "skills_command", "weapons_command"):
+    for name in (
+        "help_command", "character_command", "skills_command", "weapons_command",
+        "ritual_command", "innate_command", "setting_command", "operation_command",
+        "review_command", "party_command", "guides_command",
+    ):
         assert callable(getattr(plugin, name))
 
 
@@ -113,6 +117,22 @@ def test_weapons_command(plugin):
 def test_character_list_command(plugin):
     text = run_command(plugin.character_list_command, FakeEvent("/p5x角色列表"))
     assert "当前收录 72 名角色" in text
+
+
+def test_phase_two_commands(plugin):
+    cases = (
+        (plugin.ritual_command, "/p5x意识 汐见琴音", "【汐见琴音】意识"),
+        (plugin.innate_command, "/p5x属性意识 汐见琴音", "【汐见琴音】属性意识"),
+        (plugin.setting_command, "/p5x养成 汐见琴音", "【汐见琴音】养成"),
+        (plugin.operation_command, "/p5x操作 汐见琴音", "【汐见琴音】操作"),
+        (plugin.review_command, "/p5x评价 汐见琴音", "【汐见琴音】评价"),
+        (plugin.party_command, "/p5x配队 汐见琴音", "【汐见琴音】配队"),
+        (plugin.guides_command, "/p5x攻略 汐见琴音", "【汐见琴音】综合攻略"),
+    )
+    for handler, message, heading in cases:
+        text = run_command(handler, FakeEvent(message))
+        assert text.startswith(heading)
+        assert notices.DISCLAIMER in text
 
 
 def test_argument_extraction_without_space(plugin):
@@ -171,7 +191,11 @@ def test_command_names_match_in_real_astrbot(plugin_module):
             if isinstance(event_filter, CommandFilter):
                 registered[event_filter.command_name] = event_filter
 
-    expected = {"夜幕帮助", "p5x角色", "p5x技能", "p5x武器", "p5x角色列表"}
+    expected = {
+        "夜幕帮助", "p5x角色", "p5x技能", "p5x武器", "p5x角色列表",
+        "p5x意识", "p5x属性意识", "p5x养成", "p5x操作", "p5x评价",
+        "p5x配队", "p5x攻略",
+    }
     assert expected.issubset(set(registered)), f"未注册：{expected - set(registered)}"
 
     class FilterEvent:

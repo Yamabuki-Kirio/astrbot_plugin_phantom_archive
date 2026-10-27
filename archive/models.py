@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from typing import Any, Mapping
 
 
@@ -111,6 +112,42 @@ class Weapon:
             description_zh=_get(row, "description_zh"),
             translation_status=_get(row, "translation_status"),
         )
+
+
+@dataclass(frozen=True)
+class Guide:
+    character_key: str
+    guide_type: str
+    content: dict[str, Any]
+    source_status: str | None
+    translation_status: str | None
+
+    @classmethod
+    def from_row(cls, row: Mapping[str, Any]) -> "Guide":
+        raw = _get(row, "content_json", "{}")
+        try:
+            content = json.loads(raw) if isinstance(raw, str) else dict(raw or {})
+        except (json.JSONDecodeError, TypeError, ValueError):
+            content = {}
+        return cls(
+            character_key=_get(row, "character_key", ""),
+            guide_type=_get(row, "guide_type", ""),
+            content=content if isinstance(content, dict) else {},
+            source_status=_get(row, "source_status"),
+            translation_status=_get(row, "translation_status"),
+        )
+
+
+@dataclass(frozen=True)
+class GuideProfile:
+    character: Character
+    guides: tuple[Guide, ...]
+    conflict_count: int
+    conflict_scope: str
+
+    @property
+    def has_conflict(self) -> bool:
+        return self.conflict_count > 0
 
 
 @dataclass(frozen=True)
