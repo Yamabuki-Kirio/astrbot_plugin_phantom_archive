@@ -16,8 +16,12 @@ output/
 *.db-shm
 raw/
 
+# 发布只读中文资料库；运行期生成的 p5x_daily.sqlite3 等数据库仍保持忽略。
+!data/p5x_zh.sqlite3
+
 # data/ 目录本身要保留（部署时把数据库放进去），只忽略内容
 !data/.gitkeep
+!data/p5x_zh.sqlite3
 
 # 素材清单与占位图要进仓库：占位图是插件自己画的，清单只是索引，都不含第三方素材
 !data/assets/

@@ -3,7 +3,7 @@
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.6.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.6.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)](https://www.python.org/)
 
 查询角色、技能、武器、意识、养成、操作、评价、配队与攻略，并通过可配置的
@@ -21,6 +21,7 @@ T2I 服务生成带用户头像、角色立绘和武器图片的卡片。图片�
 - 抽到对应大阿卡纳时，优先选择已进入 P5X 的 P3 / P5 对应角色
 - 同一用户当天结果固定，跨群、改名和重启后保持一致
 - 资料数据库只读；每日运势单独写入 `p5x_daily.sqlite3`
+- 中文数据库、角色立绘和武器图片均随仓库发布，安装后即可使用
 - 渲染失败自动回退文字，不调用 LLM
 
 ## 安装
@@ -35,21 +36,13 @@ https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive
 
 安装完成后重启 AstrBot，或在插件管理页面重新加载插件。
 
-### 数据库
+### 数据库与素材
 
-本仓库不发布资料数据库。使用前需要把中文数据库放到插件数据目录：
+中文数据库 `data/p5x_zh.sqlite3`、角色立绘和武器图片均随仓库发布，正常安装后
+无需再复制数据库或下载素材。插件以只读方式打开资料库，不会修改它。
 
-```text
-data/plugins/astrbot_plugin_phantom_archive/data/p5x_zh.sqlite3
-```
-
-也可以在插件配置中通过 `database_path` 指向数据库的绝对路径。
-
-插件只接受中文库 `p5x_zh.sqlite3`，不会修改该文件。数据库缺失时会返回：
-
-```text
-夜幕档案数据库尚未安装，请联系机器人管理员。
-```
+如需使用自行维护的数据库，可以在插件配置中通过 `database_path` 指向
+`p5x_zh.sqlite3` 的绝对路径。
 
 ### 依赖
 
@@ -199,8 +192,9 @@ Persona 的战车阿卡纳处理。
 
 ### 安装后提示数据库不存在
 
-确认 `p5x_zh.sqlite3` 已放到插件的 `data/` 目录，或者在配置中填写正确的
-`database_path`。不要使用原始库 `p5x.sqlite3`。
+正常从完整仓库安装不会缺少数据库。如果出现该提示，请确认安装过程没有过滤大文件，
+并检查插件目录下是否存在 `data/p5x_zh.sqlite3`；自定义 `database_path` 时也要确认
+路径正确。不要使用原始库 `p5x.sqlite3`。
 
 ### 查询只有文字，没有图片
 
@@ -257,6 +251,12 @@ main.py        AstrBot指令入口
 - [astrbot_plugin_cyber_divination](https://github.com/ruoyuxian20-sys/astrbot_plugin_cyber_divination)：塔罗、灵签、周易与干支数据基础
 - [Lufel](https://lufel.net/)：P5X社区资料与武器图片来源
 - 《女神异闻录：夜幕魅影》国服官网：角色立绘来源
+
+## 使用说明
+
+本项目源代码、整理后的数据库与随仓库发布的图片素材均公开提供，项目仅用于
+个人学习、资料查询与非商业用途。游戏名称、角色、美术素材及相关知识产权归各自
+权利人所有，请勿将本项目或其中素材用于商业销售、付费服务或其他营利用途。
 
 ## 反馈
 

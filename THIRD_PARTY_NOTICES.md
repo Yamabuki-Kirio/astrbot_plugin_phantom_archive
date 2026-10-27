@@ -76,7 +76,7 @@ SOFTWARE.
 | 武器图来源 | Lufel 社区角色页实际使用的 `https://lufel.net/assets/img/character-weapon/` 素材 |
 | 获取方式 | `fetch_official_art.py` / `fetch_weapon_art.py` 下载、校验并转为 WebP |
 | 版权 | 归游戏发行方所有 |
-| 使用范围 | 资料卡片展示；版权归各自权利人 |
+| 使用范围 | 随开源仓库发布，用于个人学习、资料卡片展示与非商业用途；版权归各自权利人 |
 
 - 图片随版本发布，避免插件启动时联网和 Docker 环境缺图；每张图的原始 URL 与
   `official` / `community` 状态均记录在 `manifest.json`。
@@ -93,3 +93,5 @@ SOFTWARE.
 
 这部分**不是**官方数据库，也不存在「国服官方核准」的译文；
 详情见 README 的「数据来源与口径」一节。
+
+整理后的 `p5x_zh.sqlite3` 随仓库公开发布，仅用于个人学习、资料查询与非商业用途。
