@@ -13,6 +13,11 @@ from .models import Character, CharacterProfile, Skill, Weapon
 # 数值冲突的作用域（§12）：
 # 角色查询汇总「技能 + 武器」，技能查询只看技能，武器查询只看武器。
 # 意识（ritual）与角色评价（review）本阶段不对外展示，因此不计入。
+#
+# 两个数字含义不同，别混用：
+#   查询层冲突角色 33 名 —— 本阶段用户可见（技能 + 武器）
+#   数据库全类型冲突角色 55 名 —— 含 review / ritual，本阶段不展示
+# 用 55 去断言展示逻辑会误伤 YUI 这类只有评价冲突的角色，产生无上下文警告。
 CONFLICT_SCOPE_CHARACTER: tuple[str, ...] = ("skill", "weapon")
 CONFLICT_SCOPE_SKILL: tuple[str, ...] = ("skill",)
 CONFLICT_SCOPE_WEAPON: tuple[str, ...] = ("weapon",)
