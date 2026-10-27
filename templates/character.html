@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block theme %}
+  :root { --accent: #e23a45; --accent-soft: rgba(226, 58, 69, 0.15); }
+  .lead { border-left-color: var(--accent); }
+  .item { border-left-color: rgba(226, 58, 69, 0.5); }
+{% endblock %}
+
+{% block category_label %}角色档案{% endblock %}

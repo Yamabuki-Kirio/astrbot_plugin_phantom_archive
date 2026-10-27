@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block theme %}
+  :root { --accent: #9b6bd8; --accent-soft: rgba(155, 107, 216, 0.15); }
+  .item { border-left-color: rgba(155, 107, 216, 0.5); }
+{% endblock %}
+
+{% block category_label %}{{ category }}{% endblock %}

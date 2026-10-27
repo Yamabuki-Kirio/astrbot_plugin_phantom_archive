@@ -119,6 +119,11 @@ def test_character_list_command(plugin):
     assert "当前收录 72 名角色" in text
 
 
+def test_gacha_history_placeholder(plugin):
+    text = run_command(plugin.gacha_history_command, FakeEvent("/p5x抽卡记录"))
+    assert text == "抽卡记录内置还需鉴权，正在逆向游戏工程，待实现"
+
+
 def test_phase_two_commands(plugin):
     cases = (
         (plugin.ritual_command, "/p5x意识 汐见琴音", "【汐见琴音】意识"),
@@ -194,7 +199,7 @@ def test_command_names_match_in_real_astrbot(plugin_module):
     expected = {
         "夜幕帮助", "p5x角色", "p5x技能", "p5x武器", "p5x角色列表",
         "p5x意识", "p5x属性意识", "p5x养成", "p5x操作", "p5x评价",
-        "p5x配队", "p5x攻略",
+        "p5x配队", "p5x攻略", "p5x抽卡记录",
     }
     assert expected.issubset(set(registered)), f"未注册：{expected - set(registered)}"
 

@@ -7,8 +7,14 @@
     /p5x武器 <名称>
     /p5x角色列表
     /p5x意识 /p5x属性意识 /p5x养成 /p5x操作 /p5x评价 /p5x配队 /p5x攻略
+    /p5x抽卡记录（预留功能）
+    /p5x渲染状态（管理员）
+    /p5x测试渲染（管理员）
 
 只读，不写库；只读 p5x_zh.sqlite3，绝不碰原始库 p5x.sqlite3。
+
+图片输出：查询成功时把结构化结果渲染成卡片图片发送；
+渲染服务不可用、返回非图片、或校验不通过时，按配置降级为文字。
 """
 
 from __future__ import annotations
@@ -18,11 +24,24 @@ import logging
 from pathlib import Path
 
 from astrbot.api.event import AstrMessageEvent, filter
+from astrbot.api.message_components import Image
 from astrbot.api.star import Context, Star, register
 
-from .archive import notices, renderer
+from .archive import cards, image_templates, notices, renderer
 from .archive.database import DatabaseMissingError, SchemaMismatchError
-from .archive.service import ArchiveService, DEFAULT_MAX_CHARS
+from .archive.image_renderer import (
+    DEFAULT_MAX_CONCURRENT,
+    ImageRenderer,
+    RenderError,
+    RenderSettings,
+)
+from .archive.service import (
+    DEFAULT_MAX_CHARS,
+    DEFAULT_MAX_PAGES,
+    DEFAULT_ROWS_PER_PAGE,
+    ArchiveService,
+    QueryOutcome,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -32,9 +51,33 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.2.0"
+PLUGIN_VERSION = "0.3.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
+
+FALLBACK_TEXT = "text"
+FALLBACK_ERROR = "error"
+FALLBACK_MODES: tuple[str, ...] = (FALLBACK_TEXT, FALLBACK_ERROR)
+
+# 测试渲染用的固定内容：包含需要转义的尖括号，用来验证模板的自动转义是否生效
+PROBE_SECTION = cards.Section(
+    heading="渲染自检",
+    blocks=(
+        cards.Block(kind="para", lines=("这是一张测试卡片，用于确认渲染服务与模板链路可用。",)),
+        cards.Block(
+            kind="item",
+            lines=(
+                "· 转义检查",
+                "  <script>alert(1)</script> 应显示为纯文本",
+                "  引号 \" 与 & 与尖括号 < > 不得被解析成标签",
+            ),
+        ),
+        cards.Block(
+            kind="bullets",
+            lines=("· 中文字形与数字 12345", "· 符号 ★ ☆ ／ ％ ＜ ＞"),
+        ),
+    ),
+)
 
 
 def _conf_get(config, key: str, default):
@@ -45,6 +88,19 @@ def _conf_get(config, key: str, default):
         value = config.get(key, default)
         return default if value is None else value
     return getattr(config, key, default)
+
+
+def _conf_bool(config, key: str, default: bool) -> bool:
+    value = _conf_get(config, key, default)
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in ("true", "1", "yes", "on"):
+            return True
+        if lowered in ("false", "0", "no", "off", ""):
+            return False
+    return default
 
 
 def _extract_arg(event: AstrMessageEvent, command: str) -> str:
@@ -61,6 +117,23 @@ def _extract_arg(event: AstrMessageEvent, command: str) -> str:
     return parts[1].strip() if len(parts) > 1 else ""
 
 
+def build_probe_page() -> cards.CardPage:
+    """测试渲染用的固定卡片，不含任何真实资料。"""
+    return cards.CardPage(
+        category="角色",
+        title="渲染测试",
+        subtitle="5★ 测试属性｜测试职业",
+        lead="该卡片由 /p5x测试渲染 生成，不包含真实游戏资料。",
+        sections=(PROBE_SECTION,),
+        page_index=1,
+        page_total=1,
+        source_label=notices.source_label("community"),
+        translation_label=notices.translation_label("machine_translated"),
+        has_conflict=False,
+        show_footer=True,
+    )
+
+
 @register(PLUGIN_NAME, PLUGIN_AUTHOR, PLUGIN_DESC, PLUGIN_VERSION)
 class PhantomArchivePlugin(Star):
     """夜幕档案中文综合资料查询插件。"""
@@ -72,9 +145,18 @@ class PhantomArchivePlugin(Star):
             self.config = config if config is not None else {}
 
         self.max_chars = self._read_max_chars()
+        self.image_enabled = _conf_bool(self.config, "image_output_enabled", True)
+        self.fallback_mode = self._read_fallback_mode()
+        self.theme = self._read_theme()
+        self.render_settings = RenderSettings.from_config(
+            lambda key, default: _conf_get(self.config, key, default),
+            theme=self.theme,
+        )
+
         self.database_path: Path | None = None
         self._service: ArchiveService | None = None
         self._init_error: Exception | None = None
+        self._image_renderer: ImageRenderer | None = None
 
         self._open_service()
 
@@ -89,11 +171,31 @@ class PhantomArchivePlugin(Star):
             return DEFAULT_MAX_CHARS
         return max(200, value)
 
+    def _read_fallback_mode(self) -> str:
+        raw = str(_conf_get(self.config, "t2i_fallback_mode", FALLBACK_TEXT)).strip().lower()
+        if raw not in FALLBACK_MODES:
+            logger.warning("t2i_fallback_mode 配置非法（%r），回退默认 %s", raw, FALLBACK_TEXT)
+            return FALLBACK_TEXT
+        return raw
+
+    def _read_theme(self) -> str:
+        raw = str(_conf_get(self.config, "image_theme", image_templates.THEME_DARK)).strip().lower()
+        if raw not in image_templates.THEMES:
+            logger.warning("image_theme 配置非法（%r），回退默认 %s", raw, image_templates.THEME_DARK)
+            return image_templates.THEME_DARK
+        return raw
+
     def _open_service(self) -> None:
         """初始化只校验数据库，不把正文读进内存（§13）。"""
         configured = _conf_get(self.config, "database_path", "") or ""
         try:
-            service = ArchiveService.open(configured, DATA_DIR, max_chars=self.max_chars)
+            service = ArchiveService.open(
+                configured,
+                DATA_DIR,
+                max_chars=self.max_chars,
+                rows_per_page=DEFAULT_ROWS_PER_PAGE,
+                max_pages=DEFAULT_MAX_PAGES,
+            )
         except DatabaseMissingError as exc:
             self._init_error = exc
             logger.error("夜幕档案数据库不可用：%s", exc)
@@ -109,11 +211,14 @@ class PhantomArchivePlugin(Star):
         self.database_path = service.database_path
         notices.load_from_file(DATA_DIR / "display_notices.json")
         logger.info(
-            "夜幕档案已就绪：%s（角色 %d 名，单条上限 %d 字）",
+            "夜幕档案已就绪：%s（角色 %d 名，单条上限 %d 字，图片输出 %s）",
             service.database_path,
             service.count_characters(),
             service.max_chars,
+            "已启用" if self.image_ready else "未启用",
         )
+        if self.image_enabled and not self.render_settings.configured:
+            logger.warning("已开启图片输出但未配置 t2i_endpoint，查询将只发送文字")
 
     @staticmethod
     def _candidate_paths(configured: str) -> list[Path]:
@@ -123,21 +228,86 @@ class PhantomArchivePlugin(Star):
         paths.append(DATA_DIR / DATABASE_FILENAME)
         return paths
 
+    # ------------------------------------------------------------ 图片输出
+
+    @property
+    def image_ready(self) -> bool:
+        """真正会尝试出图的充要条件：开关打开 + 渲染服务地址已配置。"""
+        return self.image_enabled and self.render_settings.configured
+
+    def _renderer_instance(self) -> ImageRenderer:
+        if self._image_renderer is None:
+            self._image_renderer = ImageRenderer(
+                self.render_settings,
+                max_concurrent=DEFAULT_MAX_CONCURRENT,
+            )
+        return self._image_renderer
+
+    def _sanitize(self, text: str) -> str:
+        """把 token 从任何要外泄的文本里抹掉。"""
+        token = self.render_settings.token
+        if token and token in text:
+            return text.replace(token, "***")
+        return text
+
+    async def _render_pages(self, pages) -> list:
+        """模板渲染走线程（Jinja 是同步的），HTTP 请求走事件循环。"""
+        htmls = [
+            await asyncio.to_thread(image_templates.render_page, page, theme=self.theme)
+            for page in pages
+        ]
+        image_renderer_instance = self._renderer_instance()
+        results = await asyncio.gather(
+            *(image_renderer_instance.render(html) for html in htmls),
+            return_exceptions=True,
+        )
+        for item in results:
+            if isinstance(item, BaseException):
+                raise item
+        return list(results)
+
+    async def _deliver(self, event: AstrMessageEvent, outcome: QueryOutcome) -> list:
+        """决定发图、发文字还是报错。所有分支都只返回结果，不直接 yield。"""
+        if not (outcome.ok and outcome.has_pages and self.image_ready):
+            return [event.plain_result(outcome.text)]
+
+        try:
+            images = await self._render_pages(outcome.pages)
+        except RenderError as exc:
+            reason = self._sanitize(str(exc))
+            logger.warning("图片渲染失败：%s", reason)
+            return [event.plain_result(self._failure_result(reason, outcome))]
+        except Exception as exc:  # noqa: BLE001 - 兜底，不让异常冒到群聊
+            logger.exception("图片渲染出现未预期错误")
+            reason = self._sanitize(f"{type(exc).__name__}")
+            return [event.plain_result(self._failure_result(reason, outcome))]
+
+        return [event.chain_result([Image.fromBytes(image.data)]) for image in images]
+
+    def _failure_result(self, reason: str, outcome: QueryOutcome) -> str:
+        if self.fallback_mode == FALLBACK_ERROR:
+            return renderer.render_image_failed(reason)
+        return outcome.text
+
     # ------------------------------------------------------------ 查询入口
 
-    async def _run(self, method_name: str, *args) -> str:
+    async def _outcome(self, method_name: str, *args) -> QueryOutcome:
         """把阻塞查询丢到线程里，避免卡住事件循环。"""
         if self._service is None:
             if isinstance(self._init_error, SchemaMismatchError):
-                return renderer.render_schema_mismatch()
-            return renderer.render_database_missing()
+                return QueryOutcome(False, renderer.render_schema_mismatch(), error_kind="unavailable")
+            return QueryOutcome(False, renderer.render_database_missing(), error_kind="unavailable")
 
         func = getattr(self._service, method_name)
         try:
             return await asyncio.to_thread(func, *args)
         except Exception:  # noqa: BLE001 - 兜底，不让异常冒到群聊
             logger.exception("夜幕档案查询失败：%s", method_name)
-            return renderer.render_query_failed()
+            return QueryOutcome(False, renderer.render_query_failed(), error_kind="failed")
+
+    async def _respond(self, event: AstrMessageEvent, method_name: str, *args) -> list:
+        outcome = await self._outcome(method_name, *args)
+        return await self._deliver(event, outcome)
 
     # ------------------------------------------------------------ 指令
 
@@ -150,63 +320,166 @@ class PhantomArchivePlugin(Star):
     async def character_command(self, event: AstrMessageEvent):
         """查询角色基本资料。"""
         name = _extract_arg(event, "p5x角色")
-        yield event.plain_result(await self._run("character_message", name))
+        for result in await self._respond(event, "character_outcome", name):
+            yield result
 
     @filter.command("p5x技能")
     async def skills_command(self, event: AstrMessageEvent):
         """查询角色技能。"""
         name = _extract_arg(event, "p5x技能")
-        yield event.plain_result(await self._run("skills_message", name))
+        for result in await self._respond(event, "skills_outcome", name):
+            yield result
 
     @filter.command("p5x武器")
     async def weapons_command(self, event: AstrMessageEvent):
         """查询角色武器。"""
         name = _extract_arg(event, "p5x武器")
-        yield event.plain_result(await self._run("weapons_message", name))
+        for result in await self._respond(event, "weapons_outcome", name):
+            yield result
 
     @filter.command("p5x角色列表")
     async def character_list_command(self, event: AstrMessageEvent):
         """列出当前收录的角色。"""
-        yield event.plain_result(await self._run("character_list_message"))
+        for result in await self._respond(event, "character_list_outcome"):
+            yield result
 
-    async def _guide_command(self, event: AstrMessageEvent, command: str, guide_type: str):
+    async def _guide_command(self, event: AstrMessageEvent, command: str, guide_type: str) -> list:
         name = _extract_arg(event, command)
-        return await self._run("guide_message", name, guide_type)
+        return await self._respond(event, "guide_outcome", name, guide_type)
 
     @filter.command("p5x意识")
     async def ritual_command(self, event: AstrMessageEvent):
-        yield event.plain_result(await self._guide_command(event, "p5x意识", "ritual"))
+        for result in await self._guide_command(event, "p5x意识", "ritual"):
+            yield result
 
     @filter.command("p5x属性意识")
     async def innate_command(self, event: AstrMessageEvent):
-        yield event.plain_result(await self._guide_command(event, "p5x属性意识", "innate"))
+        for result in await self._guide_command(event, "p5x属性意识", "innate"):
+            yield result
 
     @filter.command("p5x养成")
     async def setting_command(self, event: AstrMessageEvent):
-        yield event.plain_result(await self._guide_command(event, "p5x养成", "setting"))
+        for result in await self._guide_command(event, "p5x养成", "setting"):
+            yield result
 
     @filter.command("p5x操作")
     async def operation_command(self, event: AstrMessageEvent):
-        yield event.plain_result(await self._guide_command(event, "p5x操作", "operation"))
+        for result in await self._guide_command(event, "p5x操作", "operation"):
+            yield result
 
     @filter.command("p5x评价")
     async def review_command(self, event: AstrMessageEvent):
-        yield event.plain_result(await self._guide_command(event, "p5x评价", "review"))
+        for result in await self._guide_command(event, "p5x评价", "review"):
+            yield result
 
     @filter.command("p5x配队")
     async def party_command(self, event: AstrMessageEvent):
-        yield event.plain_result(await self._guide_command(event, "p5x配队", "party"))
+        for result in await self._guide_command(event, "p5x配队", "party"):
+            yield result
 
     @filter.command("p5x攻略")
     async def guides_command(self, event: AstrMessageEvent):
         name = _extract_arg(event, "p5x攻略")
-        yield event.plain_result(await self._run("all_guides_message", name))
+        for result in await self._respond(event, "all_guides_outcome", name):
+            yield result
+
+    @filter.command("p5x抽卡记录")
+    async def gacha_history_command(self, event: AstrMessageEvent):
+        """预留抽卡记录入口，鉴权方案完成前不读取任何用户数据。"""
+        yield event.plain_result(renderer.render_gacha_history_placeholder())
+
+    # ------------------------------------------------------------ 管理员指令
+
+    @filter.command("p5x渲染状态")
+    async def render_status_command(self, event: AstrMessageEvent):
+        """查看图片渲染配置（不含令牌值）。"""
+        if not _is_admin(event):
+            yield event.plain_result(renderer.render_admin_only())
+            return
+        yield event.plain_result(renderer.render_image_status(self._status_info()))
+
+    @filter.command("p5x测试渲染")
+    async def test_render_command(self, event: AstrMessageEvent):
+        """用固定内容试渲染一张卡片，验证链路。"""
+        if not _is_admin(event):
+            yield event.plain_result(renderer.render_admin_only())
+            return
+        if not self.image_ready:
+            yield event.plain_result(
+                renderer.render_render_test_failed("图片输出未启用或未配置渲染服务")
+            )
+            return
+        try:
+            page = build_probe_page()
+            html = await asyncio.to_thread(image_templates.render_page, page, theme=self.theme)
+            image = await self._renderer_instance().render(html)
+        except RenderError as exc:
+            reason = self._sanitize(str(exc))
+            logger.warning("渲染测试失败：%s", reason)
+            yield event.plain_result(renderer.render_render_test_failed(reason))
+            return
+        except Exception as exc:  # noqa: BLE001 - 兜底
+            logger.exception("渲染测试出现未预期错误")
+            yield event.plain_result(
+                renderer.render_render_test_failed(self._sanitize(type(exc).__name__))
+            )
+            return
+
+        escaped = "&lt;script&gt;" in html
+        yield event.chain_result([Image.fromBytes(image.data)])
+        yield event.plain_result(
+            renderer.render_render_test_ok(
+                image.width, image.height, image.size_kb, image.elapsed_ms, escaped
+            )
+        )
+
+    def _status_info(self) -> dict:
+        templates = image_templates.available_templates()
+        info = self.render_settings.describe()
+        info.update(
+            {
+                "enabled": self.image_enabled,
+                "fallback_mode": self.fallback_mode,
+                "theme": self.theme,
+                "concurrency": DEFAULT_MAX_CONCURRENT,
+                "template_count": len(templates),
+                "templates": list(templates),
+                "dependencies": _dependency_versions(),
+            }
+        )
+        return info
 
     # ------------------------------------------------------------ 生命周期
 
     async def terminate(self):
-        """插件卸载时释放只读连接。"""
+        """插件卸载时释放只读连接与渲染客户端。"""
+        if self._image_renderer is not None:
+            await self._image_renderer.aclose()
+            self._image_renderer = None
         if self._service is not None:
             self._service.close()
             self._service = None
             logger.info("夜幕档案已关闭数据库连接")
+
+
+def _is_admin(event: AstrMessageEvent) -> bool:
+    """AstrBot 的 is_admin 是方法；测试替身可能没有，缺省按非管理员处理。"""
+    checker = getattr(event, "is_admin", None)
+    if callable(checker):
+        try:
+            return bool(checker())
+        except Exception:  # noqa: BLE001 - 权限判断失败按无权限处理
+            return False
+    return False
+
+
+def _dependency_versions() -> str:
+    from importlib import metadata
+
+    parts = []
+    for name, label in (("httpx", "httpx"), ("Pillow", "Pillow"), ("Jinja2", "Jinja2")):
+        try:
+            parts.append(f"{label} {metadata.version(name)}")
+        except metadata.PackageNotFoundError:
+            parts.append(f"{label} 缺失")
+    return "｜".join(parts)

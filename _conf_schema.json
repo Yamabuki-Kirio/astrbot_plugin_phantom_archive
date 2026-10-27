@@ -5,8 +5,63 @@
     "default": ""
   },
   "max_message_length": {
-    "description": "单条查询回复的最大字符数",
+    "description": "文字回复的最大字符数（图片渲染失败降级时也用它）",
     "type": "int",
     "default": 1200
+  },
+  "image_output_enabled": {
+    "description": "查询成功时发送图片卡片；关闭后所有查询都只发文字",
+    "type": "bool",
+    "default": true
+  },
+  "t2i_endpoint": {
+    "description": "T2I 渲染服务地址，需填完整 URL（含路径），留空表示不启用图片输出；插件不会自动补全 /generate",
+    "type": "string",
+    "default": ""
+  },
+  "t2i_token": {
+    "description": "渲染服务的访问令牌，留空表示不鉴权；该值不会出现在日志与状态输出中",
+    "type": "string",
+    "default": ""
+  },
+  "t2i_image_format": {
+    "description": "出图格式：png 或 jpeg",
+    "type": "string",
+    "default": "png"
+  },
+  "t2i_quality": {
+    "description": "图片质量（10-100，JPEG 生效，PNG 由服务端决定）",
+    "type": "int",
+    "default": 90
+  },
+  "t2i_scale": {
+    "description": "设备像素比档位：sd / hd / fhd",
+    "type": "string",
+    "default": "hd"
+  },
+  "t2i_render_timeout_ms": {
+    "description": "交给渲染服务的页面渲染超时（毫秒）",
+    "type": "int",
+    "default": 30000
+  },
+  "t2i_request_timeout_ms": {
+    "description": "插件等待渲染服务响应的 HTTP 超时（毫秒），应大于渲染超时",
+    "type": "int",
+    "default": 45000
+  },
+  "t2i_fallback_mode": {
+    "description": "渲染失败时的行为：text 发送文字结果，error 只发错误提示",
+    "type": "string",
+    "default": "text"
+  },
+  "t2i_max_response_mb": {
+    "description": "允许接收的图片体积上限（MB）",
+    "type": "int",
+    "default": 16
+  },
+  "image_theme": {
+    "description": "卡片配色：dark 暗色档案卡，light 浅色",
+    "type": "string",
+    "default": "dark"
   }
 }

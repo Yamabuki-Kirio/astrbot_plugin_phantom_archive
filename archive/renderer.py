@@ -514,13 +514,23 @@ def render_help() -> str:
             "/p5x评价 <名称>",
             "/p5x配队 <名称>",
             "/p5x攻略 <名称>",
+            "/p5x抽卡记录（待实现）",
             "",
             "支持中文名、原名、英文代号和 slug 查询。",
             "支持角色、技能、武器、意识、养成、操作、评价、配队和综合攻略查询。",
+            "查询成功时发送图片卡片；图片不可用时自动改发文字。",
+            "",
+            "管理员指令：",
+            "/p5x渲染状态",
+            "/p5x测试渲染",
             "",
             notices.HELP_SOURCE_NOTE,
         ]
     )
+
+
+def render_gacha_history_placeholder() -> str:
+    return "抽卡记录内置还需鉴权，正在逆向游戏工程，待实现"
 
 
 def render_not_found(term: str) -> str:
@@ -584,3 +594,84 @@ def render_schema_mismatch() -> str:
 
 def render_query_failed() -> str:
     return "查询失败，请稍后重试或联系机器人管理员。"
+
+
+# ------------------------------------------------------------------ 图片相关回复
+
+
+def render_admin_only() -> str:
+    return "该指令仅限机器人管理员使用。"
+
+
+def render_image_status(info: dict) -> str:
+    """渲染状态面板。info 里绝不能出现 token 的值，只允许出现「是否已设置」。"""
+    lines = [
+        "【夜幕档案 · 渲染状态】",
+        "",
+        f"图片输出：{'已启用' if info.get('enabled') else '已关闭'}",
+        (
+            f"渲染服务：{info.get('endpoint')}"
+            if info.get("configured")
+            else "渲染服务：未配置（当前只发送文字）"
+        ),
+        f"访问令牌：{'已设置' if info.get('token_set') else '未设置'}",
+        f"出图格式：{info.get('image_format')}｜质量 {info.get('quality')}"
+        f"｜像素比 {info.get('scale')}",
+        f"超时：渲染 {info.get('render_timeout_ms')} ms"
+        f"｜请求 {info.get('request_timeout_ms')} ms",
+        f"体积上限：{info.get('max_response_mb')} MB",
+        f"失败处理：{'改发文字' if info.get('fallback_mode') == 'text' else '仅提示错误'}",
+        f"卡片主题：{info.get('theme')}",
+        f"并发上限：{info.get('concurrency')} 张",
+        f"模板：{info.get('template_count')} 个（{'、'.join(info.get('templates') or []) or '无'}）",
+        f"依赖：{info.get('dependencies')}",
+    ]
+    if not info.get("configured"):
+        lines += ["", "在插件配置里填写 t2i_endpoint 后重启即可启用图片卡片。"]
+    return "\n".join(lines)
+
+
+def render_render_test_ok(width: int, height: int, size_kb: int, elapsed_ms: int, escaped: bool) -> str:
+    return "\n".join(
+        [
+            "【夜幕档案 · 渲染测试】",
+            "",
+            f"结果：成功（{width}×{height}，{size_kb} KB，耗时 {elapsed_ms} ms）",
+            f"HTML 转义：{'正常' if escaped else '异常'}",
+        ]
+    )
+
+
+def render_render_test_failed(reason: str) -> str:
+    return "\n".join(
+        [
+            "【夜幕档案 · 渲染测试】",
+            "",
+            f"结果：失败（{reason}）",
+            "请检查 t2i_endpoint、t2i_token 与渲染服务日志。",
+        ]
+    )
+
+
+def render_image_failed(reason: str) -> str:
+    return "\n".join(
+        [
+            f"图片渲染失败：{reason}",
+            "可发送 /p5x渲染状态 查看当前配置，或联系机器人管理员。",
+        ]
+    )
+
+
+# ------------------------------------------------------------------ 供图片层复用
+
+# 图片与文字两条路径共用同一套「从 JSON 提取文本块」的逻辑，
+# 否则两边各自解析 review/party/operation 迟早会给出不同内容。
+GUIDE_BLOCK_BUILDERS = _GUIDE_RENDERERS
+
+plain = _plain
+clip_sentence = _clip_sentence
+fmt_num = _fmt_num
+join_meta = _join_meta
+skill_label = _skill_label
+weapon_label = _weapon_label
+skill_meta = _skill_meta
