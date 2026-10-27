@@ -1,9 +1,8 @@
-name: astrbot_plugin_p5x
-display_name: P5X 助手
+name: astrbot_plugin_phantom_archive
+display_name: 夜幕档案
 desc: 面向《女神异闻录：夜幕魅影》的中文资料、角色、武器、配队与国服公告查询插件。
 help: 发送 /p5x 查看当前状态
 version: v0.0.1
 author: Yamabuki-Kirio
-repo: https://github.com/Yamabuki-Kirio/astrbot_plugin_p5x
+repo: https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive
 astrbot_version: ">=4.16,<5"
-
