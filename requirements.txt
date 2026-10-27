@@ -1,2 +1,2 @@
-# 占位版本暂无第三方依赖
-
+# 第一阶段只读查询，仅依赖 Python 标准库（sqlite3 / pathlib / asyncio）
+# AstrBot 本身由宿主提供，不在插件里声明

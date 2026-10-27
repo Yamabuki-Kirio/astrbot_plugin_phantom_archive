@@ -3,9 +3,11 @@ __pycache__/
 .venv/
 .idea/
 .vscode/
+.pytest_cache/
 
 # 本地资料库及抓取产物不得提交
-data/
+# 用 data/* 而不是 data/，这样目录本身不被排除，才能用 ! 放行 .gitkeep
+data/*
 output/
 *.sqlite
 *.sqlite3
@@ -14,3 +16,5 @@ output/
 *.db-shm
 raw/
 
+# data/ 目录本身要保留（部署时把数据库放进去），只忽略内容
+!data/.gitkeep

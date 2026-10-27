@@ -1,0 +1,12 @@
+{
+  "database_path": {
+    "description": "p5x_zh.sqlite3 的路径，留空时使用插件 data 目录",
+    "type": "string",
+    "default": ""
+  },
+  "max_message_length": {
+    "description": "单条查询回复的最大字符数",
+    "type": "int",
+    "default": 1200
+  }
+}
