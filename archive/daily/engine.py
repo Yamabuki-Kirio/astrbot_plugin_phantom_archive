@@ -22,7 +22,7 @@ from datetime import date, datetime
 from typing import Iterable, Sequence
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from . import character_draw, ganzhi, lingqian, tarot, zhouyi
+from . import arcana_affinity, character_draw, ganzhi, lingqian, tarot, zhouyi
 from .models import DailyCharacter, DailyFortune, LingQianDraw, TarotDraw, ZhouyiDraw
 
 logger = logging.getLogger(__name__)
@@ -123,11 +123,18 @@ def draw_fortune(
     user_id: str,
     characters: Sequence[DailyCharacter],
 ) -> tuple[DailyCharacter, TarotDraw, LingQianDraw, ZhouyiDraw, str]:
-    """纯抽取，不碰数据库。抽的顺序固定：角色 → 塔罗 → 灵签 → 周易。"""
-    chosen = character_draw.draw(characters, character_seed(date_key, platform_id, user_id))
+    """纯抽取，不碰数据库。
 
+    先抽塔罗；若大阿卡纳有已进入 P5X 的 P3/P5 对应角色，则从对应角色中
+    确定性选一名，否则从完整角色池选取。角色仍使用独立种子，因此同日同人固定。
+    """
     rng = random.Random(seed_int(fortune_seed(date_key, platform_id, user_id)))
     card = tarot.draw(rng)
+    preferred = arcana_affinity.preferred_candidates(card, characters)
+    chosen = character_draw.draw(
+        preferred or characters,
+        character_seed(date_key, platform_id, user_id),
+    )
     qian = lingqian.draw(rng)
     gua = zhouyi.cast(rng)
     return chosen, card, qian, gua, build_advice(qian.grade, card)

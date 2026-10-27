@@ -69,7 +69,7 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.5.0"
+PLUGIN_VERSION = "0.6.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME

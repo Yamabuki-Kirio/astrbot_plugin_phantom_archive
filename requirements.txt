@@ -1,6 +1,7 @@
 # 只读查询本身仅依赖标准库（sqlite3 / pathlib / asyncio）。
 # 下面三个依赖只用于「查询结果渲染成图片卡片」，缺任何一个都不会影响文字查询。
 httpx>=0.27
+requests>=2.31
 Pillow>=10.0
 Jinja2>=3.1
 

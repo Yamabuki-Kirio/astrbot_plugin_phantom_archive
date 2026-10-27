@@ -1584,279 +1584,334 @@
   },
   "weapons": {
     "J&C:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/J%26C/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/J%26C-4-01.png",
+      "source_status": "community",
+      "display_name": "刚毅的使者"
     },
     "J&C:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/J%26C/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/J%26C-5-01.png",
+      "source_status": "community",
+      "display_name": "群青的审判"
     },
     "YUI:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/YUI/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/YUI-4-01.png",
+      "source_status": "community",
+      "display_name": "未来指令"
     },
     "YUI:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/YUI/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/YUI-5-01.png",
+      "source_status": "community",
+      "display_name": "虚拟干扰者"
     },
     "YUI·스텔라:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/YUI%C2%B7%EC%8A%A4%ED%85%94%EB%9D%BC/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/YUI%C2%B7%EC%8A%A4%ED%85%94%EB%9D%BC-4-01.png",
+      "source_status": "community",
+      "display_name": "薯薯奇航"
     },
     "YUI·스텔라:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/YUI%C2%B7%EC%8A%A4%ED%85%94%EB%9D%BC/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/YUI%C2%B7%EC%8A%A4%ED%85%94%EB%9D%BC-5-01.png",
+      "source_status": "community",
+      "display_name": "飞越深空之船"
     },
     "나루미:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%82%98%EB%A3%A8%EB%AF%B8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%82%98%EB%A3%A8%EB%AF%B8-4-01.png",
+      "source_status": "community",
+      "display_name": "闪耀节奏"
     },
     "나루미:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%82%98%EB%A3%A8%EB%AF%B8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%82%98%EB%A3%A8%EB%AF%B8-5-01.png",
+      "source_status": "community",
+      "display_name": "霜糖安可"
     },
     "레오:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A0%88%EC%98%A4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A0%88%EC%98%A4-4-01.png",
+      "source_status": "community",
+      "display_name": "最强战戟X"
     },
     "레오:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A0%88%EC%98%A4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A0%88%EC%98%A4-5-01.png",
+      "source_status": "community",
+      "display_name": "破碎毁灭者MR"
     },
     "렌:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A0%8C/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A0%8C-4-01.png",
+      "source_status": "community",
+      "display_name": "开山刀"
     },
     "렌:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A0%8C/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A0%8C-5-01.png",
+      "source_status": "community",
+      "display_name": "不死鸟"
     },
     "렌·댄싱 스타:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A0%8C%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A0%8C%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80-4-01.png",
+      "source_status": "community",
+      "display_name": "巴塞拉德短剑"
     },
     "렌·댄싱 스타:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A0%8C%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A0%8C%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80-5-01.png",
+      "source_status": "community",
+      "display_name": "爵士锋刃"
     },
     "루우나:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A3%A8%EC%9A%B0%EB%82%98/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A3%A8%EC%9A%B0%EB%82%98-4-01.png",
+      "source_status": "community",
+      "display_name": "咆哮猎手"
     },
     "루우나:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A3%A8%EC%9A%B0%EB%82%98/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A3%A8%EC%9A%B0%EB%82%98-5-01.png",
+      "source_status": "community",
+      "display_name": "家宅恶犬"
     },
     "루페르:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A3%A8%ED%8E%98%EB%A5%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A3%A8%ED%8E%98%EB%A5%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "熔岩之火"
     },
     "루페르:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A3%A8%ED%8E%98%EB%A5%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A3%A8%ED%8E%98%EB%A5%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "神降光辉"
     },
     "류지:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A5%98%EC%A7%80/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A5%98%EC%A7%80-4-01.png",
+      "source_status": "community",
+      "display_name": "盖亚镇压者"
     },
     "류지:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A5%98%EC%A7%80/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A5%98%EC%A7%80-5-01.png",
+      "source_status": "community",
+      "display_name": "复仇者的尖齿"
     },
     "리코:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A6%AC%EC%BD%94/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A6%AC%EC%BD%94-4-01.png",
+      "source_status": "community",
+      "display_name": "霁月银勾"
     },
     "리코:weapon4-2": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A6%AC%EC%BD%94/weapon4-2.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A6%AC%EC%BD%94-4-02.png",
+      "source_status": "community",
+      "display_name": "花见绯梅"
     },
     "리코:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A6%AC%EC%BD%94/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A6%AC%EC%BD%94-5-01.png",
+      "source_status": "community",
+      "display_name": "忍具·天与刃翼"
     },
     "리코·매화:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A6%AC%EC%BD%94%C2%B7%EB%A7%A4%ED%99%94/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A6%AC%EC%BD%94%C2%B7%EB%A7%A4%ED%99%94-4-01.png",
+      "source_status": "community",
+      "display_name": "晴日惊雀"
     },
     "리코·매화:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A6%AC%EC%BD%94%C2%B7%EB%A7%A4%ED%99%94/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A6%AC%EC%BD%94%C2%B7%EB%A7%A4%ED%99%94-5-01.png",
+      "source_status": "community",
+      "display_name": "浮香·鹤舞凌冬"
     },
     "마나카:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EB%82%98%EC%B9%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EB%82%98%EC%B9%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "歌者绮梦"
     },
     "마나카:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EB%82%98%EC%B9%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EB%82%98%EC%B9%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "天籁轻吟"
     },
     "마사키:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EC%82%AC%ED%82%A4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EC%82%AC%ED%82%A4-4-01.png",
+      "source_status": "community",
+      "display_name": "不灭荣光"
     },
     "마사키:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EC%82%AC%ED%82%A4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EC%82%AC%ED%82%A4-5-01.png",
+      "source_status": "community",
+      "display_name": "神圣誓约"
     },
     "마유미:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EC%9C%A0%EB%AF%B8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EC%9C%A0%EB%AF%B8-4-01.png",
+      "source_status": "community",
+      "display_name": "开路先锋"
     },
     "마유미:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EC%9C%A0%EB%AF%B8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EC%9C%A0%EB%AF%B8-5-01.png",
+      "source_status": "community",
+      "display_name": "胜利宣言"
     },
     "마코토:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EC%BD%94%ED%86%A0/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EC%BD%94%ED%86%A0-4-01.png",
+      "source_status": "community",
+      "display_name": "马赫拳套"
     },
     "마코토:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%A7%88%EC%BD%94%ED%86%A0/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%A7%88%EC%BD%94%ED%86%A0-5-01.png",
+      "source_status": "community",
+      "display_name": "核热终结"
     },
     "모르가나:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98-4-01.png",
+      "source_status": "community",
+      "display_name": "新月刀"
     },
     "모르가나:weapon4-2": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98/weapon4-2.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98-4-02.png",
+      "source_status": "community",
+      "display_name": "猎头勺"
     },
     "모르가나:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98-5-01.png",
+      "source_status": "community",
+      "display_name": "黄金战利品"
     },
     "모르가나·댄싱 스타:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80-4-01.png",
+      "source_status": "community",
+      "display_name": "重型军刀"
     },
     "모르가나·댄싱 스타:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%EB%A5%B4%EA%B0%80%EB%82%98%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80-5-01.png",
+      "source_status": "community",
+      "display_name": "糖果狂欢者"
     },
     "모토하:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%ED%86%A0%ED%95%98/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%ED%86%A0%ED%95%98-4-01.png",
+      "source_status": "community",
+      "display_name": "罪与罚"
     },
     "모토하:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%ED%86%A0%ED%95%98/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%ED%86%A0%ED%95%98-5-01.png",
+      "source_status": "community",
+      "display_name": "电磁类星体"
     },
     "모토하·여름:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%97%AC%EB%A6%84/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%97%AC%EB%A6%84-4-01.png",
+      "source_status": "community",
+      "display_name": "嘟嘟星"
     },
     "모토하·여름:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%97%AC%EB%A6%84/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%97%AC%EB%A6%84-5-01.png",
+      "source_status": "community",
+      "display_name": "缤纷海岸"
     },
     "모토하·청광:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%B2%AD%EA%B4%91/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%B2%AD%EA%B4%91-4-01.png",
+      "source_status": "community",
+      "display_name": "日轮统治者"
     },
     "모토하·청광:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%B2%AD%EA%B4%91/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%A8%ED%86%A0%ED%95%98%C2%B7%EC%B2%AD%EA%B4%91-5-01.png",
+      "source_status": "community",
+      "display_name": "远征的先驱者号"
     },
     "몽타뉴:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%BD%ED%83%80%EB%89%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%BD%ED%83%80%EB%89%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "鸣空长歌"
     },
     "몽타뉴:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%BD%ED%83%80%EB%89%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%BD%ED%83%80%EB%89%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "凛冬女王"
     },
     "몽타뉴·백조:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%BD%ED%83%80%EB%89%B4%C2%B7%EB%B0%B1%EC%A1%B0/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%BD%ED%83%80%EB%89%B4%C2%B7%EB%B0%B1%EC%A1%B0-4-01.png",
+      "source_status": "community",
+      "display_name": "北风之女"
     },
     "몽타뉴·백조:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AA%BD%ED%83%80%EB%89%B4%C2%B7%EB%B0%B1%EC%A1%B0/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AA%BD%ED%83%80%EB%89%B4%C2%B7%EB%B0%B1%EC%A1%B0-5-01.png",
+      "source_status": "community",
+      "display_name": "天鹅梦乡"
     },
     "미나미:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EB%82%98%EB%AF%B8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EB%82%98%EB%AF%B8-4-01.png",
+      "source_status": "community",
+      "display_name": "生命颂歌"
     },
     "미나미:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EB%82%98%EB%AF%B8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EB%82%98%EB%AF%B8-5-01.png",
+      "source_status": "community",
+      "display_name": "天使之心"
     },
     "미나미·여름:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EB%82%98%EB%AF%B8%C2%B7%EC%97%AC%EB%A6%84/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EB%82%98%EB%AF%B8%C2%B7%EC%97%AC%EB%A6%84-4-01.png",
+      "source_status": "community",
+      "display_name": "午后茶语"
     },
     "미나미·여름:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EB%82%98%EB%AF%B8%C2%B7%EC%97%AC%EB%A6%84/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EB%82%98%EB%AF%B8%C2%B7%EC%97%AC%EB%A6%84-5-01.png",
+      "source_status": "community",
+      "display_name": "不凋之庭"
     },
     "미오:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%98%A4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%98%A4-4-01.png",
+      "source_status": "community",
+      "display_name": "水渊之刺"
     },
     "미오:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%98%A4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%98%A4-5-01.png",
+      "source_status": "community",
+      "display_name": "镇炎璃叉"
     },
     "미유:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%9C%A0/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%9C%A0-4-01.png",
+      "source_status": "community",
+      "display_name": "海域声呐"
     },
     "미유:weapon5-1": {
       "image": null,
@@ -1864,189 +1919,226 @@
       "source_status": "unavailable"
     },
     "미유·여름:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%9C%A0%C2%B7%EC%97%AC%EB%A6%84/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%9C%A0%C2%B7%EC%97%AC%EB%A6%84-4-01.png",
+      "source_status": "community",
+      "display_name": "海月晴空"
     },
     "미유·여름:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%9C%A0%C2%B7%EC%97%AC%EB%A6%84/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%9C%A0%C2%B7%EC%97%AC%EB%A6%84-5-01.png",
+      "source_status": "community",
+      "display_name": "游梦人鱼"
     },
     "미츠루:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%B8%A0%EB%A3%A8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%B8%A0%EB%A3%A8-4-01.png",
+      "source_status": "community",
+      "display_name": "玫瑰焰形剑"
     },
     "미츠루:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%B8%A0%EB%A3%A8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%B8%A0%EB%A3%A8-5-01.png",
+      "source_status": "community",
+      "display_name": "圣枪朗基努斯"
     },
     "미쿠:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%BF%A0/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%BF%A0-4-01.png",
+      "source_status": "community",
+      "display_name": "潮流世界"
     },
     "미쿠:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EB%AF%B8%EC%BF%A0/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EB%AF%B8%EC%BF%A0-5-01.png",
+      "source_status": "community",
+      "display_name": "寰宇回响"
     },
     "사나다:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%82%AC%EB%82%98%EB%8B%A4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%82%AC%EB%82%98%EB%8B%A4-4-01.png",
+      "source_status": "community",
+      "display_name": "地狱棘拳套"
     },
     "사나다:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%82%AC%EB%82%98%EB%8B%A4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%82%AC%EB%82%98%EB%8B%A4-5-01.png",
+      "source_status": "community",
+      "display_name": "萨巴兹乌斯"
     },
     "세이지:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%84%B8%EC%9D%B4%EC%A7%80/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%84%B8%EC%9D%B4%EC%A7%80-4-01.png",
+      "source_status": "community",
+      "display_name": "授勋之证"
     },
     "세이지:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%84%B8%EC%9D%B4%EC%A7%80/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%84%B8%EC%9D%B4%EC%A7%80-5-01.png",
+      "source_status": "community",
+      "display_name": "启明之星"
     },
     "쇼키:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%87%BC%ED%82%A4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%87%BC%ED%82%A4-4-01.png",
+      "source_status": "community",
+      "display_name": "圣誓加冕"
     },
     "쇼키:weapon4-2": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%87%BC%ED%82%A4/weapon4-2.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%87%BC%ED%82%A4-4-02.png",
+      "source_status": "community",
+      "display_name": "幻幕迭生"
     },
     "쇼키:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%87%BC%ED%82%A4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%87%BC%ED%82%A4-5-01.png",
+      "source_status": "community",
+      "display_name": "白夜星谕"
     },
     "쇼키·암야:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%87%BC%ED%82%A4%C2%B7%EC%95%94%EC%95%BC/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%87%BC%ED%82%A4%C2%B7%EC%95%94%EC%95%BC-4-01.png",
+      "source_status": "community",
+      "display_name": "众王之意志"
     },
     "쇼키·암야:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%87%BC%ED%82%A4%C2%B7%EC%95%94%EC%95%BC/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%87%BC%ED%82%A4%C2%B7%EC%95%94%EC%95%BC-5-01.png",
+      "source_status": "community",
+      "display_name": "诸神王庭"
     },
     "슌:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%8A%8C/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%8A%8C-4-01.png",
+      "source_status": "community",
+      "display_name": "噬魔"
     },
     "슌:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%8A%8C/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%8A%8C-5-01.png",
+      "source_status": "community",
+      "display_name": "始祖冰河"
     },
     "슌·프론티어:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%8A%8C%C2%B7%ED%94%84%EB%A1%A0%ED%8B%B0%EC%96%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%8A%8C%C2%B7%ED%94%84%EB%A1%A0%ED%8B%B0%EC%96%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "荒野处决"
     },
     "슌·프론티어:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%8A%8C%C2%B7%ED%94%84%EB%A1%A0%ED%8B%B0%EC%96%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%8A%8C%C2%B7%ED%94%84%EB%A1%A0%ED%8B%B0%EC%96%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "圣马角信标"
     },
     "아란:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EB%9E%80/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EB%9E%80-4-01.png",
+      "source_status": "community",
+      "display_name": "最终清算"
     },
     "아란:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EB%9E%80/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EB%9E%80-5-01.png",
+      "source_status": "community",
+      "display_name": "镜中双影"
     },
     "아야카:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%95%BC%EC%B9%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%95%BC%EC%B9%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "独唱摇滚"
     },
     "아야카:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%95%BC%EC%B9%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%95%BC%EC%B9%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "万众瞩目之星"
     },
     "아야카·여름:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%95%BC%EC%B9%B4%C2%B7%EC%97%AC%EB%A6%84/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%95%BC%EC%B9%B4%C2%B7%EC%97%AC%EB%A6%84-4-01.png",
+      "source_status": "community",
+      "display_name": "风吟潮声"
     },
     "아야카·여름:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%95%BC%EC%B9%B4%C2%B7%EC%97%AC%EB%A6%84/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%95%BC%EC%B9%B4%C2%B7%EC%97%AC%EB%A6%84-5-01.png",
+      "source_status": "community",
+      "display_name": "海色余音"
     },
     "아이기스:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%9D%B4%EA%B8%B0%EC%8A%A4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%9D%B4%EA%B8%B0%EC%8A%A4-4-01.png",
+      "source_status": "community",
+      "display_name": "自由基步枪"
     },
     "아이기스:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%9D%B4%EA%B8%B0%EC%8A%A4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%9D%B4%EA%B8%B0%EC%8A%A4-5-01.png",
+      "source_status": "community",
+      "display_name": "万魔枪"
     },
     "아케치:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%BC%80%EC%B9%98/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%BC%80%EC%B9%98-4-01.png",
+      "source_status": "community",
+      "display_name": "青沼光剑"
     },
     "아케치:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%84%EC%BC%80%EC%B9%98/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%84%EC%BC%80%EC%B9%98-5-01.png",
+      "source_status": "community",
+      "display_name": "天炽神心"
     },
     "안:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%88/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%88-4-01.png",
+      "source_status": "community",
+      "display_name": "幻象鞭"
     },
     "안:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%88/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%88-5-01.png",
+      "source_status": "community",
+      "display_name": "玫瑰之棘"
     },
     "안·댄싱 스타:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%88%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%88%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80-4-01.png",
+      "source_status": "community",
+      "display_name": "痛楚之畏"
     },
     "안·댄싱 스타:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%88%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%88%C2%B7%EB%8C%84%EC%8B%B1%20%EC%8A%A4%ED%83%80-5-01.png",
+      "source_status": "community",
+      "display_name": "致命涂装"
     },
     "야오링:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%BC%EC%98%A4%EB%A7%81/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%BC%EC%98%A4%EB%A7%81-4-01.png",
+      "source_status": "community",
+      "display_name": "四时万物"
     },
     "야오링:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%BC%EC%98%A4%EB%A7%81/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%BC%EC%98%A4%EB%A7%81-5-01.png",
+      "source_status": "community",
+      "display_name": "八荒一念"
     },
     "야오링·사자무:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%BC%EC%98%A4%EB%A7%81%C2%B7%EC%82%AC%EC%9E%90%EB%AC%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%BC%EC%98%A4%EB%A7%81%C2%B7%EC%82%AC%EC%9E%90%EB%AC%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "瑞雪红妆"
     },
     "야오링·사자무:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%95%BC%EC%98%A4%EB%A7%81%C2%B7%EC%82%AC%EC%9E%90%EB%AC%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%95%BC%EC%98%A4%EB%A7%81%C2%B7%EC%82%AC%EC%9E%90%EB%AC%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "灼灼春晖"
     },
     "원더:weapon4-1": {
       "image": null,
@@ -2059,239 +2151,286 @@
       "source_status": "unavailable"
     },
     "유스케:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%EC%8A%A4%EC%BC%80/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%EC%8A%A4%EC%BC%80-4-01.png",
+      "source_status": "community",
+      "display_name": "居合刀"
     },
     "유스케:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%EC%8A%A4%EC%BC%80/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%EC%8A%A4%EC%BC%80-5-01.png",
+      "source_status": "community",
+      "display_name": "金纹影切"
     },
     "유우미:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%EC%9A%B0%EB%AF%B8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%EC%9A%B0%EB%AF%B8-4-01.png",
+      "source_status": "community",
+      "display_name": "星夜卜者"
     },
     "유우미:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%EC%9A%B0%EB%AF%B8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%EC%9A%B0%EB%AF%B8-5-01.png",
+      "source_status": "community",
+      "display_name": "月下翎"
     },
     "유카리:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%EC%B9%B4%EB%A6%AC/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%EC%B9%B4%EB%A6%AC-4-01.png",
+      "source_status": "community",
+      "display_name": "鬼神之弓"
     },
     "유카리:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%EC%B9%B4%EB%A6%AC/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%EC%B9%B4%EB%A6%AC-5-01.png",
+      "source_status": "community",
+      "display_name": "萨伦伽"
     },
     "유키 마코토:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%ED%82%A4%20%EB%A7%88%EC%BD%94%ED%86%A0/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%ED%82%A4%20%EB%A7%88%EC%BD%94%ED%86%A0-4-01.png",
+      "source_status": "community",
+      "display_name": "名刀透彻"
     },
     "유키 마코토:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%ED%82%A4%20%EB%A7%88%EC%BD%94%ED%86%A0/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%ED%82%A4%20%EB%A7%88%EC%BD%94%ED%86%A0-5-01.png",
+      "source_status": "community",
+      "display_name": "神之剑"
     },
     "유키미:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%ED%82%A4%EB%AF%B8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%ED%82%A4%EB%AF%B8-4-01.png",
+      "source_status": "community",
+      "display_name": "万宝重击"
     },
     "유키미:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9C%A0%ED%82%A4%EB%AF%B8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9C%A0%ED%82%A4%EB%AF%B8-5-01.png",
+      "source_status": "community",
+      "display_name": "归净乐土"
     },
     "이치고:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9D%B4%EC%B9%98%EA%B3%A0/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9D%B4%EC%B9%98%EA%B3%A0-4-01.png",
+      "source_status": "community",
+      "display_name": "血誓情书"
     },
     "이치고:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9D%B4%EC%B9%98%EA%B3%A0/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9D%B4%EC%B9%98%EA%B3%A0-5-01.png",
+      "source_status": "community",
+      "display_name": "咒言魔偶"
     },
     "이치고·여름:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9D%B4%EC%B9%98%EA%B3%A0%C2%B7%EC%97%AC%EB%A6%84/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9D%B4%EC%B9%98%EA%B3%A0%C2%B7%EC%97%AC%EB%A6%84-4-01.png",
+      "source_status": "community",
+      "display_name": "溯光之链"
     },
     "이치고·여름:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%9D%B4%EC%B9%98%EA%B3%A0%C2%B7%EC%97%AC%EB%A6%84/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%9D%B4%EC%B9%98%EA%B3%A0%C2%B7%EC%97%AC%EB%A6%84-5-01.png",
+      "source_status": "community",
+      "display_name": "恋海追航者"
     },
     "준페이:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%A4%80%ED%8E%98%EC%9D%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%A4%80%ED%8E%98%EC%9D%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "圣灵之剑"
     },
     "준페이:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%A4%80%ED%8E%98%EC%9D%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%A4%80%ED%8E%98%EC%9D%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "巴鲁姆克"
     },
     "치즈코:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%98%EC%A6%88%EC%BD%94/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%98%EC%A6%88%EC%BD%94-4-01.png",
+      "source_status": "community",
+      "display_name": "航域引力"
     },
     "치즈코:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%98%EC%A6%88%EC%BD%94/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%98%EC%A6%88%EC%BD%94-5-01.png",
+      "source_status": "community",
+      "display_name": "超频脉冲"
     },
     "카스미:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%B4%EC%8A%A4%EB%AF%B8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%B4%EC%8A%A4%EB%AF%B8-4-01.png",
+      "source_status": "community",
+      "display_name": "西奈神剑"
     },
     "카스미:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%B4%EC%8A%A4%EB%AF%B8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%B4%EC%8A%A4%EB%AF%B8-5-01.png",
+      "source_status": "community",
+      "display_name": "金色晨曦"
     },
     "카요:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%B4%EC%9A%94/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%B4%EC%9A%94-4-01.png",
+      "source_status": "community",
+      "display_name": "荧色魅惑D4u"
     },
     "카요:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%B4%EC%9A%94/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%B4%EC%9A%94-5-01.png",
+      "source_status": "community",
+      "display_name": "复古迪斯科:P"
     },
     "카타야마:weapon3-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%B4%ED%83%80%EC%95%BC%EB%A7%88/weapon3-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%B4%ED%83%80%EC%95%BC%EB%A7%88-3-01.png",
+      "source_status": "community",
+      "display_name": "作战靴"
     },
     "카타야마:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%B4%ED%83%80%EC%95%BC%EB%A7%88/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%B4%ED%83%80%EC%95%BC%EB%A7%88-4-01.png",
+      "source_status": "community",
+      "display_name": "伏特赤心"
     },
     "카타야마:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%B9%B4%ED%83%80%EC%95%BC%EB%A7%88/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%B9%B4%ED%83%80%EC%95%BC%EB%A7%88-5-01.png",
+      "source_status": "community",
+      "display_name": "铁誓狼骑"
     },
     "코로마루:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%BD%94%EB%A1%9C%EB%A7%88%EB%A3%A8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%BD%94%EB%A1%9C%EB%A7%88%EB%A3%A8-4-01.png",
+      "source_status": "community",
+      "display_name": "守护短刀"
     },
     "코로마루:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%BD%94%EB%A1%9C%EB%A7%88%EB%A3%A8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%BD%94%EB%A1%9C%EB%A7%88%EB%A3%A8-5-01.png",
+      "source_status": "community",
+      "display_name": "咆哮"
     },
     "코토네:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%BD%94%ED%86%A0%EB%84%A4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%BD%94%ED%86%A0%EB%84%A4-4-01.png",
+      "source_status": "community",
+      "display_name": "天沼矛"
     },
     "코토네:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%EC%BD%94%ED%86%A0%EB%84%A4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%EC%BD%94%ED%86%A0%EB%84%A4-5-01.png",
+      "source_status": "community",
+      "display_name": "孔雀御前・改"
     },
     "키라:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%82%A4%EB%9D%BC/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%82%A4%EB%9D%BC-4-01.png",
+      "source_status": "community",
+      "display_name": "无尽灰烬"
     },
     "키라:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%82%A4%EB%9D%BC/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%82%A4%EB%9D%BC-5-01.png",
+      "source_status": "community",
+      "display_name": "血色编织"
     },
     "키요시:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%82%A4%EC%9A%94%EC%8B%9C/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%82%A4%EC%9A%94%EC%8B%9C-4-01.png",
+      "source_status": "community",
+      "display_name": "摇曳流火"
     },
     "키요시:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%82%A4%EC%9A%94%EC%8B%9C/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%82%A4%EC%9A%94%EC%8B%9C-5-01.png",
+      "source_status": "community",
+      "display_name": "光之洗礼"
     },
     "토모코:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%86%A0%EB%AA%A8%EC%BD%94/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%86%A0%EB%AA%A8%EC%BD%94-4-01.png",
+      "source_status": "community",
+      "display_name": "影舞双冠"
     },
     "토모코:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%86%A0%EB%AA%A8%EC%BD%94/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%86%A0%EB%AA%A8%EC%BD%94-5-01.png",
+      "source_status": "community",
+      "display_name": "织梦者"
     },
     "토모코·여름:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%86%A0%EB%AA%A8%EC%BD%94%C2%B7%EC%97%AC%EB%A6%84/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%86%A0%EB%AA%A8%EC%BD%94%C2%B7%EC%97%AC%EB%A6%84-4-01.png",
+      "source_status": "community",
+      "display_name": "潮汐之语"
     },
     "토모코·여름:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%86%A0%EB%AA%A8%EC%BD%94%C2%B7%EC%97%AC%EB%A6%84/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%86%A0%EB%AA%A8%EC%BD%94%C2%B7%EC%97%AC%EB%A6%84-5-01.png",
+      "source_status": "community",
+      "display_name": "波子宝贝"
     },
     "토시야:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%86%A0%EC%8B%9C%EC%95%BC/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%86%A0%EC%8B%9C%EC%95%BC-4-01.png",
+      "source_status": "community",
+      "display_name": "猩红仪杖"
     },
     "토시야:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%86%A0%EC%8B%9C%EC%95%BC/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%86%A0%EC%8B%9C%EC%95%BC-5-01.png",
+      "source_status": "community",
+      "display_name": "亡语圣裁"
     },
     "하루:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%95%98%EB%A3%A8/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%95%98%EB%A3%A8-4-01.png",
+      "source_status": "community",
+      "display_name": "基加美修战斧"
     },
     "하루:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%95%98%EB%A3%A8/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%95%98%EB%A3%A8-5-01.png",
+      "source_status": "community",
+      "display_name": "神圣战歌"
     },
     "하루나:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%95%98%EB%A3%A8%EB%82%98/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%95%98%EB%A3%A8%EB%82%98-4-01.png",
+      "source_status": "community",
+      "display_name": "毛茸啾"
     },
     "하루나:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%95%98%EB%A3%A8%EB%82%98/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%95%98%EB%A3%A8%EB%82%98-5-01.png",
+      "source_status": "community",
+      "display_name": "甜蜜礼物"
     },
     "후카:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%9B%84%EC%B9%B4/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%9B%84%EC%B9%B4-4-01.png",
+      "source_status": "community",
+      "display_name": "D型通讯装置"
     },
     "후카:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%9B%84%EC%B9%B4/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%9B%84%EC%B9%B4-5-01.png",
+      "source_status": "community",
+      "display_name": "虹音传导器"
     },
     "후타바:weapon4-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%9B%84%ED%83%80%EB%B0%94/weapon4-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%9B%84%ED%83%80%EB%B0%94-4-01.png",
+      "source_status": "community",
+      "display_name": "C型号便携式"
     },
     "후타바:weapon5-1": {
-      "image": null,
-      "source_url": null,
-      "source_status": "unavailable"
+      "image": "weapons/%ED%9B%84%ED%83%80%EB%B0%94/weapon5-1.webp",
+      "source_url": "https://lufel.net/assets/img/character-weapon/%ED%9B%84%ED%83%80%EB%B0%94-5-01.png",
+      "source_status": "community",
+      "display_name": "HACK专业型"
     }
   }
 }

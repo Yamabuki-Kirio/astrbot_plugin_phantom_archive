@@ -72,14 +72,14 @@ SOFTWARE.
 
 | 项目 | 内容 |
 | --- | --- |
-| 来源 | 《女神异闻录：夜幕魅影》国服官网 `https://p5x.wanmei.com/js/roleData260924.js` |
-| 获取方式 | `scripts/fetch_official_art.py` 按角色名下载，转码为 WebP 后存到 `data/assets/characters/` |
+| 角色立绘来源 | 《女神异闻录：夜幕魅影》国服官网 `https://p5x.wanmei.com/js/roleData260924.js` |
+| 武器图来源 | Lufel 社区角色页实际使用的 `https://lufel.net/assets/img/character-weapon/` 素材 |
+| 获取方式 | `fetch_official_art.py` / `fetch_weapon_art.py` 下载、校验并转为 WebP |
 | 版权 | 归游戏发行方所有 |
-| 使用范围 | **仅限个人自用，不商用、不再分发** |
+| 使用范围 | 资料卡片展示；版权归各自权利人 |
 
-- 图片**不进仓库**：`.gitignore` 排除了 `data/assets/characters/` 与
-  `data/assets/weapons/`，仓库里只有索引文件 `manifest.json` 和自绘占位图。
-- 使用者需要自己运行抓取脚本，图片才会落到本地。
+- 图片随版本发布，避免插件启动时联网和 Docker 环境缺图；每张图的原始 URL 与
+  `official` / `community` 状态均记录在 `manifest.json`。
 - 如果要把本插件用于公开服务或商业用途，请先自行取得授权，
   或把 `show_character_art` / `show_weapon_art` 关掉，退回占位图。
 
