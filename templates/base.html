@@ -18,6 +18,12 @@
     --accent-soft: rgba(226, 58, 69, 0.16);
     --warn: #f0b429;
     --warn-soft: rgba(240, 180, 41, 0.12);
+    --panel: rgba(9, 10, 14, 0.66);
+    --panel-line: rgba(255, 255, 255, 0.08);
+    --scrim-a: rgba(8, 9, 13, 0.62);
+    --scrim-b: rgba(8, 9, 13, 0.94);
+    --hero-mask: linear-gradient(180deg, #000 58%, transparent 100%);
+    --hero-veil: rgba(20, 22, 29, 0.62);
   }
   [data-theme="light"] {
     --bg: #eef0f4;
@@ -29,6 +35,12 @@
     --text-2: #3d434f;
     --text-3: #6b7280;
     --warn-soft: rgba(176, 122, 0, 0.10);
+    --panel: rgba(255, 255, 255, 0.82);
+    --panel-line: rgba(15, 20, 32, 0.10);
+    /* 浅色主题下立绘更容易吃掉文字，遮罩要更实 */
+    --scrim-a: rgba(255, 255, 255, 0.66);
+    --scrim-b: rgba(255, 255, 255, 0.96);
+    --hero-veil: rgba(255, 255, 255, 0.80);
   }
   * { box-sizing: border-box; }
   html, body {
@@ -47,12 +59,13 @@
   }
   .card {
     width: 820px;
-    padding: 28px 34px 22px;
+    padding: 20px 34px 22px;
     background:
       radial-gradient(120% 90% at 0% 0%, var(--accent-soft) 0%, transparent 58%),
       linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);
     border-top: 3px solid var(--accent);
     position: relative;
+    overflow: hidden;
   }
   .card::after {
     content: "";
@@ -60,8 +73,114 @@
     inset: 0;
     pointer-events: none;
     border: 1px solid var(--line);
+    z-index: 4;
   }
-  .head { position: relative; padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); }
+
+  /* ---- 立绘背景层 ---- */
+  .hero-bg {
+    position: absolute;
+    inset: -40px;
+    background-position: center 18%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      var(--scrim-a) 0%,
+      var(--scrim-a) 34%,
+      var(--scrim-b) 62%,
+      var(--scrim-b) 100%
+    );
+    z-index: 1;
+  }
+  .hero-figure {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 42%;
+    max-width: 344px;
+    height: 340px;
+    z-index: 2;
+    pointer-events: none;
+    -webkit-mask-image: var(--hero-mask);
+    mask-image: var(--hero-mask);
+  }
+  /* 左侧渐隐：让立绘与卡片背景连成一片，不出现竖切边 */
+  .hero-figure::before {    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--hero-veil) 0%, transparent 58%);
+  }
+  .hero-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right top;
+    display: block;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+  }
+  /* 浅色卡片上深色立绘过于抢眼，整体再压一层 */
+  [data-theme="light"] .hero-figure { opacity: 0.86; }
+
+  /* ---- 表头：谁在查 ---- */
+  .requester {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .requester-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--line-strong);
+    background: var(--card-2);
+    flex: 0 0 auto;
+  }
+  .requester-initial {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    flex: 0 0 auto;
+  }
+  .requester-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .requester-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    max-width: 420px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .requester-action {
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    color: var(--text-3);
+  }
+
+  /* ---- 标题区 ---- */
+  .head { position: relative; z-index: 3; padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); }
+  .card.has-hero .head { padding-right: 300px; }
   .head-top {
     display: flex;
     align-items: center;
@@ -90,6 +209,7 @@
     font-weight: 700;
     letter-spacing: 0.03em;
     color: var(--text);
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
   }
   .title::before {
     content: "";
@@ -106,9 +226,20 @@
     color: var(--text-2);
     letter-spacing: 0.06em;
   }
+
+  /* ---- 正文面板 ---- */
+  .content {
+    position: relative;
+    z-index: 3;
+    margin-top: 14px;
+    padding: 14px 16px 4px;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 5px;
+  }
   .lead {
-    margin: 14px 0 0;
-    padding: 11px 14px;
+    margin: 0 0 10px;
+    padding: 9px 12px;
     font-size: 14.5px;
     line-height: 1.7;
     color: var(--text-2);
@@ -116,8 +247,8 @@
     border-left: 2px solid var(--accent);
     border-radius: 0 3px 3px 0;
   }
-  .sections { margin-top: 6px; }
-  .section { margin-top: 16px; }
+  .section { margin-top: 12px; }
+  .section:first-child { margin-top: 0; }
   .section-heading {
     margin: 0 0 8px;
     font-size: 15.5px;
@@ -134,12 +265,24 @@
     background: linear-gradient(90deg, var(--line-strong) 0%, transparent 88%);
   }
   .item {
+    display: flex;
+    gap: 11px;
     margin: 0 0 9px;
     padding: 8px 12px 8px 13px;
     background: var(--card-2);
     border-left: 2px solid var(--line-strong);
     border-radius: 0 3px 3px 0;
   }
+  .item-thumb {
+    width: 62px;
+    height: 62px;
+    flex: 0 0 auto;
+    object-fit: contain;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--line);
+  }
+  .item-main { min-width: 0; flex: 1 1 auto; }
   .item-title {
     margin: 0;
     font-size: 14.5px;
@@ -194,8 +337,12 @@
     border: 1px solid var(--line-strong);
     border-radius: 3px;
   }
+
+  /* ---- 页脚 ---- */
   .foot {
-    margin-top: 20px;
+    position: relative;
+    z-index: 3;
+    margin-top: 18px;
     padding-top: 12px;
     border-top: 1px solid var(--line-strong);
   }
@@ -225,7 +372,27 @@
 </style>
 </head>
 <body>
-<main class="card">
+<main class="card{% if visual.has_hero_image %} has-hero{% endif %}">
+  {% if visual.has_hero_image %}
+  <div class="hero-bg" style="background-image:url('{{ visual.background_image }}'); opacity:{{ visual.background_opacity }}; filter:blur({{ visual.background_blur }}px);"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-figure"><img src="{{ visual.hero_image }}" style="opacity:{{ visual.hero_opacity }};" alt=""></div>
+  {% endif %}
+
+  {% if visual.show_requester %}
+  <header class="requester">
+    {% if visual.requester_avatar %}
+    <img class="requester-avatar" src="{{ visual.requester_avatar }}" alt="">
+    {% else %}
+    <span class="requester-initial">{{ visual.requester_name[:1] }}</span>
+    {% endif %}
+    <div class="requester-text">
+      <span class="requester-name">{{ visual.requester_name }}</span>
+      <span class="requester-action">正在查阅 · 夜幕档案</span>
+    </div>
+  </header>
+  {% endif %}
+
   <header class="head">
     <div class="head-top">
       <span class="category">{% block category_label %}{{ category }}{% endblock %}</span>
@@ -235,23 +402,27 @@
     {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
   </header>
 
-  {% if lead %}<p class="lead">{{ lead }}</p>{% endif %}
+  <div class="content">
+    {% if lead %}<p class="lead">{{ lead }}</p>{% endif %}
 
-  <div class="sections">
     {% for section in sections %}
     <section class="section">
       {% if section.heading %}<h2 class="section-heading">{{ section.heading }}</h2>{% endif %}
       {% for block in section.blocks %}
         {%- if block.kind == "item" %}
       <div class="item">
-        <p class="item-title">{{ block.title }}</p>
-        {%- if block.lines %}
-        <div class="item-body">
-          {%- for line in block.lines %}
-          <p>{{ line }}</p>
-          {%- endfor %}
+        {%- set thumb = visual.thumbs.get(block.ref_key, "") if block.ref_key else "" %}
+        {%- if thumb %}<img class="item-thumb" src="{{ thumb }}" alt="">{% endif %}
+        <div class="item-main">
+          <p class="item-title">{{ block.title }}</p>
+          {%- if block.lines %}
+          <div class="item-body">
+            {%- for line in block.lines %}
+            <p>{{ line }}</p>
+            {%- endfor %}
+          </div>
+          {%- endif %}
         </div>
-        {%- endif %}
       </div>
         {%- elif block.kind == "bullets" %}
       <ul class="bullets">
@@ -273,11 +444,11 @@
       {% endfor %}
     </section>
     {% endfor %}
-  </div>
 
-  {% if omitted %}
-  <p class="omitted">另有 {{ omitted }} 项未展示</p>
-  {% endif %}
+    {% if omitted %}
+    <p class="omitted">另有 {{ omitted }} 项未展示</p>
+    {% endif %}
+  </div>
 
   {% if show_footer %}
   <footer class="foot">

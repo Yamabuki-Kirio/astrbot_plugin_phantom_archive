@@ -27,7 +27,17 @@ from astrbot.api.event import AstrMessageEvent, filter
 from astrbot.api.message_components import Image
 from astrbot.api.star import Context, Star, register
 
-from .archive import cards, image_templates, notices, renderer
+from .archive import (
+    asset_manifest,
+    asset_resolver,
+    avatar_provider,
+    cards,
+    identity,
+    image_templates,
+    notices,
+    renderer,
+    visual_context,
+)
 from .archive.database import DatabaseMissingError, SchemaMismatchError
 from .archive.image_renderer import (
     DEFAULT_MAX_CONCURRENT,
@@ -51,9 +61,12 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.3.0"
+PLUGIN_VERSION = "0.4.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
+ASSETS_DIRNAME = "assets"
+MANIFEST_FILENAME = "manifest.json"
+IMAGE_CACHE_DIRNAME = "image_cache"
 
 FALLBACK_TEXT = "text"
 FALLBACK_ERROR = "error"
@@ -152,13 +165,28 @@ class PhantomArchivePlugin(Star):
             lambda key, default: _conf_get(self.config, key, default),
             theme=self.theme,
         )
+        self.visual_settings = visual_context.VisualSettings.from_config(
+            lambda key, default: _conf_get(self.config, key, default)
+        )
+        self.avatar_settings = avatar_provider.AvatarSettings.from_config(
+            lambda key, default: _conf_get(self.config, key, default)
+        )
+        self.asset_manifest_path = self._read_manifest_path()
 
         self.database_path: Path | None = None
         self._service: ArchiveService | None = None
         self._init_error: Exception | None = None
         self._image_renderer: ImageRenderer | None = None
+        self._manifest = asset_manifest.EMPTY_MANIFEST
+        self._asset_resolver = asset_resolver.AssetResolver(
+            None,
+            show_character_art=self.visual_settings.show_character_art,
+            show_weapon_art=self.visual_settings.show_weapon_art,
+        )
+        self._avatar_provider: avatar_provider.AvatarProvider | None = None
 
         self._open_service()
+        self._load_assets()
 
     # ------------------------------------------------------------ 初始化
 
@@ -228,6 +256,50 @@ class PhantomArchivePlugin(Star):
         paths.append(DATA_DIR / DATABASE_FILENAME)
         return paths
 
+    # ------------------------------------------------------------ 素材
+
+    def _read_manifest_path(self) -> Path:
+        """清单路径：留空时用插件 data/assets/manifest.json。"""
+        raw = str(_conf_get(self.config, "asset_manifest_path", "") or "").strip()
+        if raw:
+            return Path(raw).expanduser()
+        return DATA_DIR / ASSETS_DIRNAME / MANIFEST_FILENAME
+
+    def _load_assets(self) -> None:
+        """素材缺失只是没有图，不影响启动（§四）。"""
+        self._manifest = asset_manifest.EMPTY_MANIFEST
+        try:
+            manifest = asset_manifest.load_manifest(self.asset_manifest_path)
+        except Exception as exc:  # noqa: BLE001 - 清单坏了也不能拦住启动
+            logger.warning("素材清单加载失败（%s），本次使用纯色卡片", type(exc).__name__)
+            manifest = asset_manifest.EMPTY_MANIFEST
+
+        self._manifest = manifest
+        self._asset_resolver = asset_resolver.AssetResolver(
+            manifest if manifest.loaded else None,
+            show_character_art=self.visual_settings.show_character_art,
+            show_weapon_art=self.visual_settings.show_weapon_art,
+        )
+        if not manifest.loaded:
+            logger.info("未找到可用素材清单（%s），卡片使用占位图", self.asset_manifest_path)
+            return
+        counts = manifest.counts()
+        logger.info(
+            "素材清单已加载：角色 %d 名（有立绘 %d），武器 %d 把（有图 %d）",
+            counts["characters"],
+            counts["characters_with_portrait"],
+            counts["weapons"],
+            counts["weapons_with_image"],
+        )
+
+    def _avatar(self) -> avatar_provider.AvatarProvider:
+        if self._avatar_provider is None:
+            self._avatar_provider = avatar_provider.AvatarProvider(
+                DATA_DIR / IMAGE_CACHE_DIRNAME,
+                self.avatar_settings,
+            )
+        return self._avatar_provider
+
     # ------------------------------------------------------------ 图片输出
 
     @property
@@ -250,11 +322,41 @@ class PhantomArchivePlugin(Star):
             return text.replace(token, "***")
         return text
 
-    async def _render_pages(self, pages) -> list:
+    async def _visuals(self, event: AstrMessageEvent, pages) -> list:
+        """一次查询只取一次头像，多页复用；每页各自解析主视觉。"""
+        try:
+            requester = identity.from_event(event)
+            if self.visual_settings.show_requester_header:
+                # resolve 永远有返回值（最差是首字符头像），不会抛
+                requester = requester.with_avatar(
+                    await self._avatar().resolve(requester, event)
+                )
+        except Exception as exc:  # noqa: BLE001 - 头像失败只影响表头
+            logger.warning("读取发起者信息失败：%s", type(exc).__name__)
+            requester = identity.RequesterIdentity(
+                user_id="", display_name=identity.FALLBACK_NAME
+            )
+
+        return await asyncio.to_thread(
+            lambda: [
+                visual_context.build(
+                    page,
+                    identity=requester,
+                    resolver=self._asset_resolver,
+                    settings=self.visual_settings,
+                )
+                for page in pages
+            ]
+        )
+
+    async def _render_pages(self, event: AstrMessageEvent, pages) -> list:
         """模板渲染走线程（Jinja 是同步的），HTTP 请求走事件循环。"""
+        visuals = await self._visuals(event, pages)
         htmls = [
-            await asyncio.to_thread(image_templates.render_page, page, theme=self.theme)
-            for page in pages
+            await asyncio.to_thread(
+                image_templates.render_page, page, theme=self.theme, visual=visual
+            )
+            for page, visual in zip(pages, visuals)
         ]
         image_renderer_instance = self._renderer_instance()
         results = await asyncio.gather(
@@ -272,7 +374,7 @@ class PhantomArchivePlugin(Star):
             return [event.plain_result(outcome.text)]
 
         try:
-            images = await self._render_pages(outcome.pages)
+            images = await self._render_pages(event, outcome.pages)
         except RenderError as exc:
             reason = self._sanitize(str(exc))
             logger.warning("图片渲染失败：%s", reason)
@@ -411,7 +513,10 @@ class PhantomArchivePlugin(Star):
             return
         try:
             page = build_probe_page()
-            html = await asyncio.to_thread(image_templates.render_page, page, theme=self.theme)
+            visuals = await self._visuals(event, [page])
+            html = await asyncio.to_thread(
+                image_templates.render_page, page, theme=self.theme, visual=visuals[0]
+            )
             image = await self._renderer_instance().render(html)
         except RenderError as exc:
             reason = self._sanitize(str(exc))
@@ -436,6 +541,7 @@ class PhantomArchivePlugin(Star):
     def _status_info(self) -> dict:
         templates = image_templates.available_templates()
         info = self.render_settings.describe()
+        counts = self._manifest.counts() if self._manifest.loaded else {}
         info.update(
             {
                 "enabled": self.image_enabled,
@@ -445,6 +551,15 @@ class PhantomArchivePlugin(Star):
                 "template_count": len(templates),
                 "templates": list(templates),
                 "dependencies": _dependency_versions(),
+                "requester_header": self.visual_settings.show_requester_header,
+                "character_art": self.visual_settings.show_character_art,
+                "weapon_art": self.visual_settings.show_weapon_art,
+                "avatar_source": (
+                    "配置模板" if self.avatar_settings.has_template else "首字符头像"
+                ),
+                "manifest_loaded": self._manifest.loaded,
+                "manifest_path": str(self.asset_manifest_path),
+                "manifest_counts": counts,
             }
         )
         return info
@@ -452,7 +567,10 @@ class PhantomArchivePlugin(Star):
     # ------------------------------------------------------------ 生命周期
 
     async def terminate(self):
-        """插件卸载时释放只读连接与渲染客户端。"""
+        """插件卸载时释放只读连接、渲染客户端与头像客户端。"""
+        if self._avatar_provider is not None:
+            await self._avatar_provider.aclose()
+            self._avatar_provider = None
         if self._image_renderer is not None:
             await self._image_renderer.aclose()
             self._image_renderer = None

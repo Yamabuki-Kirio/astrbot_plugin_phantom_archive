@@ -46,11 +46,13 @@ def _png(size: tuple[int, int] = (200, 120)) -> bytes:
 
 
 class FakeEvent:
-    """实现插件真正用到的接口：plain_result / chain_result / is_admin。"""
+    """实现插件真正用到的接口：plain_result / chain_result / is_admin / 发起者。"""
 
-    def __init__(self, message_str: str, *, admin: bool = False):
+    def __init__(self, message_str: str, *, admin: bool = False, user_id: str = "", name: str = ""):
         self.message_str = message_str
         self._admin = admin
+        self._user_id = user_id
+        self._name = name
 
     def plain_result(self, text: str):
         return ("text", text)
@@ -60,6 +62,12 @@ class FakeEvent:
 
     def is_admin(self) -> bool:
         return self._admin
+
+    def get_sender_id(self) -> str:
+        return self._user_id
+
+    def get_sender_name(self) -> str:
+        return self._name
 
 
 @pytest.fixture(scope="module")
@@ -311,3 +319,140 @@ def test_terminate_closes_renderer(make_plugin):
     asyncio.run(plugin.terminate())
     assert plugin._image_renderer is None
     assert plugin._service is None
+
+
+# ------------------------------------------------------------------ 视觉升级
+
+
+def _capture_handler(store: list):
+    """把每次渲染请求里的 HTML 记下来，供断言检查。"""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        import json
+
+        store.append(json.loads(request.content.decode("utf-8"))["tmpl"])
+        return httpx.Response(200, content=_png(), headers={"content-type": "image/png"})
+
+    return handler
+
+
+def test_html_carries_requester_header(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store))
+    run(plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="10001", name="山吹桐生"))
+
+    html = store[0]
+    assert "山吹桐生" in html
+    assert "正在查阅 · 夜幕档案" in html
+    assert 'class="requester"' in html
+
+
+def test_different_users_get_different_header(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store))
+    run(plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="1", name="用户甲"))
+    run(plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="2", name="用户乙"))
+
+    assert "用户甲" in store[0] and "用户乙" not in store[0]
+    assert "用户乙" in store[1] and "用户甲" not in store[1]
+    # 不同用户的首字符头像也应不同
+    assert store[0] != store[1]
+
+
+def test_nickname_is_html_escaped_in_image(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store))
+    run(
+        plugin.character_command,
+        FakeEvent("/p5x角色 汐见琴音", user_id="1", name="<script>alert(1)</script>"),
+    )
+    html = store[0]
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;" in html
+
+
+def test_header_hidden_when_configured_off(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store), show_requester_header=False)
+    run(plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="1", name="山吹桐生"))
+    assert "正在查阅" not in store[0]
+    assert "山吹桐生" not in store[0]
+
+
+def test_every_page_keeps_requester(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store))
+    run(plugin.guides_command, FakeEvent("/p5x攻略 汐见琴音", user_id="1", name="山吹桐生"))
+    assert len(store) > 1
+    assert all("山吹桐生" in html for html in store)
+
+
+def test_character_page_has_hero_and_no_remote_url(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store))
+    run(plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="1", name="山吹桐生"))
+    html = store[0]
+    assert 'class="hero-figure"' in html
+    assert "data:image/webp;base64," in html
+    assert "http://" not in html
+    assert "https://" not in html
+
+
+def test_weapon_page_has_thumbnails(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store))
+    run(plugin.weapons_command, FakeEvent("/p5x武器 汐见琴音", user_id="1", name="山吹桐生"))
+    assert 'class="item-thumb"' in store[0]
+
+
+def test_character_list_uses_archive_hero(make_plugin):
+    store = []
+    plugin = make_plugin(handler=_capture_handler(store))
+    run(plugin.character_list_command, FakeEvent("/p5x角色列表", user_id="1", name="山吹桐生"))
+    assert 'class="hero-figure"' in store[0]
+
+
+def test_art_can_be_disabled(make_plugin):
+    store = []
+    plugin = make_plugin(
+        handler=_capture_handler(store), show_character_art=False, show_weapon_art=False
+    )
+    run(plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="1", name="山吹桐生"))
+    assert 'class="hero-figure"' not in store[0]
+
+
+def test_avatar_failure_does_not_break_query(make_plugin, tmp_path):
+    from importlib import import_module
+
+    avatar_module = import_module(f"{PACKAGE_NAME}.archive.avatar_provider")
+    plugin = make_plugin(handler=ok_handler)
+    plugin._avatar_provider = avatar_module.AvatarProvider(
+        tmp_path,
+        avatar_module.AvatarSettings(url_template="https://avatar.invalid/{user_id}"),
+        transport=httpx.MockTransport(lambda request: httpx.Response(500)),
+    )
+    results = run(
+        plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="1", name="山吹桐生")
+    )
+    assert results[0][0] == "chain"
+
+
+def test_text_fallback_unchanged_with_visual(make_plugin):
+    """降级文字必须逐字与 v0.3.0 一致，不带任何视觉痕迹。"""
+    plugin = make_plugin(handler=lambda request: httpx.Response(502, text="bad gateway"))
+    results = run(
+        plugin.character_command, FakeEvent("/p5x角色 汐见琴音", user_id="1", name="山吹桐生")
+    )
+    text = results[0][1]
+    assert text.startswith("【汐见琴音】")
+    assert "data:image" not in text
+    assert "山吹桐生" not in text
+    assert notices.DISCLAIMER in text
+
+
+def test_status_reports_asset_coverage(make_plugin):
+    plugin = make_plugin(handler=ok_handler)
+    text = run(plugin.render_status_command, FakeEvent("/p5x渲染状态", admin=True))[0][1]
+    assert "素材清单" in text
+    assert "角色立绘" in text
+    assert "表头用户" in text

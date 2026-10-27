@@ -112,3 +112,73 @@ def test_presenter_does_not_render_html(service):
     page = service.character_outcome("汐见琴音").pages[0]
     assert "<" not in page.title
     assert all("<" not in block.title for section in page.sections for block in section.blocks)
+
+
+# ------------------------------------------------------------------ 技能加点推荐
+
+
+def test_recommendation_section_is_after_lead_before_skills(service):
+    page = service.character_outcome("汐见琴音").pages[0]
+    headings = [section.heading for section in page.sections]
+    assert headings[0] == "技能加点推荐"
+    assert headings.index("技能加点推荐") < headings.index("技能")
+    assert headings.index("技能") < headings.index("武器")
+
+
+def test_recommendation_section_contains_priority_and_order(service):
+    page = service.character_outcome("汐见琴音").pages[0]
+    section = page.sections[0]
+    lines = [line for block in section.blocks for line in block.lines]
+    text = "\n".join(lines)
+    assert "优先级：" in text
+    assert "推荐顺序：" in text
+    assert "→" in text
+    assert "琴奏之调" in text
+
+
+def test_recommendation_missing_shows_explicit_text(service):
+    page = service.character_outcome("坂本龙司·星舞").pages[0]
+    section = page.sections[0]
+    assert section.heading == "技能加点推荐"
+    text = "\n".join(line for block in section.blocks for line in block.lines)
+    assert "暂未收录可靠的技能加点顺序" in text
+
+
+def test_recommendation_appears_on_first_page(service):
+    page = service.character_outcome("汐见琴音").pages[0]
+    assert page.page_index == 1
+    assert page.sections[0].heading == "技能加点推荐"
+
+
+def test_weapon_blocks_carry_ref_key(service):
+    page = service.weapons_outcome("汐见琴音").pages[0]
+    blocks = [block for section in page.sections for block in section.blocks]
+    assert blocks
+    assert all(block.ref_key for block in blocks)
+
+
+def test_weapon_page_hero_is_first_weapon(service):
+    page = service.weapons_outcome("汐见琴音").pages[0]
+    first_block = page.sections[0].blocks[0]
+    assert page.hero_kind == "weapon"
+    assert page.hero_key == first_block.ref_key
+    assert page.owner_key
+
+
+def test_character_page_hero_is_character(service):
+    page = service.character_outcome("汐见琴音").pages[0]
+    assert page.hero_kind == "character"
+    assert page.hero_key
+    assert page.hero_key == page.owner_key
+
+
+def test_character_list_hero_is_archive(service):
+    page = service.character_list_outcome().pages[0]
+    assert page.hero_kind == "archive"
+
+
+def test_guide_page_uses_character_hero(service):
+    """攻略页也是「某个角色的资料」，主视觉沿用角色立绘。"""
+    page = service.guide_outcome("汐见琴音", "review").pages[0]
+    assert page.hero_kind == "character"
+    assert page.hero_key

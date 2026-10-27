@@ -6,9 +6,11 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
-from archive import cards, image_templates, notices
+from archive import cards, image_templates, notices, visual_context
 
 ALL_TEMPLATES = (
     "base.html",
@@ -163,3 +165,156 @@ def test_render_pages_returns_one_html_per_page():
     htmls = image_templates.render_pages(pages)
     assert len(htmls) == 2
     assert all(html.startswith("<!DOCTYPE html>") for html in htmls)
+
+
+# ------------------------------------------------------------------ 视觉上下文
+
+
+def _visual(**overrides) -> visual_context.VisualContext:
+    base = dict(
+        requester_name="山吹桐生",
+        requester_avatar="data:image/webp;base64,AVATAR",
+        hero_image="data:image/webp;base64,HERO",
+        background_image="data:image/webp;base64,BG",
+        hero_kind="character",
+        has_requester_avatar=True,
+        has_hero_image=True,
+        show_requester=True,
+    )
+    base.update(overrides)
+    return visual_context.VisualContext(**base)
+
+
+def test_requester_header_rendered():
+    html = image_templates.render_page(_page(), visual=_visual())
+    assert "山吹桐生" in html
+    assert "正在查阅 · 夜幕档案" in html
+    assert "data:image/webp;base64,AVATAR" in html
+
+
+def test_requester_header_hidden_by_visual_context():
+    html = image_templates.render_page(
+        _page(), visual=_visual(show_requester=False, requester_name="", requester_avatar="")
+    )
+    assert "正在查阅" not in html
+
+
+def test_requester_without_avatar_shows_initial():
+    html = image_templates.render_page(
+        _page(),
+        visual=_visual(requester_avatar="", has_requester_avatar=False),
+    )
+    assert 'class="requester-initial"' in html
+    assert "山" in html
+
+
+def test_requester_name_is_escaped():
+    html = image_templates.render_page(
+        _page(), visual=_visual(requester_name='<img src=x onerror="alert(1)">')
+    )
+    assert "&lt;img src=x" in html
+    assert '<img src=x onerror="alert(1)">' not in html
+
+
+def test_hero_layers_rendered():
+    html = image_templates.render_page(_page(), visual=_visual())
+    assert 'class="hero-bg"' in html
+    assert 'class="hero-scrim"' in html
+    assert 'class="hero-figure"' in html
+    assert "card has-hero" in html
+    assert "data:image/webp;base64,HERO" in html
+    assert "data:image/webp;base64,BG" in html
+
+
+def test_no_hero_layers_without_image():
+    html = image_templates.render_page(_page())
+    assert 'class="hero-figure"' not in html
+    assert "card has-hero" not in html
+
+
+def test_opacity_and_blur_are_inlined():
+    html = image_templates.render_page(
+        _page(),
+        visual=_visual(background_opacity=0.5, hero_opacity=0.7, background_blur=12),
+    )
+    assert "opacity:0.5" in html
+    assert "opacity:0.7" in html
+    assert "blur(12px)" in html
+
+
+def test_only_data_uri_images():
+    """卡片里只允许 data:image 的图片，绝不允许远程地址。"""
+    html = image_templates.render_page(_page(), visual=_visual())
+    sources = re.findall(r'src="([^"]*)"', html)
+    assert sources
+    for source in sources:
+        assert source.startswith("data:image/"), source
+
+
+def test_no_remote_url_anywhere_with_visual():
+    html = image_templates.render_page(_page(), visual=_visual())
+    assert "http://" not in html
+    assert "https://" not in html
+
+
+def test_thumbnails_rendered_for_item_blocks():
+    page = _page(
+        category="武器",
+        sections=(
+            cards.Section(
+                heading="武器",
+                blocks=(
+                    cards.Block(kind="item", lines=("· 武器甲", "攻击 100"), ref_key="w1"),
+                    cards.Block(kind="item", lines=("· 武器乙", "攻击 200"), ref_key="w2"),
+                ),
+            ),
+        ),
+    )
+    visual = _visual(thumbs={"w1": "data:image/webp;base64,W1"})
+    html = image_templates.render_page(page, visual=visual)
+    assert 'class="item-thumb"' in html
+    assert "data:image/webp;base64,W1" in html
+    # 没登记的缩略图不渲染 img，但条目正文照旧
+    assert "武器乙" in html
+    assert html.count('class="item-thumb"') == 1
+
+
+def test_unknown_ref_key_does_not_break():
+    page = _page(
+        category="武器",
+        sections=(
+            cards.Section(
+                heading="武器",
+                blocks=(cards.Block(kind="item", lines=("· 武器甲", "x"), ref_key="nope"),),
+            ),
+        ),
+    )
+    html = image_templates.render_page(page, visual=_visual(thumbs={}))
+    assert "武器甲" in html
+    assert 'class="item-thumb"' not in html
+
+
+def test_render_pages_accepts_visuals():
+    pages = [_page(page_index=1, page_total=2, show_footer=False), _page(page_index=2)]
+    htmls = image_templates.render_pages(
+        pages, visuals=[_visual(), _visual(hero_image="data:image/webp;base64,H2")]
+    )
+    assert len(htmls) == 2
+    assert "data:image/webp;base64,H2" in htmls[1]
+
+
+def test_render_pages_without_visuals_still_works():
+    htmls = image_templates.render_pages([_page()])
+    assert 'class="hero-figure"' not in htmls[0]
+
+
+def test_build_context_includes_visual():
+    context = image_templates.build_context(_page(), visual=_visual())
+    assert context["visual"]["requester_name"] == "山吹桐生"
+    assert context["visual"]["has_hero_image"] is True
+
+
+def test_build_context_without_visual_uses_empty():
+    context = image_templates.build_context(_page())
+    assert context["visual"]["has_hero_image"] is False
+    assert context["visual"]["show_requester"] is True

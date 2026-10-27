@@ -18,3 +18,8 @@ raw/
 
 # data/ 目录本身要保留（部署时把数据库放进去），只忽略内容
 !data/.gitkeep
+
+# 素材清单与自产占位图要进仓库：它们是插件自己生成的，不含第三方素材
+# 若日后放入真实角色立绘 / 武器图，请先确认授权，再把 data/assets/characters
+# 与 data/assets/weapons 加回忽略列表
+!data/assets/

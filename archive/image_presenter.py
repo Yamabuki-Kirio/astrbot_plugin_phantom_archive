@@ -1,7 +1,8 @@
 """把查询结果变成卡片展示模型。
 
-这一层只做「数据 → 排版块」，不生成 HTML、不发请求、不碰数据库。
-文本块本身直接复用 renderer 的生成函数，保证图片和文字降级看到的是同一份内容。
+这一层只做「数据 → 排版块」，不生成 HTML、不发请求、不碰数据库、不查素材。
+素材匹配交给 asset_resolver，图片编码交给 image_codec ——
+这里只写业务标识（hero_kind / hero_key / ref_key），视觉层自己去解析。
 """
 
 from __future__ import annotations
@@ -21,11 +22,9 @@ CATEGORY_SKILL = "技能"
 CATEGORY_WEAPON = "武器"
 CATEGORY_LIST = "角色列表"
 
-
-def _character_statuses(profile: CharacterProfile) -> tuple:
-    return (profile.character.translation_status,) + tuple(
-        skill.translation_status for skill in profile.skills
-    ) + tuple(weapon.translation_status for weapon in profile.weapons)
+HERO_CHARACTER = "character"
+HERO_WEAPON = "weapon"
+HERO_ARCHIVE = "archive"
 
 
 def _subtitle(character: Character) -> str:
@@ -36,6 +35,17 @@ def _subtitle(character: Character) -> str:
             character.position_zh,
         ]
     )
+
+
+def _character_key(character: Character) -> str:
+    """素材按 slug 匹配，没有 slug 才退回 source_key。"""
+    return (character.slug or "").strip() or character.source_key
+
+
+def _character_statuses(profile: CharacterProfile) -> tuple:
+    return (profile.character.translation_status,) + tuple(
+        skill.translation_status for skill in profile.skills
+    ) + tuple(weapon.translation_status for weapon in profile.weapons)
 
 
 def _finish(pages, statuses, has_conflict: bool, source_status: str | None):
@@ -51,6 +61,24 @@ def _finish(pages, statuses, has_conflict: bool, source_status: str | None):
         )
         for page in pages
     ]
+
+
+# ------------------------------------------------------------------ 技能加点推荐
+
+
+def recommendation_section(profile: CharacterProfile) -> cards.Section | None:
+    """技能加点推荐板块。没有可靠数据也要出板块，写「暂未收录」。"""
+    recommendation = getattr(profile, "recommendation", None)
+    if recommendation is None:
+        return None
+
+    lines = renderer.recommendation_lines(recommendation)
+    if not lines:
+        return None
+
+    body = lines[1:]  # 第一行是「■ 技能加点推荐」，这里作为节标题
+    blocks = tuple(cards.Block(kind="para", lines=(line,)) for line in body)
+    return cards.Section(heading="技能加点推荐", blocks=blocks)
 
 
 # ------------------------------------------------------------------ 角色 / 技能 / 武器
@@ -77,14 +105,21 @@ def character_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages:
         )
         weapon_blocks.append([f"· {renderer.weapon_label(weapon)}" + (f" {meta}" if meta else "")])
 
+    # 顺序即优先级：技能加点推荐必须在第一页，所以它排在最前
     sections: list[cards.Section] = []
+    advice = recommendation_section(profile)
+    if advice is not None:
+        sections.append(advice)
     if blocks:
-        sections.append(cards.Section(heading="技能", blocks=tuple(cards.classify_block(b) for b in blocks)))
+        sections.append(
+            cards.Section(heading="技能", blocks=tuple(cards.classify_block(b) for b in blocks))
+        )
     if weapon_blocks:
         sections.append(
             cards.Section(heading="武器", blocks=tuple(cards.classify_block(b) for b in weapon_blocks))
         )
 
+    key = _character_key(character)
     pages = cards.paginate(
         CATEGORY_CHARACTER,
         character.display_name,
@@ -93,8 +128,11 @@ def character_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages:
         lead=renderer.clip_sentence(character.description_zh, CHARACTER_DESC_LIMIT),
         rows_per_page=rows_per_page,
         max_pages=max_pages,
+        hero_kind=HERO_CHARACTER,
+        hero_key=key,
+        owner_key=key,
     )
-    return _finish(pages, _character_statuses(profile), profile.has_conflict, profile.character.source_status)
+    return _finish(pages, _character_statuses(profile), profile.has_conflict, character.source_status)
 
 
 def skills_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages: int):
@@ -109,11 +147,16 @@ def skills_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages: in
         blocks.append(block)
 
     sections = (
-        (cards.Section(heading=f"技能（共 {len(profile.skills)} 条）",
-                       blocks=tuple(cards.classify_block(b) for b in blocks)),)
+        (
+            cards.Section(
+                heading=f"技能（共 {len(profile.skills)} 条）",
+                blocks=tuple(cards.classify_block(b) for b in blocks),
+            ),
+        )
         if blocks
         else ()
     )
+    key = _character_key(character)
     pages = cards.paginate(
         CATEGORY_SKILL,
         character.display_name,
@@ -121,18 +164,21 @@ def skills_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages: in
         subtitle=_subtitle(character),
         rows_per_page=rows_per_page,
         max_pages=max_pages,
+        hero_kind=HERO_CHARACTER,
+        hero_key=key,
+        owner_key=key,
     )
-    return _finish(pages, _character_statuses(profile), profile.has_conflict, profile.character.source_status)
+    return _finish(pages, _character_statuses(profile), profile.has_conflict, character.source_status)
 
 
 def weapons_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages: int):
     character = profile.character
-    blocks: list[list[str]] = []
+    blocks: list[cards.Block] = []
     for weapon in profile.weapons:
         title = renderer.weapon_label(weapon)
         if weapon.rarity:
             title += f" {weapon.rarity}★"
-        block = [f"· {title}"]
+        lines = [f"· {title}"]
         stats = renderer.join_meta(
             [
                 f"生命 {renderer.fmt_num(weapon.health)}" if weapon.health else None,
@@ -141,24 +187,31 @@ def weapons_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages: i
             ]
         )
         if stats:
-            block.append(f"  {stats}")
+            lines.append(f"  {stats}")
         skill_name = (weapon.skill_name_zh or "").strip()
-        block.append(
+        lines.append(
             f"  {notices.MISSING_WEAPON_SKILL_NAME}"
             if not skill_name
             else f"  技能名称：{skill_name}"
         )
         body = renderer.clip_sentence(weapon.description_zh, WEAPON_DESC_LIMIT)
         if body:
-            block.append(f"  {body}")
-        blocks.append(block)
+            lines.append(f"  {body}")
+
+        classified = cards.classify_block(lines)
+        # ref_key 让视觉层知道这块是哪把武器，从而挂缩略图
+        blocks.append(
+            cards.Block(
+                kind=classified.kind, lines=classified.lines, ref_key=weapon.weapon_key
+            )
+        )
 
     sections = (
-        (cards.Section(heading=f"武器（共 {len(profile.weapons)} 把）",
-                       blocks=tuple(cards.classify_block(b) for b in blocks)),)
+        (cards.Section(heading=f"武器（共 {len(profile.weapons)} 把）", blocks=tuple(blocks)),)
         if blocks
         else ()
     )
+    owner = _character_key(character)
     pages = cards.paginate(
         CATEGORY_WEAPON,
         character.display_name,
@@ -166,8 +219,33 @@ def weapons_pages(profile: CharacterProfile, *, rows_per_page: int, max_pages: i
         subtitle=_subtitle(character),
         rows_per_page=rows_per_page,
         max_pages=max_pages,
+        hero_kind=HERO_WEAPON,
+        owner_key=owner,
     )
-    return _finish(pages, _character_statuses(profile), profile.has_conflict, profile.character.source_status)
+
+    # 「当前页第一把武器」只有分页之后才知道，所以在这里回填
+    result = []
+    for page in pages:
+        first_key = next(
+            (
+                block.ref_key
+                for section in page.sections
+                for block in section.blocks
+                if block.ref_key
+            ),
+            "",
+        )
+        result.append(
+            cards.with_hero(
+                page,
+                kind=HERO_WEAPON if first_key else HERO_CHARACTER,
+                key=first_key or owner,
+                owner=owner,
+            )
+        )
+    return _finish(
+        result, _character_statuses(profile), profile.has_conflict, character.source_status
+    )
 
 
 # ------------------------------------------------------------------ 攻略类
@@ -195,6 +273,7 @@ def guide_pages(
             blocks = builder(guide.content)
 
     sections = cards.split_sections(blocks) if blocks else ()
+    key = _character_key(profile.character)
     pages = cards.paginate(
         f"{title}攻略",
         profile.character.display_name,
@@ -202,8 +281,13 @@ def guide_pages(
         subtitle=_subtitle(profile.character),
         rows_per_page=rows_per_page,
         max_pages=max_pages,
+        hero_kind=HERO_CHARACTER,
+        hero_key=key,
+        owner_key=key,
     )
-    return _finish(pages, _guide_statuses(profile), profile.has_conflict, profile.character.source_status)
+    return _finish(
+        pages, _guide_statuses(profile), profile.has_conflict, profile.character.source_status
+    )
 
 
 def all_guides_pages(profile: GuideProfile, *, rows_per_page: int, max_pages: int):
@@ -221,6 +305,7 @@ def all_guides_pages(profile: GuideProfile, *, rows_per_page: int, max_pages: in
             prefix = heading if not section.heading else f"{heading} · {section.heading}"
             sections.append(cards.Section(heading=prefix, blocks=section.blocks))
 
+    key = _character_key(profile.character)
     pages = cards.paginate(
         "综合攻略",
         profile.character.display_name,
@@ -228,8 +313,13 @@ def all_guides_pages(profile: GuideProfile, *, rows_per_page: int, max_pages: in
         subtitle=_subtitle(profile.character),
         rows_per_page=rows_per_page,
         max_pages=max_pages,
+        hero_kind=HERO_CHARACTER,
+        hero_key=key,
+        owner_key=key,
     )
-    return _finish(pages, _guide_statuses(profile), profile.has_conflict, profile.character.source_status)
+    return _finish(
+        pages, _guide_statuses(profile), profile.has_conflict, profile.character.source_status
+    )
 
 
 # ------------------------------------------------------------------ 角色列表
@@ -263,5 +353,6 @@ def character_list_pages(
         subtitle="当前收录角色",
         rows_per_page=rows_per_page,
         max_pages=max_pages,
+        hero_kind=HERO_ARCHIVE,
     )
     return _finish(pages, tuple(c.translation_status for c in characters), False, None)

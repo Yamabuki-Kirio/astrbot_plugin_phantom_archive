@@ -24,10 +24,15 @@ CONTINUATION_PREFIX = "  "
 
 @dataclass(frozen=True)
 class Block:
-    """一个排版块。kind 决定 HTML 用哪种样式，lines 保留原始文本。"""
+    """一个排版块。kind 决定 HTML 用哪种样式，lines 保留原始文本。
+
+    ``ref_key`` 是这块内容指向的业务标识（目前只有武器块会填），
+    视觉层用它去查缩略图；它只是标识符，不带路径也不带 URL。
+    """
 
     kind: str  # item | para | bullets | kv
     lines: tuple[str, ...]
+    ref_key: str = ""
 
     @property
     def title(self) -> str:
@@ -78,6 +83,10 @@ class CardPage:
     translation_label: str = ""
     has_conflict: bool = False
     show_footer: bool = False  # 最后一张才放免责声明
+    # 视觉层需要的业务标识，不含任何路径或 URL
+    hero_kind: str = ""  # character | weapon | archive
+    hero_key: str = ""  # 角色 slug / 武器 key
+    owner_key: str = ""  # 武器缺图时回退到哪个角色
 
     @property
     def page_label(self) -> str:
@@ -157,6 +166,9 @@ def paginate(
     lead: str = "",
     rows_per_page: int = DEFAULT_ROWS_PER_PAGE,
     max_pages: int = DEFAULT_MAX_PAGES,
+    hero_kind: str = "",
+    hero_key: str = "",
+    owner_key: str = "",
 ) -> list[CardPage]:
     """按整块切页。
 
@@ -234,9 +246,17 @@ def paginate(
                 page_total=total,
                 omitted=omitted if index == total else 0,
                 show_footer=index == total,
+                hero_kind=hero_kind,
+                hero_key=hero_key,
+                owner_key=owner_key,
             )
         )
     return result
+
+
+def with_hero(page: CardPage, *, kind: str, key: str, owner: str = "") -> CardPage:
+    """给某一页指定主视觉。武器页要在分页之后才知道「本页第一把武器」是谁。"""
+    return replace(page, hero_kind=kind, hero_key=key, owner_key=owner)
 
 
 def with_footer(page: CardPage, *, source_label: str, translation_label: str, has_conflict: bool) -> CardPage:

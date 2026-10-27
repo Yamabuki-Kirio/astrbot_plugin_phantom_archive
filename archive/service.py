@@ -14,10 +14,10 @@ AstrBot 的事件循环里不能跑阻塞 SQL，所以每次查询都通过
 from __future__ import annotations
 
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
-from . import cards, image_presenter, notices, renderer
+from . import cards, image_presenter, notices, recommendation, renderer
 from .database import (
     ArchiveDatabase,
     ArchiveError,
@@ -119,6 +119,30 @@ class ArchiveService:
     def _profile(self, character: Character, scope):
         return self._repo.build_profile(character, scope)
 
+    def _with_recommendation(self, profile):
+        """把 setting 攻略里的技能加点顺序解析成结构化推荐。
+
+        解析放在查询层：模板不该分析攻略 JSON，展示层也不该回库。
+        没有 setting 数据时返回 UNAVAILABLE，由展示层写「暂未收录」。
+        """
+        guide = next(
+            (
+                item
+                for item in self._repo.build_guide_profile(profile.character, ("setting",)).guides
+                if item.guide_type == "setting"
+            ),
+            None,
+        )
+        if guide is None:
+            return profile
+        parsed = recommendation.parse(
+            guide.content,
+            profile.skills,
+            source_status=guide.source_status or "",
+            translation_status=guide.translation_status or "",
+        )
+        return replace(profile, recommendation=parsed)
+
     def _paginate(self, builder, *args) -> tuple:
         return builder(*args, rows_per_page=self.rows_per_page, max_pages=self.max_pages)
 
@@ -140,7 +164,9 @@ class ArchiveService:
             located = self._locate(term, "/p5x角色")
             if isinstance(located, QueryOutcome):
                 return located
-            profile = self._profile(located[0].character, CONFLICT_SCOPE_CHARACTER)
+            profile = self._with_recommendation(
+                self._profile(located[0].character, CONFLICT_SCOPE_CHARACTER)
+            )
             text = renderer.render_character(profile, self.max_chars)
             pages = self._paginate(image_presenter.character_pages, profile)
             return QueryOutcome(ok=True, text=text, pages=tuple(pages))

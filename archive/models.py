@@ -10,6 +10,8 @@ from dataclasses import dataclass
 import json
 from typing import Any, Mapping
 
+from .recommendation import SkillUpgradeRecommendation, UNAVAILABLE
+
 
 def _get(row: Mapping[str, Any], key: str, default: Any = None) -> Any:
     try:
@@ -159,10 +161,24 @@ class CharacterProfile:
     weapons: tuple[Weapon, ...]
     conflict_count: int
     conflict_scope: str
+    # 技能加点推荐由查询层从 setting 攻略解析后挂上来，模板不负责分析 JSON
+    recommendation: SkillUpgradeRecommendation = UNAVAILABLE
+
+    def __post_init__(self) -> None:
+        if self.recommendation is None:
+            object.__setattr__(self, "recommendation", UNAVAILABLE)
 
     @property
     def has_conflict(self) -> bool:
         return self.conflict_count > 0
+
+    def statuses(self) -> tuple:
+        """这条回复涉及的所有翻译状态，用于取最差的一档展示。"""
+        return (
+            (self.character.translation_status,)
+            + tuple(skill.translation_status for skill in self.skills)
+            + tuple(weapon.translation_status for weapon in self.weapons)
+        )
 
 
 @dataclass(frozen=True)

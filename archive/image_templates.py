@@ -15,7 +15,7 @@ from typing import Iterable, Sequence
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 
-from . import cards, notices
+from . import cards, notices, visual_context
 
 logger = logging.getLogger(__name__)
 
@@ -107,18 +107,24 @@ def block_context(block: cards.Block) -> dict:
     ``·`` 前缀在这里就剥掉，模板不再做字符串裁剪 —— 模板越笨，
     用户数据被误当成标记处理的机会越少。
     """
+    ref_key = getattr(block, "ref_key", "")
     if block.kind == "item":
         # 条目正文里也可能自带 · 前缀（原文就是这样排的），一并剥掉
         return {
             "kind": "item",
             "title": block.title,
             "lines": _clean(_strip_bullet(line) for line in block.body),
+            "ref_key": ref_key,
         }
     if block.kind == "bullets":
-        return {"kind": "bullets", "lines": _clean(_strip_bullet(line) for line in block.lines)}
+        return {
+            "kind": "bullets",
+            "lines": _clean(_strip_bullet(line) for line in block.lines),
+            "ref_key": ref_key,
+        }
     if block.kind == "kv":
-        return {"kind": "kv", "lines": _clean(block.lines)}
-    return {"kind": "para", "lines": _clean(block.lines)}
+        return {"kind": "kv", "lines": _clean(block.lines), "ref_key": ref_key}
+    return {"kind": "para", "lines": _clean(block.lines), "ref_key": ref_key}
 
 
 def section_context(section: cards.Section) -> dict:
@@ -129,10 +135,16 @@ def section_context(section: cards.Section) -> dict:
     }
 
 
-def build_context(page: cards.CardPage, *, theme: str = THEME_DARK) -> dict:
+def build_context(
+    page: cards.CardPage,
+    *,
+    theme: str = THEME_DARK,
+    visual: visual_context.VisualContext | None = None,
+) -> dict:
     """一张卡片的完整模板上下文。缺字段直接抛错，由调用方降级成文字。"""
     if theme not in THEMES:
         theme = THEME_DARK
+    visual_dict = (visual or visual_context.EMPTY_VISUAL).as_template_dict()
     return {
         "theme": theme,
         "category": page.category,
@@ -150,21 +162,37 @@ def build_context(page: cards.CardPage, *, theme: str = THEME_DARK) -> dict:
         "source_label": page.source_label,
         "translation_label": page.translation_label,
         "disclaimer_lines": notices.DISCLAIMER_LINES,
+        "visual": visual_dict,
     }
 
 
 # ---------------------------------------------------------------- 渲染
 
 
-def render_page(page: cards.CardPage, *, theme: str = THEME_DARK) -> str:
-    """渲染一张卡片。"""
+def render_page(
+    page: cards.CardPage,
+    *,
+    theme: str = THEME_DARK,
+    visual: visual_context.VisualContext | None = None,
+) -> str:
+    """渲染一张卡片。visual 为空时输出无头像、无立绘的纯色卡片。"""
     env = get_environment()
     template = env.get_template(template_for(page.category))
-    return template.render(**build_context(page, theme=theme))
+    return template.render(**build_context(page, theme=theme, visual=visual))
 
 
-def render_pages(pages: Sequence[cards.CardPage], *, theme: str = THEME_DARK) -> list[str]:
-    return [render_page(page, theme=theme) for page in pages]
+def render_pages(
+    pages: Sequence[cards.CardPage],
+    *,
+    theme: str = THEME_DARK,
+    visuals: Sequence[visual_context.VisualContext | None] | None = None,
+) -> list[str]:
+    if visuals is None:
+        return [render_page(page, theme=theme) for page in pages]
+    return [
+        render_page(page, theme=theme, visual=visual)
+        for page, visual in zip(pages, visuals)
+    ]
 
 
 __all__ = [

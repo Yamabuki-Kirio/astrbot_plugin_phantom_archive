@@ -63,5 +63,55 @@
     "description": "卡片配色：dark 暗色档案卡，light 浅色",
     "type": "string",
     "default": "dark"
+  },
+  "show_requester_header": {
+    "description": "卡片表头显示发起查询的用户头像与昵称",
+    "type": "bool",
+    "default": true
+  },
+  "show_character_art": {
+    "description": "角色类查询使用角色立绘作为主视觉（缺图时用占位图）",
+    "type": "bool",
+    "default": true
+  },
+  "show_weapon_art": {
+    "description": "武器类查询使用武器图作为主视觉与条目缩略图（缺图时逐级回退）",
+    "type": "bool",
+    "default": true
+  },
+  "asset_manifest_path": {
+    "description": "素材清单 manifest.json 的路径，留空时使用插件 data/assets/manifest.json",
+    "type": "string",
+    "default": ""
+  },
+  "card_background_opacity": {
+    "description": "卡片背景图不透明度（0-0.6，越大背景越明显）",
+    "type": "float",
+    "default": 0.24
+  },
+  "card_hero_opacity": {
+    "description": "主视觉立绘不透明度（0.2-1.0）",
+    "type": "float",
+    "default": 0.92
+  },
+  "card_background_blur": {
+    "description": "背景图模糊半径（0-40，0 表示不模糊）",
+    "type": "int",
+    "default": 8
+  },
+  "avatar_cache_hours": {
+    "description": "头像缓存有效期（小时，0 表示每次都重新获取）",
+    "type": "int",
+    "default": 24
+  },
+  "avatar_request_timeout": {
+    "description": "头像下载超时（秒，1-30）；超时不会影响查询，会改用首字符头像",
+    "type": "int",
+    "default": 5
+  },
+  "qq_avatar_url_template": {
+    "description": "QQ 头像地址模板，必须含 {user_id} 占位符，例如 https://第三方面板/{user_id}；留空表示只用首字符头像",
+    "type": "string",
+    "default": ""
   }
 }

@@ -1,0 +1,1149 @@
+{
+  "_comment": "由 scripts/build_asset_manifest.py 生成；路径相对本文件所在目录",
+  "characters": {
+    "j-c": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "bui": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "bui-cosmic": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "pinky": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "leon": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "joker": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "joker-starlight": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "howler": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "cattle": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "skull": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "류지·댄싱 스타": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "wind": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "wind-tempest": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "ange": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "cherish": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "turbo": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "queen": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "mona": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "mona-starlight": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "closer": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "closer-tropical": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "closer-radiance": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "mont": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "mont-frostgale": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "marian": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "marian-beachflower": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "matoi": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "puppet": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "puppet-wavecatcher": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "kirijo": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "miku": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "akihiko": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "fleuret": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "luce": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "luce-notte": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "soy": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "soy-pioneer": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아라가키": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "anri": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아마다": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "chord": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "chord-summer": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "aegis": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "crow": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "panther": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "panther-starlight": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "rin": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "rin-firecracker": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "원더": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "fox": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "phoebe": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "yukari": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "makoto": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "yuki": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "berry": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "berry-summer": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "junpei": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "vino": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "violet": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "okyann": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "blitz": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "koromaru": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "kotone": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "messa": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "key": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "moko": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "moko-seaside": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "sepia": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "noir": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "riddle": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "fuka": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "navi": {
+      "portrait": null,
+      "background": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    }
+  },
+  "weapons": {
+    "J&C:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "J&C:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "YUI:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "YUI:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "YUI·스텔라:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "YUI·스텔라:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "나루미:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "나루미:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "레오:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "레오:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "렌:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "렌:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "렌·댄싱 스타:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "렌·댄싱 스타:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "루우나:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "루우나:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "루페르:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "루페르:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "류지:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "류지:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "리코:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "리코:weapon4-2": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "리코:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "리코·매화:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "리코·매화:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마나카:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마나카:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마사키:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마사키:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마유미:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마유미:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마코토:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "마코토:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모르가나:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모르가나:weapon4-2": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모르가나:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모르가나·댄싱 스타:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모르가나·댄싱 스타:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모토하:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모토하:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모토하·여름:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모토하·여름:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모토하·청광:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "모토하·청광:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "몽타뉴:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "몽타뉴:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "몽타뉴·백조:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "몽타뉴·백조:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미나미:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미나미:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미나미·여름:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미나미·여름:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미오:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미오:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미유:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미유:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미유·여름:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미유·여름:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미츠루:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미츠루:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미쿠:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "미쿠:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "사나다:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "사나다:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "세이지:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "세이지:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "쇼키:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "쇼키:weapon4-2": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "쇼키:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "쇼키·암야:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "쇼키·암야:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "슌:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "슌:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "슌·프론티어:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "슌·프론티어:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아란:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아란:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아야카:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아야카:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아야카·여름:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아야카·여름:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아이기스:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아이기스:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아케치:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "아케치:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "안:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "안:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "안·댄싱 스타:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "안·댄싱 스타:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "야오링:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "야오링:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "야오링·사자무:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "야오링·사자무:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "원더:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "원더:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유스케:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유스케:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유우미:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유우미:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유카리:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유카리:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유키 마코토:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유키 마코토:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유키미:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "유키미:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "이치고:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "이치고:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "이치고·여름:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "이치고·여름:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "준페이:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "준페이:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "치즈코:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "치즈코:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "카스미:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "카스미:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "카요:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "카요:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "카타야마:weapon3-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "카타야마:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "카타야마:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "코로마루:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "코로마루:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "코토네:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "코토네:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "키라:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "키라:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "키요시:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "키요시:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "토모코:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "토모코:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "토모코·여름:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "토모코·여름:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "토시야:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "토시야:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "하루:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "하루:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "하루나:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "하루나:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "후카:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "후카:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "후타바:weapon4-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    },
+    "후타바:weapon5-1": {
+      "image": null,
+      "source_url": null,
+      "source_status": "unavailable"
+    }
+  }
+}

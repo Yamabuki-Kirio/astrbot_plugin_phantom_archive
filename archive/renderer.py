@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import re
 
-from . import notices
+from . import notices, recommendation as recommendation_module
 from .models import Character, CharacterProfile, Guide, GuideProfile, SearchResult, Skill, Weapon
 
 SEPARATOR = "—" * 12
@@ -163,6 +163,31 @@ def _character_header(character: Character) -> list[str]:
 # ------------------------------------------------------------------ 角色
 
 
+def recommendation_lines(recommendation) -> list[str]:
+    """技能加点推荐的文本块。图片卡片与文字降级共用这一份，保证两边一致。
+
+    没有可靠数据时**不隐藏板块**，明确写「暂未收录」，
+    否则用户会以为是漏了而不是没有。
+    """
+    if recommendation is None:
+        return []
+
+    lines = ["■ 技能加点推荐"]
+    if not getattr(recommendation, "available", False):
+        lines.append(recommendation_module.UNAVAILABLE_TEXT)
+        return lines
+
+    if recommendation.priority_labels:
+        lines.append(f"优先级：{recommendation.priority_text}")
+    if recommendation.ordered_skill_names:
+        lines.append(f"推荐顺序：{recommendation.order_text}")
+    for note in tuple(recommendation.notes)[:3]:
+        lines.append(f"说明：{note}")
+    if recommendation.needs_review:
+        lines.append(f"标注：{notices.NEEDS_REVIEW_BADGE}部分内容待人工核对")
+    return lines
+
+
 def render_character(profile: CharacterProfile, max_chars: int) -> str:
     character = profile.character
     statuses = [character.translation_status]
@@ -175,6 +200,11 @@ def render_character(profile: CharacterProfile, max_chars: int) -> str:
     intro = _clip_sentence(character.description_zh, CHARACTER_DESC_LIMIT)
     if intro:
         builder.add([intro])
+
+    # 技能加点推荐：放在简介之后、技能概要之前，顺序与图片卡片保持一致
+    advice = recommendation_lines(profile.recommendation)
+    if advice:
+        builder.add([""] + advice)
 
     if profile.skills:
         builder.try_add(["", "■ 技能"])
@@ -603,6 +633,19 @@ def render_admin_only() -> str:
     return "该指令仅限机器人管理员使用。"
 
 
+def _manifest_line(info: dict) -> str:
+    """素材覆盖情况：宁可显示 0，也不要让人以为「已经支持图片」。"""
+    if not info.get("manifest_loaded"):
+        return "素材清单：未加载（卡片使用占位图）"
+    counts = info.get("manifest_counts") or {}
+    return (
+        f"素材清单：角色 {counts.get('characters', 0)} 名"
+        f"（有立绘 {counts.get('characters_with_portrait', 0)}）"
+        f"｜武器 {counts.get('weapons', 0)} 把"
+        f"（有图 {counts.get('weapons_with_image', 0)}）"
+    )
+
+
 def render_image_status(info: dict) -> str:
     """渲染状态面板。info 里绝不能出现 token 的值，只允许出现「是否已设置」。"""
     lines = [
@@ -625,6 +668,12 @@ def render_image_status(info: dict) -> str:
         f"并发上限：{info.get('concurrency')} 张",
         f"模板：{info.get('template_count')} 个（{'、'.join(info.get('templates') or []) or '无'}）",
         f"依赖：{info.get('dependencies')}",
+        "",
+        f"表头用户：{'显示' if info.get('requester_header') else '隐藏'}"
+        f"｜头像来源：{info.get('avatar_source') or '首字符头像'}",
+        f"角色立绘：{'显示' if info.get('character_art') else '关闭'}"
+        f"｜武器图：{'显示' if info.get('weapon_art') else '关闭'}",
+        _manifest_line(info),
     ]
     if not info.get("configured"):
         lines += ["", "在插件配置里填写 t2i_endpoint 后重启即可启用图片卡片。"]
@@ -667,6 +716,7 @@ def render_image_failed(reason: str) -> str:
 # 图片与文字两条路径共用同一套「从 JSON 提取文本块」的逻辑，
 # 否则两边各自解析 review/party/operation 迟早会给出不同内容。
 GUIDE_BLOCK_BUILDERS = _GUIDE_RENDERERS
+recommendation_block = recommendation_lines
 
 plain = _plain
 clip_sentence = _clip_sentence
