@@ -3,7 +3,7 @@
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.6.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.7.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)](https://www.python.org/)
 
 查询角色、技能、武器、意识、养成、操作、评价、配队与攻略，并通过可配置的
@@ -106,13 +106,31 @@ t2i_endpoint = http://你的渲染服务:端口/完整路径
 | `t2i_quality` | `90` | JPEG图片质量 |
 | `t2i_scale` | `hd` | `sd` / `hd` / `fhd` |
 | `t2i_fallback_mode` | `text` | 失败后发文字或只报错 |
-| `image_theme` | `dark` | `dark` / `light` |
+| `image_theme` | `light` | `light` 浅色纸面（默认） / `dark` 暗色档案卡 |
 | `show_requester_header` | `true` | 显示发起者头像和昵称 |
 | `show_character_art` | `true` | 显示角色立绘 |
 | `show_weapon_art` | `true` | 显示武器图和缩略图 |
-| `qq_avatar_url_template` | 空 | QQ头像模板，必须包含 `{user_id}` |
+| `qq_avatar_url_template` | 空 | 自定义头像模板，必须包含 `{user_id}`；填写后优先于自动推断 |
+| `avatar_use_system_proxy` | `false` | 头像下载是否读取系统代理 |
 
-头像获取失败时会自动使用昵称首字符，不影响查询。
+### 头像来源
+
+卡片表头的头像按以下顺序解析，先命中者生效：
+
+| 顺序 | 来源 | 说明 |
+| --- | --- | --- |
+| 1 | 配置模板 | 填了 `qq_avatar_url_template` 就用它 |
+| 2 | QQ 自动 | OneBot 系平台且用户 ID 是纯数字时，自动使用腾讯 qlogo 头像地址 |
+| 3 | 平台字段 | 事件对象自带的头像字段（部分适配器会提供） |
+| 4 | 首字符 | 以上都没有时，用昵称首字符生成占位头像 |
+
+第 2 步只对 OneBot 生效：Telegram、Discord 的 `user_id` 不是 QQ 号，
+拿数字 ID 去猜 QQ 头像只会请求到别人的头像。日志会记录命中的来源
+（`config_template` / `qq_auto` / `event` / `initial`）与回退原因，
+但不会打印完整地址和用户 ID。
+
+头像下载默认直连，不读系统代理；容器里必须走代理才能访问腾讯头像服务时，
+打开 `avatar_use_system_proxy`。头像获取失败时会自动使用昵称首字符，不影响查询。
 
 ## 每日运势
 
@@ -228,7 +246,7 @@ python scripts/verify_assets.py
 当前版本校验结果：
 
 ```text
-499 passed
+519 passed
 角色立绘 69/72
 武器图片 139/142
 素材文件 393 个，校验通过

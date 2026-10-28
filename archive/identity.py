@@ -107,6 +107,31 @@ def platform_id(event) -> str:
     return UNKNOWN_PLATFORM
 
 
+def platform_kind(event) -> str:
+    """平台**类型**（aiocqhttp / telegram / …），用于判断能不能自动拼头像地址。
+
+    与 :func:`platform_id` 的区别：那个优先取实例 id（同一平台多开时用来区分身份），
+    这里只要类型名 —— ``aiocqhttp`` 才知道对方是 OneBot 后端。
+    """
+    if event is None:
+        return ""
+
+    meta = getattr(event, "platform_meta", None)
+    for holder in (meta, event):
+        if holder is None:
+            continue
+        for attr in ("name", "type", "adapter_name"):
+            value = (
+                holder.get(attr)
+                if isinstance(holder, dict)
+                else getattr(holder, attr, None)
+            )
+            if isinstance(value, str) and value.strip():
+                return value.strip().lower()
+
+    return _safe_call(event, "get_platform_name").strip().lower()
+
+
 def platform_avatar_url(event) -> str:
     """平台事件里自带的头像地址。
 
@@ -132,6 +157,7 @@ __all__ = [
     "truncate_name",
     "platform_avatar_url",
     "platform_id",
+    "platform_kind",
     "MAX_DISPLAY_CHARS",
     "FALLBACK_NAME",
     "UNKNOWN_PLATFORM",

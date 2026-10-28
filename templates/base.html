@@ -18,29 +18,41 @@
     --accent-soft: rgba(226, 58, 69, 0.16);
     --warn: #f0b429;
     --warn-soft: rgba(240, 180, 41, 0.12);
-    --panel: rgba(9, 10, 14, 0.66);
-    --panel-line: rgba(255, 255, 255, 0.08);
-    --scrim-a: rgba(8, 9, 13, 0.62);
-    --scrim-b: rgba(8, 9, 13, 0.94);
-    --hero-mask: linear-gradient(180deg, #000 58%, transparent 100%);
-    --hero-veil: rgba(20, 22, 29, 0.62);
+    /* 卡片主色（rgb 三元组），给需要半透明的渐变遮罩直接拼 rgba 用 */
+    --card-rgb: 20, 22, 29;
+    /* 面板半透明：压住文字的同时还能看见底下的立绘 */
+    --panel: rgba(12, 14, 20, 0.62);
+    --panel-line: rgba(255, 255, 255, 0.12);
+    /* 面板内部的小块（条目 / 导语）用更轻的一层，避免叠加成实心色块 */
+    --block: rgba(255, 255, 255, 0.05);
+    --block-line: rgba(255, 255, 255, 0.10);
+    /* 立绘只有一层连续的水平遮罩：左缘缓慢淡出、右缘保持完整。
+       左段压得很淡，避免立绘轮廓在表头空白处留下明显的重影 */
+    --hero-mask: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.15) 20%,
+      rgba(0, 0, 0, 0.7) 40%,
+      #000 58%
+    );
   }
   [data-theme="light"] {
-    --bg: #eef0f4;
+    --bg: #eceff4;
     --card: #ffffff;
-    --card-2: #f6f7fa;
+    --card-2: #f3f5f9;
+    --card-rgb: 255, 255, 255;
     --line: rgba(15, 20, 32, 0.10);
-    --line-strong: rgba(15, 20, 32, 0.18);
-    --text: #1a1d24;
-    --text-2: #3d434f;
+    --line-strong: rgba(15, 20, 32, 0.20);
+    --text: #15171d;
+    --text-2: #3c4250;
     --text-3: #6b7280;
     --warn-soft: rgba(176, 122, 0, 0.10);
-    --panel: rgba(255, 255, 255, 0.82);
+    /* 浅色面板：奶白半透明，立绘透过面板仍能看见轮廓，文字保持深色可读 */
+    /* 带一点冷灰的浅色玻璃，避免在白色纸面上糊成一块纯白 */
+    --panel: rgba(233, 238, 246, 0.58);
     --panel-line: rgba(15, 20, 32, 0.10);
-    /* 浅色主题下立绘更容易吃掉文字，遮罩要更实 */
-    --scrim-a: rgba(255, 255, 255, 0.66);
-    --scrim-b: rgba(255, 255, 255, 0.96);
-    --hero-veil: rgba(255, 255, 255, 0.80);
+    --block: rgba(255, 255, 255, 0.52);
+    --block-line: rgba(15, 20, 32, 0.07);
   }
   * { box-sizing: border-box; }
   html, body {
@@ -50,15 +62,20 @@
   }
   body {
     width: 820px;
-    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC",
-                 "Source Han Sans SC", "Hiragino Sans GB", sans-serif;
+    font-family: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Noto Sans SC",
+                 "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei",
+                 "Hiragino Sans GB", sans-serif;
     color: var(--text);
     font-size: 15px;
-    line-height: 1.62;
+    line-height: 1.66;
+    letter-spacing: 0.005em;
+    font-feature-settings: "palt" 1;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   .card {
     width: 820px;
+    min-height: 430px;
     padding: 20px 34px 22px;
     background:
       radial-gradient(120% 90% at 0% 0%, var(--accent-soft) 0%, transparent 58%),
@@ -76,7 +93,7 @@
     z-index: 4;
   }
 
-  /* ---- 立绘背景层 ---- */
+  /* ---- 立绘层：右侧整条全高，单层连续水平遮罩 ---- */
   .hero-bg {
     position: absolute;
     inset: -40px;
@@ -88,45 +105,56 @@
   .hero-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      180deg,
-      var(--scrim-a) 0%,
-      var(--scrim-a) 34%,
-      var(--scrim-b) 62%,
-      var(--scrim-b) 100%
-    );
     z-index: 1;
+    background: linear-gradient(
+      90deg,
+      rgba(var(--card-rgb), 0.96) 0%,
+      rgba(var(--card-rgb), 0.94) 42%,
+      rgba(var(--card-rgb), 0.32) 54%,
+      rgba(var(--card-rgb), 0.05) 70%,
+      transparent 100%
+    );
   }
+  /* 立绘从卡片顶部一直铺到底部，宽度占右侧一大半，
+     水平遮罩只负责把左缘淡出，不再有上下两段的接缝 */
   .hero-figure {
     position: absolute;
     top: 0;
     right: 0;
-    width: 42%;
-    max-width: 344px;
-    height: 340px;
+    bottom: 0;
+    width: 58%;
     z-index: 2;
     pointer-events: none;
     -webkit-mask-image: var(--hero-mask);
     mask-image: var(--hero-mask);
   }
-  /* 左侧渐隐：让立绘与卡片背景连成一片，不出现竖切边 */
-  .hero-figure::before {    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(90deg, var(--hero-veil) 0%, transparent 58%);
-  }
   .hero-figure img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: right top;
     display: block;
-    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
   }
-  /* 浅色卡片上深色立绘过于抢眼，整体再压一层 */
-  [data-theme="light"] .hero-figure { opacity: 0.86; }
+  /* 浅色卡片上深色立绘会压掉标题，右上角补一层淡淡的纸面 */
+  [data-theme="light"] .hero-figure { opacity: 0.95; }
+  /* 顶部纸面只保护左侧表头和标题。右侧人物保持清晰，避免整张立绘
+     被一层白雾洗淡。 */
+  .hero-top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 210px;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgba(var(--card-rgb), 0.98) 0%,
+      rgba(var(--card-rgb), 0.94) 43%,
+      rgba(var(--card-rgb), 0.30) 57%,
+      rgba(var(--card-rgb), 0) 72%
+    );
+  }
 
   /* ---- 表头：谁在查 ---- */
   .requester {
@@ -180,7 +208,8 @@
 
   /* ---- 标题区 ---- */
   .head { position: relative; z-index: 3; padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); }
-  .card.has-hero .head { padding-right: 300px; }
+  /* 有立绘时文字列收窄，把右侧整条让给立绘 */
+  .card.has-hero .head { padding-right: 44%; }
   .head-top {
     display: flex;
     align-items: center;
@@ -205,12 +234,14 @@
   .title {
     margin: 0;
     font-size: 31px;
-    line-height: 1.24;
+    line-height: 1.22;
     font-weight: 700;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.015em;
     color: var(--text);
-    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.30);
   }
+  /* 浅色卡上立绘偏亮，用白色柔光把标题托起来，而不是加深色阴影 */
+  [data-theme="light"] .title { text-shadow: 0 1px 16px rgba(255, 255, 255, 0.80); }
   .title::before {
     content: "";
     display: inline-block;
@@ -222,12 +253,13 @@
   }
   .subtitle {
     margin: 8px 0 0;
-    font-size: 14px;
+    font-size: 14.5px;
     color: var(--text-2);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* ---- 正文面板 ---- */
+  /* ---- 正文面板：左侧独立信息列，不再覆盖人物主体 ---- */
   .content {
     position: relative;
     z-index: 3;
@@ -235,26 +267,34 @@
     padding: 14px 16px 4px;
     background: var(--panel);
     border: 1px solid var(--panel-line);
-    border-radius: 5px;
+    border-radius: 6px;
+    -webkit-backdrop-filter: blur(18px) saturate(1.04);
+    backdrop-filter: blur(18px) saturate(1.04);
+    box-shadow: 0 14px 32px rgba(8, 10, 16, 0.16);
   }
+  .card.has-hero .content,
+  .card.has-hero .foot { width: 50%; }
   .lead {
     margin: 0 0 10px;
     padding: 9px 12px;
     font-size: 14.5px;
     line-height: 1.7;
     color: var(--text-2);
-    background: var(--card-2);
+    background: var(--block);
     border-left: 2px solid var(--accent);
     border-radius: 0 3px 3px 0;
+    /* 文字列收窄后，长导语必须在面板内折行，不能压到立绘上 */
+    overflow-wrap: anywhere;
   }
   .section { margin-top: 12px; }
   .section:first-child { margin-top: 0; }
   .section-heading {
     margin: 0 0 8px;
-    font-size: 15.5px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--accent);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
   }
   .section-heading::after {
     content: "";
@@ -268,41 +308,47 @@
     display: flex;
     gap: 11px;
     margin: 0 0 9px;
-    padding: 8px 12px 8px 13px;
-    background: var(--card-2);
-    border-left: 2px solid var(--line-strong);
-    border-radius: 0 3px 3px 0;
+    padding: 9px 13px 9px 13px;
+    background: var(--block);
+    border-left: 2px solid var(--block-line);
+    border-radius: 0 4px 4px 0;
   }
   .item-thumb {
     width: 62px;
     height: 62px;
     flex: 0 0 auto;
     object-fit: contain;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.22);
-    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--block);
+    border: 1px solid var(--block-line);
   }
   .item-main { min-width: 0; flex: 1 1 auto; }
   .item-title {
     margin: 0;
-    font-size: 14.5px;
-    font-weight: 600;
+    font-size: 15.5px;
+    font-weight: 700;
     color: var(--text);
-    line-height: 1.55;
+    line-height: 1.5;
+    letter-spacing: 0.015em;
   }
-  .item-body { margin-top: 4px; }
+  .item-body { margin-top: 5px; }
   .item-body p, .para p {
-    margin: 0 0 2px;
-    font-size: 13.5px;
-    line-height: 1.68;
+    margin: 0 0 3px;
+    font-size: 13.4px;
+    line-height: 1.78;
     color: var(--text-2);
+    letter-spacing: 0.004em;
+    /* 数值列（攻击 779.61 / 48.0% …）等宽对齐，扫读更整齐 */
+    font-variant-numeric: tabular-nums;
     word-break: break-word;
   }
   .para { margin: 0 0 8px; }
   .kv {
     margin: 0 0 6px;
-    font-size: 14px;
+    font-size: 13.6px;
+    line-height: 1.72;
     color: var(--text-2);
+    font-variant-numeric: tabular-nums;
     word-break: break-word;
   }
   .bullets {
@@ -312,10 +358,11 @@
   }
   .bullets li {
     position: relative;
-    margin: 0 0 5px;
-    font-size: 13.5px;
-    line-height: 1.68;
+    margin: 0 0 6px;
+    font-size: 13.4px;
+    line-height: 1.76;
     color: var(--text-2);
+    font-variant-numeric: tabular-nums;
     word-break: break-word;
   }
   .bullets li::before {
@@ -336,6 +383,36 @@
     background: var(--warn-soft);
     border: 1px solid var(--line-strong);
     border-radius: 3px;
+  }
+
+  /* ---- 列表卡：不留立绘列，正文分两栏，避免右侧大片空白 ---- */
+  .card.is-list .content,
+  .card.is-list .foot { width: 100%; }
+  .card.is-list .head { padding-right: 0; }
+  /* 列表卡底下没有立绘，面板不必做玻璃效果，回到干净的浅底 */
+  .card.is-list .content {
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0 6px 18px rgba(20, 24, 36, 0.05);
+  }
+  .card.is-list .hero-figure,
+  .card.is-list .hero-top,
+  .card.is-list .hero-scrim,
+  .card.is-list .hero-bg { display: none; }
+  .card.is-list .content .section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  .card.is-list .section-heading { column-span: all; }
+  .card.is-list .kv {
+    break-inside: avoid;
+    margin: 0 0 5px;
+    padding: 5px 10px;
+    font-size: 13px;
+    background: var(--block);
+    border-left: 2px solid var(--block-line);
+    border-radius: 0 3px 3px 0;
   }
 
   /* ---- 页脚 ---- */
@@ -372,11 +449,12 @@
 </style>
 </head>
 <body>
-<main class="card{% if visual.has_hero_image %} has-hero{% endif %}">
+<main class="card{% if visual.has_hero_image %} has-hero{% endif %}{% if category == "角色列表" %} is-list{% endif %}">
   {% if visual.has_hero_image %}
   <div class="hero-bg" style="background-image:url('{{ visual.background_image }}'); opacity:{{ visual.background_opacity }}; filter:blur({{ visual.background_blur }}px);"></div>
   <div class="hero-scrim"></div>
   <div class="hero-figure"><img src="{{ visual.hero_image }}" style="opacity:{{ visual.hero_opacity }};" alt=""></div>
+  <div class="hero-top"></div>
   {% endif %}
 
   {% if visual.show_requester %}

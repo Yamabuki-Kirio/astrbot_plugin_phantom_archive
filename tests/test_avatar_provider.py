@@ -213,21 +213,195 @@ def test_empty_user_id_uses_initial(tmp_path):
     assert _decode(uri).size == (image_codec.AVATAR_SIZE, image_codec.AVATAR_SIZE)
 
 
-def test_platform_avatar_url_takes_precedence(tmp_path):
+class Event:
+    """贴近 AstrBot 的事件替身：``platform_meta.name`` 是平台类型。"""
+
+    def __init__(self, kind: str = "", avatar: str = ""):
+        self.platform_meta = type("Meta", (), {"name": kind, "id": f"{kind}-1"})()
+        sender = type("Sender", (), {"avatar": avatar} if avatar else {})()
+        self.message_obj = type("M", (), {"sender": sender})()
+
+
+def _event(kind: str = "", avatar: str = "") -> Event:
+    return Event(kind, avatar)
+
+
+def test_config_template_beats_platform_url(tmp_path):
+    """用户手填模板优先于平台字段：配置即最终决定。"""
     seen = {}
 
     def handler(request):
         seen["url"] = str(request.url)
         return httpx.Response(200, content=_avatar_bytes())
 
-    class Event:
-        class Sender:
-            avatar = "https://platform.invalid/pic.png"
+    _resolve(
+        _provider(tmp_path, handler),
+        event=_event("telegram", "https://platform.invalid/pic.png"),
+    )
+    assert seen["url"] == "https://avatar.invalid/10001.png"
 
-        message_obj = type("M", (), {"sender": Sender()})
 
-    _resolve(_provider(tmp_path, handler), event=Event())
+# ------------------------------------------------------------------ QQ 自动
+
+
+def test_qq_auto_uses_qlogo_for_onebot_numeric_id(tmp_path):
+    seen = {}
+
+    def handler(request):
+        seen["url"] = str(request.url)
+        return httpx.Response(200, content=_avatar_bytes())
+
+    uri = _resolve(_provider(tmp_path, handler, url_template=""), event=_event("aiocqhttp"))
+    assert seen["url"] == (
+        f"https://q1.qlogo.cn/g?b=qq&nk=10001&s=640"
+    )
+    assert _decode(uri).size == (image_codec.AVATAR_EDGE, image_codec.AVATAR_EDGE)
+
+
+def test_qq_auto_beats_platform_field_on_onebot(tmp_path):
+    seen = {}
+
+    def handler(request):
+        seen["url"] = str(request.url)
+        return httpx.Response(200, content=_avatar_bytes())
+
+    _resolve(
+        _provider(tmp_path, handler, url_template=""),
+        event=_event("aiocqhttp", "https://platform.invalid/pic.png"),
+    )
+    assert seen["url"].startswith("https://q1.qlogo.cn/")
+
+
+def test_qq_auto_skipped_when_id_is_not_numeric(tmp_path):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(200, content=_avatar_bytes())
+
+    uri = _resolve(
+        _provider(tmp_path, handler, url_template=""),
+        RequesterIdentity("openid-abc", "山吹桐生"),
+        event=_event("aiocqhttp"),
+    )
+    assert calls == []
+    assert _decode(uri).size == (image_codec.AVATAR_SIZE, image_codec.AVATAR_SIZE)
+
+
+@pytest.mark.parametrize("kind", ["telegram", "discord", "lark", "qq_official"])
+def test_qq_auto_skipped_for_non_onebot_platforms(tmp_path, kind):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(200, content=_avatar_bytes())
+
+    uri = _resolve(_provider(tmp_path, handler, url_template=""), event=_event(kind))
+    assert calls == []
+    assert _decode(uri).size == (image_codec.AVATAR_SIZE, image_codec.AVATAR_SIZE)
+
+
+def test_event_avatar_used_for_non_onebot_platform(tmp_path):
+    seen = {}
+
+    def handler(request):
+        seen["url"] = str(request.url)
+        return httpx.Response(200, content=_avatar_bytes())
+
+    _resolve(
+        _provider(tmp_path, handler, url_template=""),
+        event=_event("telegram", "https://platform.invalid/pic.png"),
+    )
     assert seen["url"] == "https://platform.invalid/pic.png"
+
+
+def test_qq_number_rules():
+    assert avatar_provider.is_qq_number("10001") is True
+    assert avatar_provider.is_qq_number(" 123456789 ") is True
+    assert avatar_provider.is_qq_number("1234") is False
+    assert avatar_provider.is_qq_number("1234567890123") is False
+    assert avatar_provider.is_qq_number("1000a") is False
+    assert avatar_provider.is_qq_number("１０００１") is False
+
+
+def test_onebot_platform_rules():
+    assert avatar_provider.is_onebot_platform("aiocqhttp") is True
+    assert avatar_provider.is_onebot_platform("OneBot_v11") is True
+    assert avatar_provider.is_onebot_platform("telegram") is False
+    assert avatar_provider.is_onebot_platform("") is False
+
+
+def test_auto_qq_avatar_url_only_for_onebot_numeric():
+    assert avatar_provider.auto_qq_avatar_url("aiocqhttp", "10001").endswith("nk=10001&s=640")
+    assert avatar_provider.auto_qq_avatar_url("telegram", "10001") == ""
+    assert avatar_provider.auto_qq_avatar_url("aiocqhttp", "abc") == ""
+
+
+def test_cache_key_separates_platforms(tmp_path):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(200, content=_avatar_bytes())
+
+    provider = _provider(tmp_path, handler)
+    _resolve(provider, event=_event("aiocqhttp"))
+    _resolve(provider, event=_event("telegram"))
+    assert len(calls) == 2
+    assert len(list((tmp_path / avatar_provider.AVATAR_DIRNAME).glob("*.webp"))) == 2
+
+
+def test_proxy_flag_passed_to_client(tmp_path, monkeypatch):
+    captured = {}
+
+    class FakeClient:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+        async def aclose(self):
+            return None
+
+    monkeypatch.setattr(httpx, "AsyncClient", FakeClient)
+    provider = avatar_provider.AvatarProvider(
+        tmp_path, avatar_provider.AvatarSettings(use_system_proxy=True)
+    )
+    provider._ensure_client()
+    assert captured["trust_env"] is True
+
+
+def test_proxy_flag_defaults_to_direct(tmp_path, monkeypatch):
+    captured = {}
+
+    class FakeClient:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+        async def aclose(self):
+            return None
+
+    monkeypatch.setattr(httpx, "AsyncClient", FakeClient)
+    avatar_provider.AvatarProvider(tmp_path)._ensure_client()
+    assert captured["trust_env"] is False
+
+
+def test_proxy_flag_from_config():
+    settings = avatar_provider.AvatarSettings.from_config(
+        lambda key, default: {"avatar_use_system_proxy": "true"}.get(key, default)
+    )
+    assert settings.use_system_proxy is True
+
+
+def test_logs_record_source_without_url_or_id(tmp_path, caplog):
+    caplog.set_level(logging.INFO)
+
+    def handler(request):
+        raise httpx.ConnectError("boom")
+
+    _resolve(_provider(tmp_path, handler, url_template=""), event=_event("aiocqhttp"))
+    assert "qq_auto" in caplog.text
+    assert "下载失败" in caplog.text
+    assert "qlogo" not in caplog.text
+    assert "10001" not in caplog.text
 
 
 # ------------------------------------------------------------------ 安全

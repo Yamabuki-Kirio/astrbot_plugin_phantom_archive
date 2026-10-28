@@ -139,6 +139,38 @@ def test_platform_avatar_url_without_event():
     assert identity.platform_avatar_url(object()) == ""
 
 
+class TypedEvent(FullEvent):
+    def __init__(self, name=None, instance_id=None):
+        super().__init__()
+        self.platform_meta = type(
+            "Meta", (), {"name": name, "id": instance_id}
+        )()
+
+
+# ------------------------------------------------------------------ 平台
+
+
+def test_platform_kind_reads_meta_name():
+    assert identity.platform_kind(TypedEvent("aiocqhttp", "qq-1")) == "aiocqhttp"
+
+
+def test_platform_kind_is_case_insensitive():
+    assert identity.platform_kind(TypedEvent("OneBot", "x")) == "onebot"
+
+
+def test_platform_kind_without_meta_is_empty():
+    assert identity.platform_kind(FullEvent()) == ""
+    assert identity.platform_kind(object()) == ""
+    assert identity.platform_kind(None) == ""
+
+
+def test_platform_id_prefers_instance_id():
+    """identity 仍然用实例 id 区分身份，platform_kind 才看类型名。"""
+    event = TypedEvent("aiocqhttp", "qq-1")
+    assert identity.platform_id(event) == "qq-1"
+    assert identity.platform_kind(event) == "aiocqhttp"
+
+
 @pytest.mark.parametrize("limit", [1, 2, 5])
 def test_truncate_respects_custom_limit(limit):
     result = identity.truncate_name("abcdefghij", limit=limit)

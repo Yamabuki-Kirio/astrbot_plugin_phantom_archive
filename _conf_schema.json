@@ -60,9 +60,9 @@
     "default": 16
   },
   "image_theme": {
-    "description": "卡片配色：dark 暗色档案卡，light 浅色",
+    "description": "卡片配色：light 浅色纸面（默认），dark 暗色档案卡",
     "type": "string",
-    "default": "dark"
+    "default": "light"
   },
   "show_requester_header": {
     "description": "卡片表头显示发起查询的用户头像与昵称",
@@ -110,9 +110,14 @@
     "default": 5
   },
   "qq_avatar_url_template": {
-    "description": "QQ 头像地址模板，必须含 {user_id} 占位符，例如 https://第三方面板/{user_id}；留空表示只用首字符头像",
+    "description": "自定义头像地址模板，必须含 {user_id} 占位符，例如 https://第三方面板/{user_id}；填写后优先于自动推断，留空时 OneBot/QQ 会自动使用腾讯头像地址",
     "type": "string",
     "default": ""
+  },
+  "avatar_use_system_proxy": {
+    "description": "头像下载是否读取系统代理（HTTP_PROXY / HTTPS_PROXY）；默认直连，容器里必须走代理才能访问腾讯头像服务时再打开",
+    "type": "bool",
+    "default": false
   },
   "daily_fortune_enabled": {
     "description": "开启 /p5x每日运势：抽取今日角色与塔罗、灵签、周易，结果按天固定",

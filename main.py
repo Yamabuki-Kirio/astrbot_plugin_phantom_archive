@@ -69,7 +69,7 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.6.1"
+PLUGIN_VERSION = "0.7.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME
@@ -231,10 +231,11 @@ class PhantomArchivePlugin(Star):
         return raw
 
     def _read_theme(self) -> str:
-        raw = str(_conf_get(self.config, "image_theme", image_templates.THEME_DARK)).strip().lower()
+        default = image_templates.THEME_LIGHT
+        raw = str(_conf_get(self.config, "image_theme", default)).strip().lower()
         if raw not in image_templates.THEMES:
-            logger.warning("image_theme 配置非法（%r），回退默认 %s", raw, image_templates.THEME_DARK)
-            return image_templates.THEME_DARK
+            logger.warning("image_theme 配置非法（%r），回退默认 %s", raw, default)
+            return default
         return raw
 
     def _open_service(self) -> None:
@@ -750,9 +751,8 @@ class PhantomArchivePlugin(Star):
                 "requester_header": self.visual_settings.show_requester_header,
                 "character_art": self.visual_settings.show_character_art,
                 "weapon_art": self.visual_settings.show_weapon_art,
-                "avatar_source": (
-                    "配置模板" if self.avatar_settings.has_template else "首字符头像"
-                ),
+                "avatar_source": self._avatar_source_chain(),
+                "avatar_proxy": self.avatar_settings.use_system_proxy,
                 "manifest_loaded": self._manifest.loaded,
                 "manifest_path": str(self.asset_manifest_path),
                 "manifest_counts": counts,
@@ -763,6 +763,16 @@ class PhantomArchivePlugin(Star):
             }
         )
         return info
+
+    def _avatar_source_chain(self) -> str:
+        """状态指令里列出头像会按什么顺序找，方便用户自己判断该配哪一项。"""
+        chain: list[str] = []
+        if self.avatar_settings.has_template:
+            chain.append("配置模板")
+        chain.append("QQ 自动（OneBot 纯数字 ID）")
+        chain.append("平台字段")
+        chain.append("首字符头像")
+        return " → ".join(chain)
 
     def _daily_record_count(self) -> int:
         if self._daily_store is None:
