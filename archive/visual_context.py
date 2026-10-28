@@ -89,6 +89,8 @@ class VisualContext:
     background_image: str = ""
     hero_kind: str = asset_resolver.HERO_NONE
     has_requester_avatar: bool = False
+    # 横构图立绘：模板改用 contain 贴底，避免 cover 把人物裁出画面
+    hero_wide: bool = False
     has_hero_image: bool = False
     show_requester: bool = True
     background_opacity: float = DEFAULT_BACKGROUND_OPACITY
@@ -109,6 +111,7 @@ class VisualContext:
             "background_image": self.background_image,
             "hero_kind": self.hero_kind,
             "has_hero_image": self.has_hero_image,
+            "hero_wide": self.hero_wide,
             "background_opacity": round(self.background_opacity, 3),
             "hero_opacity": round(self.hero_opacity, 3),
             "background_blur": int(self.background_blur),
@@ -192,6 +195,7 @@ def build(
         hero_kind=kind,
         has_requester_avatar=bool(avatar),
         has_hero_image=bool(hero),
+        hero_wide=bool(getattr(resolved, "hero_wide", False)) if resolved is not None else False,
         show_requester=bool(settings.show_requester_header and identity is not None),
         background_opacity=settings.background_opacity,
         hero_opacity=settings.hero_opacity,

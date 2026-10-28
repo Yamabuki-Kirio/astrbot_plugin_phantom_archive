@@ -48,9 +48,44 @@ def test_text_contains_every_section():
     assert "2026 年 10 月 27 日" in text
     assert "今日角色：" in text
     assert "塔罗指引：" in text
-    assert "观音灵签：" in text
-    assert "周易卦象：" in text
-    assert "综合建议：" in text
+
+
+def test_text_omits_removed_sections():
+    text = presenter.render_text(make_fortune())
+    assert "观音灵签" not in text
+    assert "周易" not in text
+    assert "卦" not in text
+    assert "动爻" not in text
+
+
+def test_text_contains_grade_guide_and_advice():
+    fortune = make_fortune()
+    text = presenter.render_text(fortune)
+    assert f"· {fortune.grade}" in text
+    suitable, avoid = fortune.guide
+    assert f"宜：{suitable}" in text
+    assert f"忌：{avoid}" in text
+    assert f"综合建议：{fortune.advice}" in text
+    # 建议里必须带上这张牌的牌义，而不是一句通用的套话
+    assert fortune.tarot.meaning in fortune.advice
+
+
+def test_tarot_label_drops_number_and_english():
+    fortune = make_fortune()
+    for day in range(1, 15):
+        drawn = make_fortune(date_key=f"2027-01-{day:02d}").tarot
+        label = presenter.tarot_label(drawn)
+        assert drawn.position in label
+        assert " The " not in label and "The " not in label
+
+
+def test_card_block_carries_grade():
+    fortune = make_fortune()
+    page = presenter.build_page(fortune)
+    block = page.sections[0].blocks[0]
+    assert f"· {fortune.grade}" in block.title
+    assert any(line.startswith("宜：") for line in block.body)
+    assert any(line.startswith("忌：") for line in block.body)
 
 
 def test_text_ends_with_entertainment_note():
@@ -65,10 +100,11 @@ def test_text_fits_message_budget():
         assert len(text) <= 1200
 
 
-def test_text_has_no_duplicated_moving_label():
-    for day in range(1, 15):
+def test_text_is_short_for_every_day():
+    """砍掉两块后，文字长度应稳定在一屏内。"""
+    for day in range(1, 29):
         text = presenter.render_text(make_fortune(date_key=f"2026-12-{day:02d}"))
-        assert "动爻：动爻" not in text
+        assert len(text) <= 400
 
 
 def test_text_does_not_leak_community_disclaimer():
@@ -95,9 +131,9 @@ def test_page_structure():
     assert page.hero_variant == DATE_KEY
 
 
-def test_page_has_four_sections():
+def test_page_has_tarot_and_advice_sections():
     headings = [section.heading for section in presenter.build_sections(make_fortune())]
-    assert headings == ["塔罗指引", "观音灵签", "周易卦象", "综合建议"]
+    assert headings == ["塔罗指引", "综合建议"]
 
 
 def test_page_disclaimer_is_daily_specific():
@@ -115,7 +151,9 @@ def test_template_is_registered():
 def test_render_page_uses_daily_template():
     page = presenter.build_page(make_fortune())
     html = image_templates.render_page(page, theme="dark")
-    assert "每日运势" in html
+    # 运势卡把类别标签换成了「今日角色」，模板专属文案要在这里出现
+    assert "今日角色" in html
+    assert "塔罗指引" in html
     assert "仅供娱乐参考" in html
     assert "Lufel" not in html
     assert "机器翻译" not in html
@@ -184,7 +222,7 @@ def test_visual_uses_manifest_portrait(tmp_path):
 
 
 def test_missing_art_falls_back_to_placeholder_without_redraw(tmp_path):
-    """缺图只影响视觉：角色、塔罗、灵签、卦象都不能变。"""
+    """缺图只影响视觉：角色与塔罗都不能变。"""
     fortune = make_fortune()
     page = presenter.build_page(fortune)
     # 清单里没有这个角色，但占位图在

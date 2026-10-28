@@ -114,11 +114,7 @@ def test_rename_keeps_result_but_updates_display_name():
 def test_next_day_refreshes():
     today = generate()
     tomorrow = generate(date_key="2026-10-28")
-    assert (today.character.key, today.tarot.name, today.lingqian.number) != (
-        tomorrow.character.key,
-        tomorrow.tarot.name,
-        tomorrow.lingqian.number,
-    )
+    assert today.to_payload() != tomorrow.to_payload()
 
 
 def test_character_can_repeat_on_other_days():
@@ -196,16 +192,26 @@ def test_payload_round_trip_keeps_every_field():
     )
     assert restored.character == fortune.character
     assert restored.tarot == fortune.tarot
-    assert restored.lingqian == fortune.lingqian
-    assert restored.zhouyi == fortune.zhouyi
-    assert restored.advice == fortune.advice
     assert restored.stored is True
 
 
-def test_advice_mentions_grade_and_tarot():
+def test_grade_is_derived_and_stable():
+    """评级不进 payload，但每次算都一样。"""
     fortune = generate()
-    assert engine.GRADE_ADVICE[fortune.lingqian.grade][:4] in fortune.advice
-    assert fortune.tarot.name in fortune.advice
+    restored = models.DailyFortune.from_payload(
+        fortune.to_payload(),
+        date_key=fortune.date_key,
+        timezone=fortune.timezone,
+        platform_id=fortune.platform_id,
+        user_id=fortune.user_id,
+        display_name=fortune.display_name,
+    )
+    assert fortune.grade in ("大吉", "吉", "平", "凶", "大凶")
+    assert restored.grade == fortune.grade
+    assert restored.guide == fortune.guide
+    assert restored.advice == fortune.advice
+    assert "grade" not in fortune.to_payload()
+    assert "advice" not in fortune.to_payload()
 
 
 def test_empty_pool_raises():
@@ -218,8 +224,8 @@ def test_invalid_date_key_raises():
         generate(date_key="2026/10/27")
 
 
-def test_draw_fortune_returns_all_four_parts():
-    chosen, card, qian, gua, advice = engine.draw_fortune(
+def test_draw_fortune_returns_character_and_tarot():
+    chosen, card = engine.draw_fortune(
         date_key=DATE_KEY,
         platform_id="aiocqhttp",
         user_id="10001",
@@ -227,9 +233,6 @@ def test_draw_fortune_returns_all_four_parts():
     )
     assert chosen.key
     assert card.name and card.meaning
-    assert 1 <= qian.number <= 100
-    assert 1 <= gua.number <= 64
-    assert advice
 
 
 def test_date_label_is_human_readable():
@@ -240,7 +243,7 @@ def test_date_label_is_human_readable():
 
 def test_models_tolerate_broken_payload():
     broken = models.DailyFortune.from_payload(
-        {"tarot": "not-a-dict", "lingqian": None, "zhouyi": 3},
+        {"tarot": "not-a-dict", "character": None},
         date_key=DATE_KEY,
         timezone="Asia/Shanghai",
         platform_id="p",
@@ -248,5 +251,30 @@ def test_models_tolerate_broken_payload():
         display_name="n",
     )
     assert broken.tarot.name == ""
-    assert broken.lingqian.number == 0
-    assert broken.zhouyi.number == 0
+    assert broken.character.key == ""
+
+
+def test_legacy_payload_with_removed_sections_is_readable():
+    """旧记录里还留着 lingqian / zhouyi，读回来只取仍在用的字段。"""
+    legacy = {
+        "character": {"key": "k1", "name": "角色一"},
+        "tarot": {"name": "愚者", "is_reversed": False, "meaning": "新的开始"},
+        "lingqian": {"number": 1, "grade": "上上", "poem": "旧签诗"},
+        "zhouyi": {"number": 1, "name": "乾"},
+        "ganzhi": "甲戌",
+        "advice": "旧建议",
+    }
+    restored = models.DailyFortune.from_payload(
+        legacy,
+        date_key=DATE_KEY,
+        timezone="Asia/Shanghai",
+        platform_id="p",
+        user_id="u",
+        display_name="n",
+    )
+    assert restored.character.name == "角色一"
+    assert restored.tarot.name == "愚者"
+    assert not hasattr(restored, "lingqian")
+    assert not hasattr(restored, "zhouyi")
+    # 旧记录里存的 advice 不再采信：建议现在按牌名/正逆位/牌义现算
+    assert "旧建议" not in restored.advice

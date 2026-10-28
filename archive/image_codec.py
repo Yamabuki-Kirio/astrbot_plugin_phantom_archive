@@ -48,9 +48,18 @@ _MAGIC: tuple[tuple[bytes, str], ...] = (
 _CACHE: OrderedDict[tuple, str] = OrderedDict()
 _CACHE_LIMIT = 128
 
+# 只有真正横构图（宽 ≥ 高）的图才算「宽图」：同一角色的动作大字图会落在这一档，
+# 这类图塞进窄高的立绘列必须 contain，否则 cover 会把人物裁到画面外。
+# 接近方形的立绘（如 855×960）仍按竖构图处理 —— 裁掉两边远比留一圈空白好看。
+WIDE_ASPECT_RATIO = 1.0
+
+# 只读文件头拿到的尺寸缓存
+_SIZE_CACHE: OrderedDict[tuple, tuple[int, int] | None] = OrderedDict()
+
 
 def clear_cache() -> None:
     _CACHE.clear()
+    _SIZE_CACHE.clear()
 
 
 def sniff_format(data: bytes) -> str | None:
@@ -170,6 +179,48 @@ def encode_path(
     return uri
 
 
+def probe_size(path: str | Path) -> tuple[int, int] | None:
+    """只读文件头拿宽高（不解码像素），用于判断立绘是竖构图还是横构图。
+
+    失败返回 ``None``：调用方一律当作「竖构图」处理，最坏只是裁得紧一点。
+    """
+    try:
+        file = Path(path)
+        stat = file.stat()
+    except OSError:
+        return None
+    key = (str(file.resolve()), stat.st_mtime_ns, stat.st_size)
+    cached = _SIZE_CACHE.get(key, ...)
+    if cached is not ...:
+        _SIZE_CACHE.move_to_end(key)
+        return cached  # type: ignore[return-value]
+
+    size: tuple[int, int] | None
+    try:
+        from PIL import Image
+
+        with Image.open(file) as image:
+            size = image.size
+    except Exception:  # noqa: BLE001 - 坏图当拿不到
+        size = None
+
+    _SIZE_CACHE[key] = size
+    while len(_SIZE_CACHE) > _CACHE_LIMIT:
+        _SIZE_CACHE.popitem(last=False)
+    return size
+
+
+def is_wide_image(path: str | Path) -> bool:
+    """宽 ≥ 高的图在窄列里应改用 contain。读不出来一律当作竖构图。"""
+    size = probe_size(path)
+    if not size:
+        return False
+    width, height = size
+    if width <= 0 or height <= 0:
+        return False
+    return height < width * WIDE_ASPECT_RATIO
+
+
 # ------------------------------------------------------------------ 首字符头像
 
 _FONT_CANDIDATES: tuple[str, ...] = (
@@ -269,6 +320,9 @@ __all__ = [
     "is_supported",
     "encode_bytes",
     "encode_path",
+    "probe_size",
+    "is_wide_image",
+    "WIDE_ASPECT_RATIO",
     "make_initial_avatar",
     "clear_cache",
 ]

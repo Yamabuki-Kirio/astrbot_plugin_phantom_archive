@@ -185,3 +185,34 @@ def test_placeholder_for_unknown_kind_is_archive(tmp_path):
     assert resolver.placeholder("something-else") == resolver.placeholder(
         asset_resolver.HERO_ARCHIVE
     )
+
+
+# ------------------------------------------------------------------ 构图
+
+
+def _manifest_with_portrait(root, size, slug="wide"):
+    path = _write_image(root / "characters" / slug / "1.webp", size=size)
+    data = {
+        "characters": {
+            slug: {
+                "portrait": path.relative_to(root).as_posix(),
+                "portraits": [{"path": path.relative_to(root).as_posix()}],
+            }
+        }
+    }
+    return asset_manifest.parse_manifest(data, root)
+
+
+def test_character_hero_flags_wide_portrait(tmp_path):
+    """横构图立绘要标记出来，模板才会改用 contain，不把人物裁出画面。"""
+    root = tmp_path / "assets"
+    manifest = _manifest_with_portrait(root, (900, 500))
+    art = asset_resolver.AssetResolver(manifest).character_hero("wide")
+    assert art.hero_wide is True
+
+
+def test_character_hero_keeps_tall_portrait_covered(tmp_path):
+    root = tmp_path / "assets"
+    manifest = _manifest_with_portrait(root, (363, 960), slug="tall")
+    art = asset_resolver.AssetResolver(manifest).character_hero("tall")
+    assert art.hero_wide is False

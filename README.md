@@ -3,7 +3,7 @@
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.7.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.8.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)](https://www.python.org/)
 
 查询角色、技能、武器、意识、养成、操作、评价、配队与攻略，并通过可配置的
@@ -17,7 +17,7 @@ T2I 服务生成带用户头像、角色立绘和武器图片的卡片。图片�
 - 中文名、原名、英文代号和 slug 多种检索方式
 - 暗色 / 浅色图片卡片，支持用户头像、角色立绘和武器缩略图
 - 角色立绘 `69/72`，共113张；武器图片 `139/142`
-- 每日运势：今日角色 + 塔罗 + 观音灵签 + 周易卦象
+- 每日运势：今日角色（立绘）+ 一张塔罗牌，附大吉 / 吉 / 平 / 凶 / 大凶评级、宜忌与综合建议
 - 抽到对应大阿卡纳时，优先选择已进入 P5X 的 P3 / P5 对应角色
 - 同一用户当天结果固定，跨群、改名和重启后保持一致
 - 资料数据库只读；每日运势单独写入 `p5x_daily.sqlite3`
@@ -134,7 +134,19 @@ t2i_endpoint = http://你的渲染服务:端口/完整路径
 
 ## 每日运势
 
-每日运势由日期、平台和用户 ID 生成固定种子，并保存到独立数据库：
+每日运势只包含两部分：**今日角色**与**今日塔罗**。
+
+塔罗会给出五档评级（大吉 / 吉 / 平 / 凶 / 大凶）以及对应的宜 / 忌，并写一段
+结合牌义的综合建议，全部由「牌名 + 正逆位 + 牌义」查表算出，不调用任何模型：
+
+- 大阿卡纳按传统牌义固定（太阳、世界大吉，高塔大凶，死神、恶魔凶……）；
+- 小阿卡纳按「花色 × 点数」给档：权杖看行动、圣杯看情感、宝剑看冲突、星币看物质；
+- 逆位一律降一档（大吉→吉→平→凶→大凶），也就是「平的降成凶、凶的降成大凶」；
+- 少数逆位在牌义上是解脱或转机的牌（恶魔、高塔、月亮、宝剑十、圣杯四……）单独给档，
+  牌义明确破裂失控的（战车、命运之轮、圣杯十……）则比降一档更重；
+- 综合建议 = 「牌名 + 正逆位 + 牌义」+ 该档位的行动口径，同一张牌永远同一段话。
+
+由日期、平台和用户 ID 生成固定种子，并保存到独立数据库：
 
 ```text
 data/p5x_daily.sqlite3
@@ -246,7 +258,7 @@ python scripts/verify_assets.py
 当前版本校验结果：
 
 ```text
-530 项测试通过（其中 71 项需要 AstrBot 运行时）
+576 项测试通过（其中 71 项需要 AstrBot 运行时）
 角色立绘 69/72
 武器图片 139/142
 素材文件 393 个，校验通过
@@ -266,7 +278,7 @@ main.py        AstrBot指令入口
 ## 致谢
 
 - [AstrBot](https://github.com/AstrBotDevs/AstrBot)
-- [astrbot_plugin_cyber_divination](https://github.com/ruoyuxian20-sys/astrbot_plugin_cyber_divination)：塔罗、灵签、周易与干支数据基础
+- [astrbot_plugin_cyber_divination](https://github.com/ruoyuxian20-sys/astrbot_plugin_cyber_divination)：塔罗与干支数据基础
 - [Lufel](https://lufel.net/)：P5X社区资料与武器图片来源
 - 《女神异闻录：夜幕魅影》国服官网：角色立绘来源
 

@@ -361,9 +361,9 @@ def test_write_failure_still_returns_result(make_plugin, plugin_module, caplog):
 
 def test_no_llm_or_network_in_daily_modules():
     """每日运势不调用任何模型、不发任何外部请求。"""
-    from archive.daily import engine, lingqian, presenter, repository, tarot, zhouyi
+    from archive.daily import engine, presenter, repository, tarot
 
-    for module in (engine, lingqian, presenter, repository, tarot, zhouyi):
+    for module in (engine, presenter, repository, tarot):
         source = Path(module.__file__).read_text(encoding="utf-8")
         for forbidden in ("httpx", "requests", "openai", "anthropic", "aiohttp", "urllib"):
             assert forbidden not in source, f"{module.__name__} 不应出现 {forbidden}"
@@ -378,13 +378,13 @@ def test_help_menu_lists_daily_command():
     assert "同一用户当天结果固定，次日刷新，仅供娱乐。" in help_text
 
 
-def test_third_party_notices_exist():
-    notices_path = PLUGIN_ROOT / "THIRD_PARTY_NOTICES.md"
-    assert notices_path.is_file()
-    content = notices_path.read_text(encoding="utf-8")
-    assert "MIT License" in content
-    assert "astrbot_plugin_cyber_divination" in content
-    assert "tarot.py" in content and "lingqian.py" in content and "zhouyi.py" in content
+def test_third_party_notices_are_checked_elsewhere():
+    """声明与已下线模块的校验放在 tests/test_notices.py。
+
+    那边不依赖 AstrBot，本地也会跑；放在本文件里会被整模块跳过，
+    声明和断言的矛盾要等到装了 AstrBot 的环境才暴露。
+    """
+    assert (PLUGIN_ROOT / "tests" / "test_notices.py").is_file()
 
 
 def test_status_panel_shows_daily_info(make_plugin):

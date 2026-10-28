@@ -1,12 +1,10 @@
-"""每日运势：抽角色 + 塔罗 + 灵签 + 周易，输出一张卡片或一段文字。
+"""每日运势：抽角色 + 塔罗，输出一张卡片或一段文字。
 
 模块边界：
 
     models        纯数据结构（含序列化）
     engine        种子、时区、抽取编排
     tarot         塔罗数据与单张抽取
-    lingqian      灵签数据与抽签
-    zhouyi        六爻起卦与六十四卦
     ganzhi        干支
     character_draw 今日角色（确定性、与行序无关）
     repository    独立每日库的读写
@@ -21,22 +19,18 @@ from . import (
     character_draw,
     engine,
     ganzhi,
-    lingqian,
     models,
     presenter,
     repository,
     tarot,
-    zhouyi,
 )
 
 __all__ = [
     "character_draw",
     "engine",
     "ganzhi",
-    "lingqian",
     "models",
     "presenter",
     "repository",
     "tarot",
-    "zhouyi",
 ]

@@ -48,6 +48,8 @@ class ResolvedArt:
     hero_kind: str = HERO_NONE
     hero_source: str = ""  # character / weapon / fallback:character …
     has_real_asset: bool = False
+    # 横构图（同一角色的动作大字图）：模板要用 contain 贴底，cover 会把人挤出去
+    hero_wide: bool = False
 
 
 class AssetResolver:
@@ -76,16 +78,24 @@ class AssetResolver:
             return ""
         return image_codec.encode_path(self.root / relative, edge=edge) or ""
 
-    def placeholder(self, kind: str, *, edge: int = FALLBACK_EDGE) -> str:
+    def _wide(self, relative: str) -> bool:
+        """这张素材是不是横构图（决定模板用 cover 还是 contain）。"""
+        return bool(relative) and image_codec.is_wide_image(self.root / relative)
+
+    def _fallback_relative(self, kind: str) -> str:
         name = {
             HERO_CHARACTER: FALLBACK_CHARACTER,
             HERO_WEAPON: FALLBACK_WEAPON,
             HERO_ARCHIVE: FALLBACK_ARCHIVE,
         }.get(kind, FALLBACK_ARCHIVE)
-        key = f"{name}:{edge}"
+        return f"fallback/{name}"
+
+    def placeholder(self, kind: str, *, edge: int = FALLBACK_EDGE) -> str:
+        relative = self._fallback_relative(kind)
+        key = f"{relative}:{edge}"
         if key not in self._fallback_cache:
             self._fallback_cache[key] = image_codec.encode_path(
-                self.root / "fallback" / name, edge=edge
+                self.root / relative, edge=edge
             ) or ""
         return self._fallback_cache[key]
 
@@ -125,24 +135,33 @@ class AssetResolver:
         background = self._uri(assets.background.relative_path) or portrait
         return portrait, background, bool(portrait)
 
+    def _portrait_entry(self, keys: tuple[str, ...], variant: str):
+        assets = self._character_assets(tuple(key for key in keys if key))
+        if assets is None:
+            return None
+        return self.pick_portrait(assets.all_portraits, variant)
+
     def character_hero(self, *keys: str, variant: str = "") -> ResolvedArt:
         if not self.show_character_art:
             # 明确关掉立绘时不要再退回占位图 —— 用户要的就是无图卡片
             return ResolvedArt()
         portrait, background, real = self.character_art(*keys, variant=variant)
         if portrait:
+            entry = self._portrait_entry(keys, variant)
             return ResolvedArt(
                 hero=portrait,
                 background=background,
                 hero_kind=HERO_CHARACTER,
                 hero_source="character",
                 has_real_asset=real,
+                hero_wide=self._wide(entry.relative_path) if entry else False,
             )
         return ResolvedArt(
             hero=self.placeholder(HERO_CHARACTER),
             background=self.placeholder(HERO_CHARACTER),
             hero_kind=HERO_CHARACTER,
             hero_source="fallback:character",
+            hero_wide=self._wide(self._fallback_relative(HERO_CHARACTER)),
         )
 
     # ---- 武器 ----
@@ -163,33 +182,46 @@ class AssetResolver:
         image = self.weapon_image(owner_key, weapon_key, edge=THUMB_EDGE)
         return image or self.placeholder(HERO_WEAPON, edge=THUMB_EDGE)
 
+    def _weapon_entry(self, owner_key: str, weapon_key: str):
+        if not (self.manifest and weapon_key):
+            return None
+        return self.manifest.weapon(
+            f"{owner_key}:{weapon_key}" if owner_key else "",
+            weapon_key,
+        )
+
     def weapon_hero(self, owner_key: str, weapon_key: str) -> ResolvedArt:
         if not self.show_weapon_art:
             return ResolvedArt()
         image = self.weapon_image(owner_key, weapon_key, edge=image_codec.MAX_EDGE)
         if image:
+            entry = self._weapon_entry(owner_key, weapon_key)
             return ResolvedArt(
                 hero=image,
                 background=image,
                 hero_kind=HERO_WEAPON,
                 hero_source="weapon",
                 has_real_asset=True,
+                hero_wide=self._wide(entry.relative_path) if entry else False,
             )
         # 武器缺图 → 退回角色立绘
         portrait, background, real = self.character_art(owner_key)
         if portrait:
+            entry = self._portrait_entry((owner_key,), "")
             return ResolvedArt(
                 hero=portrait,
                 background=background or portrait,
                 hero_kind=HERO_WEAPON,
                 hero_source="character",
                 has_real_asset=real,
+                hero_wide=self._wide(entry.relative_path) if entry else False,
             )
         return ResolvedArt(
             hero=self.placeholder(HERO_WEAPON),
             background=self.placeholder(HERO_WEAPON),
             hero_kind=HERO_WEAPON,
             hero_source="fallback:weapon",
+            hero_wide=self._wide(self._fallback_relative(HERO_WEAPON)),
         )
 
     # ---- 列表 ----
@@ -200,6 +232,7 @@ class AssetResolver:
             background=self.placeholder(HERO_ARCHIVE),
             hero_kind=HERO_ARCHIVE,
             hero_source="fallback:archive",
+            hero_wide=self._wide(self._fallback_relative(HERO_ARCHIVE)),
         )
 
 

@@ -168,3 +168,33 @@ def test_initial_avatar_is_small():
     payload = len(base64.b64decode(uri.partition(",")[2]))
     assert payload < image_codec.MAX_AVATAR_BYTES
     assert payload < 32 * 1024
+
+# ------------------------------------------------------------------ 构图探测
+
+def test_probe_size_reads_dimensions(tmp_path):
+    path = tmp_path / "wide.webp"
+    path.write_bytes(_image("WEBP", size=(900, 500)))
+    assert image_codec.probe_size(path) == (900, 500)
+
+
+def test_probe_size_missing_file_is_none(tmp_path):
+    assert image_codec.probe_size(tmp_path / "nope.webp") is None
+
+
+def test_is_wide_only_for_landscape(tmp_path):
+    wide = tmp_path / "wide.webp"
+    wide.write_bytes(_image("WEBP", size=(900, 500)))
+    tall = tmp_path / "tall.webp"
+    tall.write_bytes(_image("WEBP", size=(363, 960)))
+    square = tmp_path / "square.webp"
+    square.write_bytes(_image("WEBP", size=(720, 720)))
+
+    assert image_codec.is_wide_image(wide) is True
+    assert image_codec.is_wide_image(tall) is False
+    assert image_codec.is_wide_image(square) is False
+
+
+def test_is_wide_false_for_unreadable(tmp_path):
+    broken = tmp_path / "broken.webp"
+    broken.write_bytes(b"not an image")
+    assert image_codec.is_wide_image(broken) is False

@@ -5,8 +5,8 @@
     fortune_seed   = SHA256("fortune|日期|平台|用户ID")
     character_seed = SHA256("character|日期|平台|用户ID")
 
-两把种子分开，是为了让「塔罗/灵签/卦象」和「今日角色」互不影响：
-以后想单独调整角色池（比如只从 5★ 里抽），不会连带把运势内容全改一遍。
+两把种子分开，是为了让「塔罗」和「今日角色」互不影响：
+以后想单独调整角色池（比如只从 5★ 里抽），不会连带把塔罗全改一遍。
 
 算法里**没有** MD5，也没有 ``random.random()`` 之外的隐式随机源：
 所有随机都来自 ``random.Random(种子)``，同一个种子在任何进程、任何机器上
@@ -22,8 +22,8 @@ from datetime import date, datetime
 from typing import Iterable, Sequence
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from . import arcana_affinity, character_draw, ganzhi, lingqian, tarot, zhouyi
-from .models import DailyCharacter, DailyFortune, LingQianDraw, TarotDraw, ZhouyiDraw
+from . import arcana_affinity, character_draw, ganzhi, tarot
+from .models import DailyCharacter, DailyFortune, TarotDraw
 
 logger = logging.getLogger(__name__)
 
@@ -32,17 +32,6 @@ DEFAULT_TIMEZONE = "Asia/Shanghai"
 FORTUNE_SALT = "fortune"
 CHARACTER_SALT = "character"
 SEED_SEPARATOR = "|"
-
-# 按灵签吉凶给一句综合建议（确定性，不用模型生成）
-GRADE_ADVICE: dict[str, str] = {
-    "上上": "诸事顺遂，适合主动出击、把握良机。",
-    "上签": "运势不错，按部就班推进，多有好消息。",
-    "中签": "平稳中有小波折，宜稳扎稳打、量力而行。",
-    "中平": "平常心对待，守成蓄力，静待时机。",
-    "下签": "今日宜低调谨慎，少做重大决定，养精蓄锐。",
-}
-
-FALLBACK_ADVICE = "顺其自然，过好当下。"
 
 
 class FortuneUnavailableError(Exception):
@@ -106,23 +95,13 @@ def seed_int(seed: bytes) -> int:
 # ---------------------------------------------------------------- 生成
 
 
-def build_advice(grade: str, card: TarotDraw) -> str:
-    """综合建议 = 灵签基调 + 塔罗一句。两句，不堆砌。"""
-    base = GRADE_ADVICE.get(grade, FALLBACK_ADVICE)
-    if card.is_reversed:
-        tail = f"抽到{card.name}逆位，先把手上没理顺的事收个尾，再谈往前推。"
-    else:
-        tail = f"抽到{card.name}正位，可以借这股劲往前走一步。"
-    return f"{base}{tail}"
-
-
 def draw_fortune(
     *,
     date_key: str,
     platform_id: str,
     user_id: str,
     characters: Sequence[DailyCharacter],
-) -> tuple[DailyCharacter, TarotDraw, LingQianDraw, ZhouyiDraw, str]:
+) -> tuple[DailyCharacter, TarotDraw]:
     """纯抽取，不碰数据库。
 
     先抽塔罗；若大阿卡纳有已进入 P5X 的 P3/P5 对应角色，则从对应角色中
@@ -135,9 +114,7 @@ def draw_fortune(
         preferred or characters,
         character_seed(date_key, platform_id, user_id),
     )
-    qian = lingqian.draw(rng)
-    gua = zhouyi.cast(rng)
-    return chosen, card, qian, gua, build_advice(qian.grade, card)
+    return chosen, card
 
 
 def generate(
@@ -155,7 +132,7 @@ def generate(
     if not pool:
         raise FortuneUnavailableError("角色库为空，无法抽取今日角色")
 
-    chosen, card, qian, gua, advice = draw_fortune(
+    chosen, card = draw_fortune(
         date_key=date_key,
         platform_id=platform_id,
         user_id=user_id,
@@ -169,10 +146,7 @@ def generate(
         display_name=display_name,
         character=chosen,
         tarot=card,
-        lingqian=qian,
-        zhouyi=gua,
         ganzhi=ganzhi.day_ganzhi(day),
-        advice=advice,
         stored=False,
     )
 
@@ -181,10 +155,7 @@ __all__ = [
     "DEFAULT_TIMEZONE",
     "FORTUNE_SALT",
     "CHARACTER_SALT",
-    "FALLBACK_ADVICE",
-    "GRADE_ADVICE",
     "FortuneUnavailableError",
-    "build_advice",
     "character_seed",
     "date_key_of",
     "draw_fortune",

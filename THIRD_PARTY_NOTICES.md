@@ -11,20 +11,20 @@
 | 名称 | `astrbot_plugin_cyber_divination`（赛博算命） |
 | 作者 | ruoyuxian20-sys（若雨希安） |
 | 许可证 | MIT |
-| 用途 | 每日运势的塔罗牌义、观音灵签、周易六十四卦数据与起卦算法 |
+| 用途 | 每日运势的塔罗牌义与干支数据 |
 
 ### 实际使用的模块
 
 | 上游文件 | 本仓库文件 | 使用方式 |
 | --- | --- | --- |
 | `core/tarot.py` | `archive/daily/tarot.py` | 78 张牌的牌名与正 / 逆位释义；单张抽取 |
-| `core/lingqian.py` | `archive/daily/lingqian.py` | 一百签的吉凶、签诗、解曰；抽签 |
-| `core/zhouyi.py` | `archive/daily/zhouyi.py` | 六十四卦卦辞与简解、上下卦对照表、三枚铜钱起卦、动爻与变卦 |
 | `core/ganzhi.py` | `archive/daily/ganzhi.py` | 天干地支与日干支推算 |
-| `core/daily.py` | `archive/daily/engine.py` | **仅参考**「种子 → 塔罗 → 灵签 → 周易」的抽取顺序与吉凶建议措辞 |
+| `core/daily.py` | `archive/daily/engine.py` | **仅参考**「种子 → 塔罗 → 角色」的抽取顺序 |
 
 ### 明确未使用的部分
 
+- 观音灵签与周易六十四卦：每日运势只保留「今日角色 + 塔罗」，
+  上游的 `lingqian.py`、`zhouyi.py` 数据与起卦算法**未包含**在本仓库中；
 - 奇门遁甲、占卜历史记录、LLM 润色；
 - 上游自带的 T2I 出图、命令树、配置管理与消息排版；
 - 求签问事、牌阵解析（三张 / 过去现在未来）、按关键词查牌。
@@ -33,12 +33,12 @@
 
 1. 随机种子由 **MD5** 改为 **SHA-256**，并且种子里加入日期、平台、用户 ID
    三段，保证「同一人同一天结果固定、跨进程一致」；
-2. 所有 `draw` / `cast` 都改成**必须传入** `random.Random` 实例，模块内部不再
-   自己取随机源（上游用 `random.SystemRandom()` 兜底，会导致结果不可复现）；
+2. 抽牌改成**必须传入** `random.Random` 实例，模块内部不再自己取随机源
+   （上游用 `random.SystemRandom()` 兜底，会导致结果不可复现）；
 3. 去掉了全部 `format_*` / `build_result` 文本排版函数与命令解析；
-4. 周易部分没有引入「六神」：每日运势卡片只有一屏预算，
-   优先保证塔罗、灵签、卦象三块完整显示；
-5. 数据以 `tuple` 常量保存，避免运行期被意外修改。
+4. 数据以 `tuple` 常量保存，避免运行期被意外修改；
+5. 五档吉凶评级与综合建议（`archive/daily/fortune_grade.py`）是本项目自写的
+   规则表，不来自上游，也不调用任何模型；牌义原文仍取自上游。
 
 ### 许可证原文
 

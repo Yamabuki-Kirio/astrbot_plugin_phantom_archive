@@ -120,7 +120,7 @@
     "default": false
   },
   "daily_fortune_enabled": {
-    "description": "开启 /p5x每日运势：抽取今日角色与塔罗、灵签、周易，结果按天固定",
+    "description": "开启 /p5x每日运势：抽取今日角色与一张塔罗牌，结果按天固定",
     "type": "bool",
     "default": true
   },

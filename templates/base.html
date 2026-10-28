@@ -135,6 +135,12 @@
     object-position: right top;
     display: block;
   }
+  /* 横构图立绘（同一角色的动作大字图）：cover 会把人物挤出窄高的列，
+     改成 contain 贴右下角，整张图完整且不压到左侧文字 */
+  .hero-figure img.hero-art--wide {
+    object-fit: contain;
+    object-position: right bottom;
+  }
   /* 浅色卡片上深色立绘会压掉标题，右上角补一层淡淡的纸面 */
   [data-theme="light"] .hero-figure { opacity: 0.95; }
   /* 顶部纸面只保护左侧表头和标题。右侧人物保持清晰，避免整张立绘
@@ -453,7 +459,7 @@
   {% if visual.has_hero_image %}
   <div class="hero-bg" style="background-image:url('{{ visual.background_image }}'); opacity:{{ visual.background_opacity }}; filter:blur({{ visual.background_blur }}px);"></div>
   <div class="hero-scrim"></div>
-  <div class="hero-figure"><img src="{{ visual.hero_image }}" style="opacity:{{ visual.hero_opacity }};" alt=""></div>
+  <div class="hero-figure"><img class="hero-art{% if visual.hero_wide %} hero-art--wide{% endif %}" src="{{ visual.hero_image }}" style="opacity:{{ visual.hero_opacity }};" alt=""></div>
   <div class="hero-top"></div>
   {% endif %}
 

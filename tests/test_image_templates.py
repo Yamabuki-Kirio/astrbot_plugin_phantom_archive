@@ -318,3 +318,15 @@ def test_build_context_without_visual_uses_empty():
     context = image_templates.build_context(_page())
     assert context["visual"]["has_hero_image"] is False
     assert context["visual"]["show_requester"] is True
+
+
+def test_wide_hero_switches_to_contain_class():
+    """横构图立绘加 hero-art--wide，靠 CSS 换成 contain。"""
+    html = image_templates.render_page(_page(), visual=_visual(hero_wide=True))
+    assert 'class="hero-art hero-art--wide"' in html
+
+
+def test_tall_hero_has_no_wide_class():
+    html = image_templates.render_page(_page(), visual=_visual())
+    assert 'class="hero-art"' in html
+    assert 'class="hero-art hero-art--wide"' not in html

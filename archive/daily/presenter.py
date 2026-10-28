@@ -3,14 +3,15 @@
 文字和图片**必须**由同一个对象生成 —— 图挂了就换文字，内容不能变。
 所以这里只有两个纯函数，谁都不重新抽签、不重新抽角色。
 
-排版取舍：塔罗、灵签、卦象三块固定都显示，不做分页。
+排版取舍：只保留「今日角色 + 塔罗」，不做分页。
 每日运势是「一眼看完」的东西，翻页反而破坏体验；
-真正需要克制的长文本（卦辞）已经在数据层裁到一两句。
+正文分两块：塔罗（五档评级 + 宜忌）与综合建议（结合牌义展开的一句话）。
 """
 
 from __future__ import annotations
 
 from .. import cards
+from . import fortune_grade
 
 CATEGORY = "每日运势"
 TEMPLATE_NAME = "daily_fortune.html"
@@ -47,6 +48,19 @@ def character_line(fortune) -> str:
     return f"{name}（{subtitle}）" if subtitle else name
 
 
+def tarot_label(tarot) -> str:
+    """「命运之轮（逆位）」。
+
+    大阿卡纳的原始牌名是「X 命运之轮 Wheel of Fortune」，序号与英文名
+    在半宽的信息栏里会把标题挤成三行，卡片上只保留中文牌名。
+    """
+    full = (tarot.name or "").strip()
+    name = fortune_grade.major_name(full) or full
+    if not name:
+        return ""
+    return f"{name}（{tarot.position}）"
+
+
 # ---------------------------------------------------------------- 文字
 
 
@@ -57,31 +71,10 @@ def render_text(fortune) -> str:
 
     tarot = fortune.tarot
     if tarot.name:
-        lines.append(f"塔罗指引：{tarot.label}")
-        if tarot.meaning:
-            lines.append(f"  → {tarot.meaning}")
-
-    qian = fortune.lingqian
-    if qian.grade:
-        lines.append(f"观音灵签：{qian.label}")
-        poem = " ".join(qian.poem_lines)
-        if poem:
-            lines.append(f"  签诗：{poem}")
-        if qian.explain:
-            lines.append(f"  解曰：{qian.explain}")
-
-    gua = fortune.zhouyi
-    if gua.name:
-        trigram = f"（{gua.trigram_label}）" if gua.trigram_label else ""
-        lines.append(f"周易卦象：{gua.label}{trigram}")
-        if gua.guaci:
-            lines.append(f"  卦辞：{gua.guaci}")
-        if gua.jie:
-            lines.append(f"  简解：{gua.jie}")
-        if gua.moving and gua.changed_name:
-            lines.append(f"  动爻：{gua.moving_label}，变{gua.changed_name}卦")
-
-    if fortune.advice:
+        lines.append(f"塔罗指引：{tarot_label(tarot)}· {fortune.grade}")
+        suitable, avoid = fortune.guide
+        lines.append(f"  宜：{suitable}")
+        lines.append(f"  忌：{avoid}")
         lines.append("")
         lines.append(f"综合建议：{fortune.advice}")
 
@@ -94,48 +87,30 @@ def render_text(fortune) -> str:
 
 
 def _tarot_block(fortune) -> cards.Block:
-    tarot = fortune.tarot
-    body = [f"  {tarot.meaning}"] if tarot.meaning else ["  牌面释义暂缺"]
-    return cards.Block(kind="item", lines=(f"· {tarot.label}", *body))
+    """塔罗是这张卡的第二主角：标题放牌名 + 正逆位 + 吉凶，正文放宜忌。
+
+    牌义不在这里重复 —— 它已经写进「综合建议」那句话里了。
+    """
+    suitable, avoid = fortune.guide
+    body = [f"宜：{suitable}", f"忌：{avoid}"]
+    label = tarot_label(fortune.tarot) or "塔罗牌"
+    return cards.Block(kind="item", lines=(f"· {label}· {fortune.grade}", *body))
 
 
-def _lingqian_block(fortune) -> cards.Block:
-    qian = fortune.lingqian
-    body = [f"  {line}" for line in qian.poem_lines]
-    if qian.explain:
-        body.append(f"  解曰：{qian.explain}")
-    return cards.Block(kind="item", lines=(f"· {qian.label}", *body))
+def _tarot_section(fortune) -> cards.Section:
+    return cards.Section(heading="塔罗指引", blocks=(_tarot_block(fortune),))
 
 
-def _zhouyi_block(fortune) -> cards.Block:
-    gua = fortune.zhouyi
-    trigram = f"（{gua.trigram_label}）" if gua.trigram_label else ""
-    lines = [f"本卦：{gua.label}{trigram}"]
-    if gua.guaci:
-        lines.append(f"卦辞：{gua.guaci}")
-    if gua.jie:
-        lines.append(f"简解：{gua.jie}")
-    if gua.moving and gua.changed_name:
-        lines.append(f"动爻：{gua.moving_label}，变{gua.changed_name}卦")
-    else:
-        lines.append("动爻：六爻安静，宜守其常")
-    return cards.Block(kind="kv", lines=tuple(lines))
+def _advice_section(fortune) -> cards.Section:
+    return cards.Section(
+        heading="综合建议",
+        blocks=(cards.Block(kind="para", lines=(fortune.advice,)),),
+    )
 
 
 def build_sections(fortune) -> tuple[cards.Section, ...]:
-    sections = [
-        cards.Section(heading="塔罗指引", blocks=(_tarot_block(fortune),)),
-        cards.Section(heading="观音灵签", blocks=(_lingqian_block(fortune),)),
-        cards.Section(heading="周易卦象", blocks=(_zhouyi_block(fortune),)),
-    ]
-    if fortune.advice:
-        sections.append(
-            cards.Section(
-                heading="综合建议",
-                blocks=(cards.Block(kind="para", lines=(fortune.advice,)),),
-            )
-        )
-    return tuple(sections)
+    """两块：塔罗（评级 + 宜忌）与综合建议（结合牌义展开）。"""
+    return (_tarot_section(fortune), _advice_section(fortune))
 
 
 def build_page(fortune) -> cards.CardPage:
@@ -146,7 +121,8 @@ def build_page(fortune) -> cards.CardPage:
         category=CATEGORY,
         title=_short(character.name),
         subtitle=character.subtitle,
-        lead=f"{fortune.day_label} · 今日角色",
+        # 卡片标题就是今天抽到的角色，导语只留日期；「今日角色」交给类别标签
+        lead=fortune.day_label,
         sections=build_sections(fortune),
         page_index=1,
         page_total=1,
@@ -173,4 +149,5 @@ __all__ = [
     "build_sections",
     "character_line",
     "render_text",
+    "tarot_label",
 ]

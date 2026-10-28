@@ -1,65 +1,107 @@
 {% extends "base.html" %}
 
 {#
-  每日运势卡片：结构与查询卡片一致，但重心不同 ——
-  用户一眼要看到的是「今天是谁」和「今天什么日子」，
-  所以角色名放到最大字号，日期做成高亮行，塔罗 / 灵签 / 卦象退到半透明面板里。
+  每日运势卡片：只有「今日角色 + 塔罗」两块内容，重心和查询卡不同 ——
+  用户一眼要看到的是「今天是谁」和「今天抽到什么牌、什么吉凶」，
+  所以角色名放到最大字号，日期退成背景信息，
+  塔罗单独占据一块强调面板（牌名 · 评级 / 牌义 / 宜 / 忌），其余空间留给右侧立绘。
 #}
 
 {% block theme %}
+  /* 内容少了两块，卡片给立绘留出足够的竖向画布 */
+  .card { min-height: 560px; }
+
   .title {
-    font-size: 46px;
-    line-height: 1.14;
-    letter-spacing: 0.05em;
+    font-size: 48px;
+    line-height: 1.12;
+    letter-spacing: 0.04em;
   }
   .title::before {
     width: 5px;
-    height: 34px;
-    vertical-align: -7px;
+    height: 36px;
+    vertical-align: -8px;
   }
   .subtitle {
-    margin-top: 9px;
+    margin-top: 10px;
     font-size: 15px;
     letter-spacing: 0.12em;
     color: var(--text-2);
   }
-  .card.has-hero .head { padding-right: 55%; }
-  /* 立绘统一由 base.html 的右侧全高布局处理，
-     这里只调运势卡自己的整体氛围，不再单独改立绘尺寸 */
-  .hero-figure {
-    width: 58%;
-  }
-  .hero-figure img {
-    object-position: right top;
-  }
-  /* 运势正文较长，严格限制在左半边；人物从中线右侧完整露出，
-     不再让脸、头发或身体落在信息栏玻璃后面。 */
+  .card.has-hero .head { padding-right: 52%; }
+  /* 立绘统一由 base.html 的右侧全高布局处理 */
+  .hero-figure { width: 60%; }
+  /* 竖构图贴顶，横构图由 base.html 的 hero-art--wide 规则接管（contain + 贴底） */
+  .hero-figure img:not(.hero-art--wide) { object-position: right top; }
+
+  /* 只剩两块正文，信息栏比查询卡窄一些，把右侧让给人物 */
   .card.has-hero .content,
-  .card.has-hero .foot {
-    width: 46%;
-  }
+  .card.has-hero .foot { width: 50%; }
+
+  /* 日期只是背景信息：比正文还小一号，不再抢标题的注意力 */
   .lead {
-    margin-bottom: 12px;
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: 0.10em;
-    color: var(--accent);
+    margin: 0 0 12px;
+    padding: 0 0 0 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+    color: var(--text-3);
     background: transparent;
-    border-left-width: 3px;
+    border-left: 2px solid var(--line-strong);
+    border-radius: 0;
   }
   .content {
-    padding: 16px 18px 6px;
-    border-radius: 6px;
+    padding: 16px 16px 8px;
+    border-radius: 8px;
   }
+
+  /* 小节标题退成标签，让塔罗牌名成为视觉主角 */
   .section-heading {
-    font-size: 14.5px;
-    letter-spacing: 0.14em;
+    font-size: 12.5px;
+    letter-spacing: 0.20em;
+    color: var(--text-3);
   }
-  .item-title { font-size: 15px; }
-  .item-body p { font-size: 13.5px; }
-  .kv { font-size: 13.5px; line-height: 1.66; }
-  .foot .meta { font-size: 12px; }
+  .section-heading::after { margin-top: 5px; }
+  .section { margin-top: 16px; }
+  .section:first-child { margin-top: 2px; }
+
+  /* 塔罗块：牌名大号 + 正逆位，牌义在下面 */
+  .item {
+    padding: 13px 14px 12px;
+    border-left-width: 3px;
+    border-left-color: var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .item-title {
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .item-body { margin-top: 8px; }
+  .item-body p {
+    font-size: 13.2px;
+    line-height: 1.82;
+    letter-spacing: 0.006em;
+  }
+  /* 宜 / 忌 是行动口径，保持正文色即可 */
+  .item-body p { color: var(--text-2); }
+
+  /* 综合建议：不加框，靠字号与行距把它从条目里抬出来 */
+  .section + .section { margin-top: 18px; }
+  .para p {
+    font-size: 13.6px;
+    line-height: 1.9;
+    letter-spacing: 0.006em;
+    color: var(--text);
+  }
+
+  .foot .meta { font-size: 11.8px; }
+  .foot { margin-top: 16px; }
 
   /* 浅色纸面上立绘整体略压淡，避免压过标题 */
   [data-theme="light"] .hero-figure { opacity: 0.9; }
 {% endblock %}
+
+{% block category_label %}今日角色{% endblock %}

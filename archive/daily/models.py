@@ -13,6 +13,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Mapping
 
+from . import fortune_grade
+
 TAROT_UPRIGHT = "正位"
 TAROT_REVERSED = "逆位"
 
@@ -62,120 +64,6 @@ class TarotDraw:
             name=_text(raw.get("name")),
             is_reversed=bool(raw.get("is_reversed")),
             meaning=_text(raw.get("meaning")),
-        )
-
-
-@dataclass(frozen=True)
-class LingQianDraw:
-    """一支观音灵签。签诗原文里带换行，展示时按行拆。"""
-
-    number: int = 0
-    grade: str = ""
-    poem: str = ""
-    explain: str = ""
-
-    @property
-    def poem_lines(self) -> tuple[str, ...]:
-        return tuple(line.strip() for line in self.poem.splitlines() if line.strip())
-
-    @property
-    def label(self) -> str:
-        if self.number <= 0:
-            return self.grade
-        return f"第 {self.number} 签 · {self.grade}"
-
-    def to_dict(self) -> dict:
-        return {
-            "number": self.number,
-            "grade": self.grade,
-            "poem": self.poem,
-            "explain": self.explain,
-        }
-
-    @classmethod
-    def from_dict(cls, raw: Any) -> "LingQianDraw":
-        if not isinstance(raw, Mapping):
-            return cls()
-        return cls(
-            number=_int(raw.get("number")),
-            grade=_text(raw.get("grade")),
-            poem=_text(raw.get("poem")),
-            explain=_text(raw.get("explain")),
-        )
-
-
-@dataclass(frozen=True)
-class ZhouyiDraw:
-    """一卦。变卦信息只在有动爻时存在。"""
-
-    number: int = 0
-    name: str = ""
-    symbol: str = ""
-    upper: str = ""
-    lower: str = ""
-    guaci: str = ""
-    jie: str = ""
-    moving: tuple[int, ...] = ()
-    changed_number: int | None = None
-    changed_name: str = ""
-
-    @property
-    def label(self) -> str:
-        """「坤卦」。不带 Unicode 卦符 —— 多数中文字体没有 U+4DC0–4DFF，
-        在无头 Chrome 里会渲染成豆腐块，卡片上宁可少一个装饰。"""
-        if not self.name:
-            return ""
-        return f"{self.name}卦"
-
-    @property
-    def label_with_symbol(self) -> str:
-        """带卦符的版本，只给确定字体支持的地方用（例如终端自检）。"""
-        return f"{self.symbol} {self.label}".strip()
-
-    @property
-    def trigram_label(self) -> str:
-        if not (self.upper and self.lower):
-            return ""
-        return f"{self.upper}上{self.lower}下"
-
-    @property
-    def moving_label(self) -> str:
-        """「第3、5爻」。调用方自己加「动爻：」前缀，这里不重复。"""
-        if not self.moving:
-            return ""
-        return "第" + "、".join(str(i) for i in self.moving) + "爻"
-
-    def to_dict(self) -> dict:
-        return {
-            "number": self.number,
-            "name": self.name,
-            "symbol": self.symbol,
-            "upper": self.upper,
-            "lower": self.lower,
-            "guaci": self.guaci,
-            "jie": self.jie,
-            "moving": list(self.moving),
-            "changed_number": self.changed_number,
-            "changed_name": self.changed_name,
-        }
-
-    @classmethod
-    def from_dict(cls, raw: Any) -> "ZhouyiDraw":
-        if not isinstance(raw, Mapping):
-            return cls()
-        moving = raw.get("moving")
-        changed = raw.get("changed_number")
-        return cls(
-            number=_int(raw.get("number")),
-            name=_text(raw.get("name")),
-            symbol=_text(raw.get("symbol")),
-            upper=_text(raw.get("upper")),
-            lower=_text(raw.get("lower")),
-            guaci=_text(raw.get("guaci")),
-            jie=_text(raw.get("jie")),
-            moving=tuple(_int(item) for item in moving) if isinstance(moving, (list, tuple)) else (),
-            changed_number=_int(changed) if changed is not None else None,
-            changed_name=_text(raw.get("changed_name")),
         )
 
 
@@ -239,10 +127,7 @@ class DailyFortune:
     display_name: str = ""
     character: DailyCharacter = field(default_factory=DailyCharacter)
     tarot: TarotDraw = field(default_factory=TarotDraw)
-    lingqian: LingQianDraw = field(default_factory=LingQianDraw)
-    zhouyi: ZhouyiDraw = field(default_factory=ZhouyiDraw)
     ganzhi: str = ""
-    advice: str = ""
     stored: bool = False  # True = 这条是当天之前就已经存下来的
 
     @property
@@ -261,28 +146,55 @@ class DailyFortune:
     def character_key(self) -> str:
         return self.character.key
 
+    @property
+    def grade(self) -> str:
+        """塔罗吉凶评级（大吉 / 吉 / 平 / 凶）。
+
+        由牌名与正逆位实时算出，不进 payload：
+        旧记录没有这个字段也能拿到同一结果，改了规则也不用洗库。
+        """
+        return fortune_grade.grade_of(self.tarot.name, self.tarot.is_reversed)
+
+    @property
+    def guide(self) -> tuple[str, str]:
+        """与评级对应的 ``(宜, 忌)``。"""
+        return fortune_grade.guide_of(self.grade)
+
+    @property
+    def advice(self) -> str:
+        """综合建议：由「牌名 + 正逆位 + 牌义 + 评级」拼出的确定性文案。
+
+        同样是实时算出、不进 payload —— 旧记录也能拿到同一段话，
+        改了文案不用洗库，也不会因为存档里的旧句子和当前牌义对不上。
+        """
+        return fortune_grade.build_advice(
+            self.tarot.name,
+            self.tarot.meaning,
+            self.tarot.is_reversed,
+            grade=self.grade,
+        )
+
     def to_payload(self) -> dict:
         """存进 ``fortune_json`` 的那一份。不含身份字段，身份走表列。"""
         return {
             "character": self.character.to_dict(),
             "tarot": self.tarot.to_dict(),
-            "lingqian": self.lingqian.to_dict(),
-            "zhouyi": self.zhouyi.to_dict(),
             "ganzhi": self.ganzhi,
-            "advice": self.advice,
         }
 
     @classmethod
     def from_payload(cls, raw: Any, **identity: str) -> "DailyFortune":
-        """从库里读回来。``identity`` 覆盖 date_key / timezone / platform_id / user_id / display_name。"""
+        """从库里读回来。
+
+        ``identity`` 覆盖 date_key / timezone / platform_id / user_id / display_name。
+        旧记录里多出来的 ``lingqian`` / ``zhouyi`` / ``advice`` 字段会被忽略，
+        已停用的板块不会因为历史数据又冒出来。
+        """
         data = raw if isinstance(raw, Mapping) else {}
         return cls(
             character=DailyCharacter.from_dict(data.get("character")),
             tarot=TarotDraw.from_dict(data.get("tarot")),
-            lingqian=LingQianDraw.from_dict(data.get("lingqian")),
-            zhouyi=ZhouyiDraw.from_dict(data.get("zhouyi")),
             ganzhi=_text(data.get("ganzhi")),
-            advice=_text(data.get("advice")),
             stored=True,
             **identity,
         )
@@ -291,9 +203,7 @@ class DailyFortune:
 __all__ = [
     "DailyCharacter",
     "DailyFortune",
-    "LingQianDraw",
     "TarotDraw",
-    "ZhouyiDraw",
     "TAROT_UPRIGHT",
     "TAROT_REVERSED",
     "UNKNOWN_CHARACTER_NAME",
