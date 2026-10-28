@@ -246,7 +246,7 @@ python scripts/verify_assets.py
 当前版本校验结果：
 
 ```text
-519 passed
+530 项测试通过（其中 71 项需要 AstrBot 运行时）
 角色立绘 69/72
 武器图片 139/142
 素材文件 393 个，校验通过
