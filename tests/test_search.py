@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from archive.search import MAX_CANDIDATES, normalize_term, search_characters
+from archive.search import MAX_CANDIDATES, normalize_key, normalize_term, search_characters
 
 ALIASES = ["汐见琴音", "코토네", "KOTONE", "kotone"]
 
@@ -33,6 +33,36 @@ def test_codename_is_case_insensitive(repository):
 def test_exact_beats_fuzzy(repository):
     """「雨宫莲」必须命中 1 条，而不是把「雨宫莲·星舞」也算进来。"""
     result = search_characters(repository, "雨宫莲")
+    assert result.kind == "one"
+    assert result.character.name_zh == "雨宫莲"
+
+
+@pytest.mark.parametrize("term", ["雨宫莲星舞", "雨宫莲-星舞", "雨宫莲・星舞"])
+def test_variant_name_ignores_decorative_separator(repository, term):
+    result = search_characters(repository, term)
+    assert result.kind == "one"
+    assert result.character.name_zh == "雨宫莲·星舞"
+
+
+@pytest.mark.parametrize(
+    ("term", "expected"),
+    [
+        ("周星驰", "雨宫莲·星舞"),
+        ("哈姆子", "汐见琴音"),
+        ("P3P女主", "汐见琴音"),
+        ("鬼太郎", "结城理"),
+        ("阿鬼", "结城理"),
+        ("牢理", "结城理"),
+    ],
+)
+def test_community_aliases(repository, term, expected):
+    result = search_characters(repository, term)
+    assert result.kind == "one"
+    assert result.character.name_zh == expected
+
+
+def test_one_character_typo_is_tolerated(repository):
+    result = search_characters(repository, "雨宫连")
     assert result.kind == "one"
     assert result.character.name_zh == "雨宫莲"
 
@@ -68,3 +98,8 @@ def test_normalize_term():
     assert normalize_term("  a   b  ") == "a b"
     assert normalize_term(None) == ""
     assert normalize_term("汐见琴音") == "汐见琴音"
+
+
+def test_normalize_key():
+    assert normalize_key(" 雨宫莲・星舞 ") == "雨宫莲星舞"
+    assert normalize_key("JOKER-Starlight") == "jokerstarlight"
