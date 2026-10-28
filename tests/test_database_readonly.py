@@ -42,8 +42,10 @@ def test_uri_is_read_only(db_path):
     uri = build_uri(db_path)
     assert uri.startswith("file:")
     assert "mode=ro" in uri
-    # 中文路径必须被编码，否则 sqlite3 打不开
-    assert "%" in uri
+    # 非 ASCII 路径（中文目录）必须被编码，否则 sqlite3 打不开；
+    # 纯 ASCII 路径（CI 的 runner 就是）本来就没有可编码字符
+    if not str(db_path).isascii():
+        assert "%" in uri
 
 
 def test_query_only_pragma_is_on(db_path):
