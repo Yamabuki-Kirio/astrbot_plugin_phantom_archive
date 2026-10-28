@@ -24,6 +24,26 @@ T2I 服务生成带用户头像、角色立绘和武器图片的卡片。图片�
 - 中文数据库、角色立绘和武器图片均随仓库发布，安装后即可使用
 - 渲染失败自动回退文字，不调用 LLM
 
+## 预览
+
+下图全部由插件自带的模板 + 真实数据库渲染，没有手工修图（截图里的发起者是测试账号）。
+
+| 角色档案（浅色，默认） | 同一张卡的暗色主题 |
+| --- | --- |
+| ![](docs/preview/character.webp) | ![](docs/preview/character-dark.webp) |
+
+| 技能档案 | 武器档案 |
+| --- | --- |
+| ![](docs/preview/skills.webp) | ![](docs/preview/weapon.webp) |
+
+| 配队攻略 | 角色名册（两栏） |
+| --- | --- |
+| ![](docs/preview/guide.webp) | ![](docs/preview/list.webp) |
+
+| 每日运势 · 大吉 | 每日运势 · 大凶 |
+| --- | --- |
+| ![](docs/preview/daily-great.webp) | ![](docs/preview/daily-awful.webp) |
+
 ## 安装
 
 ### 在 AstrBot WebUI 安装
