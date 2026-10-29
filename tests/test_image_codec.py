@@ -198,3 +198,14 @@ def test_is_wide_false_for_unreadable(tmp_path):
     broken = tmp_path / "broken.webp"
     broken.write_bytes(b"not an image")
     assert image_codec.is_wide_image(broken) is False
+# ------------------------------------------------------------------ 透明底
+
+def test_has_transparency_detects_alpha(tmp_path):
+    transparent = tmp_path / "t.webp"
+    Image.new("RGBA", (60, 60), (0, 0, 0, 0)).save(transparent, format="WEBP")
+    opaque = tmp_path / "o.webp"
+    Image.new("RGB", (60, 60), (10, 10, 10)).save(opaque, format="WEBP")
+
+    assert image_codec.has_transparency(transparent) is True
+    assert image_codec.has_transparency(opaque) is False
+    assert image_codec.has_transparency(tmp_path / "nope.webp") is False

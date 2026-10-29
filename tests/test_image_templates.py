@@ -320,6 +320,19 @@ def test_build_context_without_visual_uses_empty():
     assert context["visual"]["show_requester"] is True
 
 
+def test_opaque_hero_gets_mask_class():
+    """不透明素材（武器照片、占位图）仍要水平遮罩融边。"""
+    html = image_templates.render_page(_page(), visual=_visual(hero_transparent=False))
+    assert 'class="hero-figure hero-figure--masked"' in html
+
+
+def test_transparent_hero_has_no_mask_class():
+    """透明底立绘不加遮罩，否则人物左半身会被一起淡掉。"""
+    html = image_templates.render_page(_page(), visual=_visual())
+    assert 'class="hero-figure"' in html
+    assert 'class="hero-figure hero-figure--masked"' not in html
+
+
 def test_wide_hero_switches_to_contain_class():
     """横构图立绘加 hero-art--wide，靠 CSS 换成 contain。"""
     html = image_templates.render_page(_page(), visual=_visual(hero_wide=True))

@@ -216,3 +216,33 @@ def test_character_hero_keeps_tall_portrait_covered(tmp_path):
     manifest = _manifest_with_portrait(root, (363, 960), slug="tall")
     art = asset_resolver.AssetResolver(manifest).character_hero("tall")
     assert art.hero_wide is False
+
+
+def test_character_hero_flags_transparent_portrait(tmp_path):
+    """透明底立绘不该再加 CSS 遮罩，否则人物会被淡掉。"""
+    root = tmp_path / "assets"
+    folder = root / "characters" / "cutout"
+    folder.mkdir(parents=True)
+    from PIL import Image as PILImage
+
+    PILImage.new("RGBA", (400, 800), (0, 0, 0, 0)).save(folder / "1.webp", format="WEBP")
+    manifest = asset_manifest.parse_manifest(
+        {
+            "characters": {
+                "cutout": {
+                    "portrait": "characters/cutout/1.webp",
+                    "portraits": [{"path": "characters/cutout/1.webp"}],
+                }
+            }
+        },
+        root,
+    )
+    art = asset_resolver.AssetResolver(manifest).character_hero("cutout")
+    assert art.hero_transparent is True
+
+
+def test_character_hero_marks_opaque_portrait(tmp_path):
+    root = tmp_path / "assets"
+    manifest = _manifest_with_portrait(root, (400, 800), slug="opaque")
+    art = asset_resolver.AssetResolver(manifest).character_hero("opaque")
+    assert art.hero_transparent is False

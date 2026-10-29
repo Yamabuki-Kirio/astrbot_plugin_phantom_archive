@@ -55,11 +55,14 @@ WIDE_ASPECT_RATIO = 1.0
 
 # 只读文件头拿到的尺寸缓存
 _SIZE_CACHE: OrderedDict[tuple, tuple[int, int] | None] = OrderedDict()
+# 是否带透明像素的缓存
+_ALPHA_CACHE: OrderedDict[tuple, bool] = OrderedDict()
 
 
 def clear_cache() -> None:
     _CACHE.clear()
     _SIZE_CACHE.clear()
+    _ALPHA_CACHE.clear()
 
 
 def sniff_format(data: bytes) -> str | None:
@@ -210,6 +213,40 @@ def probe_size(path: str | Path) -> tuple[int, int] | None:
     return size
 
 
+def has_transparency(path: str | Path) -> bool:
+    """图里是否真的带透明像素。
+
+    带透明的立绘不需要再靠 CSS 遮罩去融边 —— 加了反而把人物左半身一起
+    淡掉，看起来发灰；只有「整块不透明」的图（武器照片、占位图）才要遮罩。
+    """
+    try:
+        file = Path(path)
+        stat = file.stat()
+    except OSError:
+        return False
+    cache_key = (str(file.resolve()), stat.st_mtime_ns, stat.st_size)
+    cached = _ALPHA_CACHE.get(cache_key)
+    if cached is not None:
+        _ALPHA_CACHE.move_to_end(cache_key)
+        return cached
+
+    result = False
+    try:
+        from PIL import Image
+
+        with Image.open(file) as image:
+            if image.mode in ("RGBA", "LA", "PA"):
+                alpha = image.convert("RGBA").split()[3]
+                result = alpha.getextrema()[0] < 250
+    except Exception:  # noqa: BLE001 - 读不出来就当不透明
+        result = False
+
+    _ALPHA_CACHE[cache_key] = result
+    while len(_ALPHA_CACHE) > _CACHE_LIMIT:
+        _ALPHA_CACHE.popitem(last=False)
+    return result
+
+
 def is_wide_image(path: str | Path) -> bool:
     """宽 ≥ 高的图在窄列里应改用 contain。读不出来一律当作竖构图。"""
     size = probe_size(path)
@@ -321,6 +358,7 @@ __all__ = [
     "encode_bytes",
     "encode_path",
     "probe_size",
+    "has_transparency",
     "is_wide_image",
     "WIDE_ASPECT_RATIO",
     "make_initial_avatar",

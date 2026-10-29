@@ -50,6 +50,8 @@ class ResolvedArt:
     has_real_asset: bool = False
     # 横构图（同一角色的动作大字图）：模板要用 contain 贴底，cover 会把人挤出去
     hero_wide: bool = False
+    # 立绘自带透明通道时不需要 CSS 遮罩融边，加了反而会把人物淡掉
+    hero_transparent: bool = True
 
 
 class AssetResolver:
@@ -81,6 +83,10 @@ class AssetResolver:
     def _wide(self, relative: str) -> bool:
         """这张素材是不是横构图（决定模板用 cover 还是 contain）。"""
         return bool(relative) and image_codec.is_wide_image(self.root / relative)
+
+    def _transparent(self, relative: str) -> bool:
+        """素材是否自带透明通道（决定模板要不要再加 CSS 遮罩融边）。"""
+        return bool(relative) and image_codec.has_transparency(self.root / relative)
 
     def _fallback_relative(self, kind: str) -> str:
         name = {
@@ -155,6 +161,7 @@ class AssetResolver:
                 hero_source="character",
                 has_real_asset=real,
                 hero_wide=self._wide(entry.relative_path) if entry else False,
+                hero_transparent=self._transparent(entry.relative_path) if entry else False,
             )
         return ResolvedArt(
             hero=self.placeholder(HERO_CHARACTER),
@@ -162,6 +169,7 @@ class AssetResolver:
             hero_kind=HERO_CHARACTER,
             hero_source="fallback:character",
             hero_wide=self._wide(self._fallback_relative(HERO_CHARACTER)),
+            hero_transparent=self._transparent(self._fallback_relative(HERO_CHARACTER)),
         )
 
     # ---- 武器 ----
@@ -203,6 +211,7 @@ class AssetResolver:
                 hero_source="weapon",
                 has_real_asset=True,
                 hero_wide=self._wide(entry.relative_path) if entry else False,
+                hero_transparent=self._transparent(entry.relative_path) if entry else False,
             )
         # 武器缺图 → 退回角色立绘
         portrait, background, real = self.character_art(owner_key)
@@ -215,6 +224,7 @@ class AssetResolver:
                 hero_source="character",
                 has_real_asset=real,
                 hero_wide=self._wide(entry.relative_path) if entry else False,
+                hero_transparent=self._transparent(entry.relative_path) if entry else False,
             )
         return ResolvedArt(
             hero=self.placeholder(HERO_WEAPON),
@@ -222,6 +232,7 @@ class AssetResolver:
             hero_kind=HERO_WEAPON,
             hero_source="fallback:weapon",
             hero_wide=self._wide(self._fallback_relative(HERO_WEAPON)),
+            hero_transparent=self._transparent(self._fallback_relative(HERO_WEAPON)),
         )
 
     # ---- 列表 ----
@@ -233,6 +244,7 @@ class AssetResolver:
             hero_kind=HERO_ARCHIVE,
             hero_source="fallback:archive",
             hero_wide=self._wide(self._fallback_relative(HERO_ARCHIVE)),
+            hero_transparent=self._transparent(self._fallback_relative(HERO_ARCHIVE)),
         )
 
 

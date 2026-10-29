@@ -125,6 +125,10 @@
     width: 58%;
     z-index: 2;
     pointer-events: none;
+  }
+  /* 只有「整块不透明」的素材（武器照片、占位图）才需要水平遮罩融边；
+     自带透明通道的立绘再加遮罩会把人物左半身一起淡掉 */
+  .hero-figure--masked {
     -webkit-mask-image: var(--hero-mask);
     mask-image: var(--hero-mask);
   }
@@ -141,8 +145,8 @@
     object-fit: contain;
     object-position: right bottom;
   }
-  /* 浅色卡片上深色立绘会压掉标题，右上角补一层淡淡的纸面 */
-  [data-theme="light"] .hero-figure { opacity: 0.95; }
+  /* 立绘已在素材层统一成透明底，浅色卡片不再压淡，否则人物会发灰 */
+  [data-theme="light"] .hero-figure { opacity: 1; }
   /* 顶部纸面只保护左侧表头和标题。右侧人物保持清晰，避免整张立绘
      被一层白雾洗淡。 */
   .hero-top {
@@ -459,7 +463,7 @@
   {% if visual.has_hero_image %}
   <div class="hero-bg" style="background-image:url('{{ visual.background_image }}'); opacity:{{ visual.background_opacity }}; filter:blur({{ visual.background_blur }}px);"></div>
   <div class="hero-scrim"></div>
-  <div class="hero-figure"><img class="hero-art{% if visual.hero_wide %} hero-art--wide{% endif %}" src="{{ visual.hero_image }}" style="opacity:{{ visual.hero_opacity }};" alt=""></div>
+  <div class="hero-figure{% if not visual.hero_transparent %} hero-figure--masked{% endif %}"><img class="hero-art{% if visual.hero_wide %} hero-art--wide{% endif %}" src="{{ visual.hero_image }}" style="opacity:{{ visual.hero_opacity }};" alt=""></div>
   <div class="hero-top"></div>
   {% endif %}
 
