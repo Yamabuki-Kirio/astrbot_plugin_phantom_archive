@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import random
 
+from . import fortune_grade
 from .models import TarotDraw
 
 # (牌名, 正位含义, 逆位含义)
@@ -111,10 +112,6 @@ MINOR_ARCANA: dict[str, tuple[tuple[str, str], ...]] = {
     ),
 }
 
-# 逆位概率：固定 0.5，写在常量里方便测试与日后调整
-REVERSED_RATE = 0.5
-
-
 def _build_all_cards() -> tuple[tuple[str, str, str], ...]:
     cards = list(MAJOR_ARCANA)
     for suit, entries in MINOR_ARCANA.items():
@@ -129,14 +126,33 @@ MAJOR_COUNT = len(MAJOR_ARCANA)
 MINOR_COUNT = sum(len(entries) for entries in MINOR_ARCANA.values())
 
 
+def _build_grade_pools() -> dict[str, tuple[tuple[str, str, bool], ...]]:
+    """把 78 张牌的正逆位按最终评级分组。
+
+    抽取时先等概率选五档评级，再在档内抽具体牌面，因此
+    大吉 / 吉 / 平 / 凶 / 大凶各占 20%，同时保留原有牌义和正逆位规则。
+    """
+    pools: dict[str, list[tuple[str, str, bool]]] = {
+        grade: [] for grade in fortune_grade.GRADES
+    }
+    for name, upright, reversed_ in ALL_CARDS:
+        pools[fortune_grade.grade_of(name, False)].append((name, upright, False))
+        pools[fortune_grade.grade_of(name, True)].append((name, reversed_, True))
+    return {grade: tuple(cards) for grade, cards in pools.items()}
+
+
+GRADE_POOLS = _build_grade_pools()
+
+
 def draw(rng: random.Random) -> TarotDraw:
-    """抽一张牌。rng 必须由调用方传入 —— 本模块不允许自己取随机源。"""
-    name, upright, reversed_ = ALL_CARDS[rng.randrange(len(ALL_CARDS))]
-    is_reversed = rng.random() < REVERSED_RATE
+    """等概率抽五档评级，再从该档的正逆位牌面中抽一张。"""
+    grade = fortune_grade.GRADES[rng.randrange(len(fortune_grade.GRADES))]
+    pool = GRADE_POOLS[grade]
+    name, meaning, is_reversed = pool[rng.randrange(len(pool))]
     return TarotDraw(
         name=name,
         is_reversed=is_reversed,
-        meaning=reversed_ if is_reversed else upright,
+        meaning=meaning,
     )
 
 
@@ -147,6 +163,6 @@ __all__ = [
     "MINOR_ARCANA",
     "MINOR_COUNT",
     "MINOR_RANKS",
-    "REVERSED_RATE",
+    "GRADE_POOLS",
     "draw",
 ]

@@ -23,6 +23,26 @@ def test_every_card_has_a_valid_grade():
             assert fortune_grade.grade_of(name, reversed_) in fortune_grade.GRADES
 
 
+def test_tarot_grade_pools_cover_every_position_once():
+    entries = [entry for pool in tarot.GRADE_POOLS.values() for entry in pool]
+    assert len(entries) == len(tarot.ALL_CARDS) * 2
+    assert len(set(entries)) == len(entries)
+    assert all(tarot.GRADE_POOLS[grade] for grade in fortune_grade.GRADES)
+
+
+def test_tarot_draw_uses_even_grade_probability():
+    import random
+    from collections import Counter
+
+    rng = random.Random(20261104)
+    counts = Counter(
+        fortune_grade.grade_of(card.name, card.is_reversed)
+        for card in (tarot.draw(rng) for _ in range(50_000))
+    )
+    # 五档理论值均为 10,000；留足正常随机波动空间。
+    assert all(9_700 <= counts[grade] <= 10_300 for grade in fortune_grade.GRADES)
+
+
 def test_major_arcana_use_fixed_table():
     assert fortune_grade.grade_of("XIX 太阳 The Sun") == "大吉"
     assert fortune_grade.grade_of("XXI 世界 The World") == "大吉"
