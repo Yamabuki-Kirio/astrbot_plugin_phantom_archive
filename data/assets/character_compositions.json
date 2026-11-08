@@ -1,0 +1,382 @@
+{
+  "imported": [
+    {
+      "slug": "leon",
+      "path": "characters/leon/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "cattle",
+      "path": "characters/cattle/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "closer",
+      "path": "characters/closer/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "mont",
+      "path": "characters/mont/portrait.webp",
+      "foreground_height": 1.3,
+      "has_back": false
+    },
+    {
+      "slug": "puppet",
+      "path": "characters/puppet/portrait.webp",
+      "foreground_height": 1.2,
+      "has_back": false
+    },
+    {
+      "slug": "fleuret",
+      "path": "characters/fleuret/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "soy",
+      "path": "characters/soy/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "yuki",
+      "path": "characters/yuki/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "okyann",
+      "path": "characters/okyann/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "key",
+      "path": "characters/key/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "moko",
+      "path": "characters/moko/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "sepia",
+      "path": "characters/sepia/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "vino",
+      "path": "characters/vino/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "wind",
+      "path": "characters/wind/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "luce",
+      "path": "characters/luce/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "riddle",
+      "path": "characters/riddle/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "skull",
+      "path": "characters/skull/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "mona",
+      "path": "characters/mona/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "panther",
+      "path": "characters/panther/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "rin",
+      "path": "characters/rin/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "joker",
+      "path": "characters/joker/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "marian",
+      "path": "characters/marian/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "bui",
+      "path": "characters/bui/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "fox",
+      "path": "characters/fox/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "queen",
+      "path": "characters/queen/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "phoebe",
+      "path": "characters/phoebe/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "chord",
+      "path": "characters/chord/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "closer-tropical",
+      "path": "characters/closer-tropical/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "moko-seaside",
+      "path": "characters/moko-seaside/portrait.webp",
+      "foreground_height": 1.22,
+      "has_back": false
+    },
+    {
+      "slug": "messa",
+      "path": "characters/messa/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "navi",
+      "path": "characters/navi/portrait.webp",
+      "foreground_height": 1.15,
+      "has_back": false
+    },
+    {
+      "slug": "cherish",
+      "path": "characters/cherish/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "noir",
+      "path": "characters/noir/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "mont-frostgale",
+      "path": "characters/mont-frostgale/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "howler",
+      "path": "characters/howler/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "violet",
+      "path": "characters/violet/portrait.webp",
+      "foreground_height": 1.35,
+      "has_back": false
+    },
+    {
+      "slug": "wind-tempest",
+      "path": "characters/wind-tempest/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "rin-firecracker",
+      "path": "characters/rin-firecracker/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "matoi",
+      "path": "characters/matoi/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "turbo",
+      "path": "characters/turbo/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "ange",
+      "path": "characters/ange/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "makoto",
+      "path": "characters/makoto/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "yukari",
+      "path": "characters/yukari/portrait.webp",
+      "foreground_height": 1.3,
+      "has_back": false
+    },
+    {
+      "slug": "akihiko",
+      "path": "characters/akihiko/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "berry",
+      "path": "characters/berry/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "marian-beachflower",
+      "path": "characters/marian-beachflower/portrait.webp",
+      "foreground_height": 1.12,
+      "has_back": false
+    },
+    {
+      "slug": "puppet-wavecatcher",
+      "path": "characters/puppet-wavecatcher/portrait.webp",
+      "foreground_height": 1.08,
+      "has_back": false
+    },
+    {
+      "slug": "blitz",
+      "path": "characters/blitz/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "bui-cosmic",
+      "path": "characters/bui-cosmic/portrait.webp",
+      "foreground_height": 1.2,
+      "has_back": false
+    },
+    {
+      "slug": "kirijo",
+      "path": "characters/kirijo/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "fuka",
+      "path": "characters/fuka/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "luce-notte",
+      "path": "characters/luce-notte/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "soy-pioneer",
+      "path": "characters/soy-pioneer/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "j-c",
+      "path": "characters/j-c/portrait.webp",
+      "foreground_height": 1.12,
+      "has_back": false
+    },
+    {
+      "slug": "junpei",
+      "path": "characters/junpei/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "closer-radiance",
+      "path": "characters/closer-radiance/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "aegis",
+      "path": "characters/aegis/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "joker-starlight",
+      "path": "characters/joker-starlight/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "mona-starlight",
+      "path": "characters/mona-starlight/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "miku",
+      "path": "characters/miku/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "panther-starlight",
+      "path": "characters/panther-starlight/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    },
+    {
+      "slug": "chord-summer",
+      "path": "characters/chord-summer/portrait.webp",
+      "foreground_height": 1.15,
+      "has_back": false
+    },
+    {
+      "slug": "kotone",
+      "path": "characters/kotone/portrait.webp",
+      "foreground_height": 1.5,
+      "has_back": false
+    }
+  ]
+}

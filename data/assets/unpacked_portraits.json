@@ -1,0 +1,646 @@
+{
+  "imported": [
+    {
+      "slug": "leon",
+      "source_file": "lihui-guaidao-leo.png",
+      "path": "characters/leon/unpacked.webp",
+      "size": [
+        1726,
+        1756
+      ],
+      "source_sha256": "5e833a94277cfdedbdf0015c837cd1d9fe0d9ec6155e777c1ff8981cb66cd0cb"
+    },
+    {
+      "slug": "cattle",
+      "source_file": "lihui-guaidao-cattle.png",
+      "path": "characters/cattle/unpacked.webp",
+      "size": [
+        876,
+        1079
+      ],
+      "source_sha256": "2cfa7fd5caa9294f6d5f55529de10c1e7c336fecc0a3ed81c2c118a1be5e3e76"
+    },
+    {
+      "slug": "closer",
+      "source_file": "lihui-guaidao-closer.png",
+      "path": "characters/closer/unpacked.webp",
+      "size": [
+        1238,
+        1835
+      ],
+      "source_sha256": "b0f6847a632bde5e6f62c0d06c88dd4e8867cc996fd8360345783b3fa00449ba"
+    },
+    {
+      "slug": "mont",
+      "source_file": "lihui-guaidao-mont.png",
+      "path": "characters/mont/unpacked.webp",
+      "size": [
+        1613,
+        2306
+      ],
+      "source_sha256": "af6e0cd1fdab68281c7dab4a786ac8ce533146309018610272023278d50c90e3"
+    },
+    {
+      "slug": "puppet",
+      "source_file": "lihui-guaidao-puppet.png",
+      "path": "characters/puppet/unpacked.webp",
+      "size": [
+        1262,
+        1334
+      ],
+      "source_sha256": "99dc077f649da87eb4c119635d716a6847dbbbbc518bb80aa5e73cff9aca3713"
+    },
+    {
+      "slug": "fleuret",
+      "source_file": "lihui-guaidao-seiji.png",
+      "path": "characters/fleuret/unpacked.webp",
+      "size": [
+        1167,
+        2226
+      ],
+      "source_sha256": "6c034e054c31869e40a9887c6dbade8dc6a44329bd36156250914547f79ead7a"
+    },
+    {
+      "slug": "soy",
+      "source_file": "lihui-guaidao-soy.png",
+      "path": "characters/soy/unpacked.webp",
+      "size": [
+        1770,
+        2066
+      ],
+      "source_sha256": "a2776eebe095a039e945a3be068712a07029e1bf0d08c5b2241ebbf24aec801b"
+    },
+    {
+      "slug": "yuki",
+      "source_file": "lihui-guaidao-tembin.png",
+      "path": "characters/yuki/unpacked.webp",
+      "size": [
+        1609,
+        2210
+      ],
+      "source_sha256": "1c45a4357363e728d5d255fe9a3745a2537085c9caba3b1863d896265055e019"
+    },
+    {
+      "slug": "okyann",
+      "source_file": "lihui-guaidao-okyann.png",
+      "path": "characters/okyann/unpacked.webp",
+      "size": [
+        1451,
+        1814
+      ],
+      "source_sha256": "6d5ee6db7aaa1300d30857fbd3ea5554420659d8e9b514c0d419fad2f2f5a907"
+    },
+    {
+      "slug": "key",
+      "source_file": "lihui-guaidao-kii.png",
+      "path": "characters/key/unpacked.webp",
+      "size": [
+        968,
+        1734
+      ],
+      "source_sha256": "1ed80808671bed11b09169e3ca829ac04361a6d0cfd99915ab821a7a29c6911f"
+    },
+    {
+      "slug": "moko",
+      "source_file": "lihui-guaidao-kotomo.png",
+      "path": "characters/moko/unpacked.webp",
+      "size": [
+        1522,
+        2170
+      ],
+      "source_sha256": "91711cfc92d6187fe93239d67a35b465129c663548cb80311772f228f0b7c146"
+    },
+    {
+      "slug": "sepia",
+      "source_file": "lihui-guaidao-sepia.png",
+      "path": "characters/sepia/unpacked.webp",
+      "size": [
+        2400,
+        1810
+      ],
+      "source_sha256": "c1929e7585e1cc59533cd38a15c71d185152e766f0a70355b38c5d7bd4e4da8f"
+    },
+    {
+      "slug": "vino",
+      "source_file": "lihui-guaidao-vino.png",
+      "path": "characters/vino/unpacked.webp",
+      "size": [
+        1575,
+        2319
+      ],
+      "source_sha256": "957acabb0b9de720aa1e3e36b72f46da2a883e8a876c21c82fe8f6c1f1f1cf22"
+    },
+    {
+      "slug": "wind",
+      "source_file": "lihui-guaidao-wind.png",
+      "path": "characters/wind/unpacked.webp",
+      "size": [
+        1324,
+        2172
+      ],
+      "source_sha256": "24e8fab3639f7e74c33bbbb593741ebf936456971b2becd58d66bfdfa60e44ab"
+    },
+    {
+      "slug": "luce",
+      "source_file": "lihui-guaidao-luce.png",
+      "path": "characters/luce/unpacked.webp",
+      "size": [
+        1675,
+        2330
+      ],
+      "source_sha256": "b77a6aa0edd420a334c7a9e70a6d739e863034429be95f7395f03405e4577c50"
+    },
+    {
+      "slug": "riddle",
+      "source_file": "lihui-guaidao-riddle.png",
+      "path": "characters/riddle/unpacked.webp",
+      "size": [
+        780,
+        1502
+      ],
+      "source_sha256": "a70d320461edb17861b2a73a2c70a43f4abd30da9361cdad445f826641385b6a"
+    },
+    {
+      "slug": "skull",
+      "source_file": "lihui-guaidao-skull.png",
+      "path": "characters/skull/unpacked.webp",
+      "size": [
+        1413,
+        1726
+      ],
+      "source_sha256": "de3ed837dfa9f48ab0a99e21431be912b2703120eabde34256dc5eca7e96bd04"
+    },
+    {
+      "slug": "mona",
+      "source_file": "lihui-guaidao-mona.png",
+      "path": "characters/mona/unpacked.webp",
+      "size": [
+        704,
+        1493
+      ],
+      "source_sha256": "00d5e36cc9ea2a8773d048e02fe68d36ea18feb4307835f69e59df7839f7eb71"
+    },
+    {
+      "slug": "panther",
+      "source_file": "lihui-guaidao-panther.png",
+      "path": "characters/panther/unpacked.webp",
+      "size": [
+        2022,
+        2377
+      ],
+      "source_sha256": "91920a1eaa4b592c495aed9c9364db0add5bf3b8b05c166e1f8e0328d9e38a66"
+    },
+    {
+      "slug": "rin",
+      "source_file": "lihui-guaidao-rin.png",
+      "path": "characters/rin/unpacked.webp",
+      "size": [
+        1993,
+        2124
+      ],
+      "source_sha256": "b584849df78ee8aa44993d2ab4e475e29ae35f3a81fb3b5f362cd7e70471359e"
+    },
+    {
+      "slug": "joker",
+      "source_file": "lihui-guaidao-joker.png",
+      "path": "characters/joker/unpacked.webp",
+      "size": [
+        1385,
+        2048
+      ],
+      "source_sha256": "47b546d2d3fec7925c695d259472507ef2a78a7264e31073fa00a509bd4214d6"
+    },
+    {
+      "slug": "marian",
+      "source_file": "lihui-guaidao-marian.png",
+      "path": "characters/marian/unpacked.webp",
+      "size": [
+        874,
+        1765
+      ],
+      "source_sha256": "6f1df5c900f0ae584eb3ba7af52cc6717f41a1d6dc11afd94a2e0a808746df81"
+    },
+    {
+      "slug": "bui",
+      "source_file": "lihui-guaidao-bui.png",
+      "path": "characters/bui/unpacked.webp",
+      "size": [
+        1239,
+        2033
+      ],
+      "source_sha256": "63cf97dabf7554f48bda1d6f12f51f6459a3c1b710fab67de1f490431f448397"
+    },
+    {
+      "slug": "fox",
+      "source_file": "lihui-guaidao-fox.png",
+      "path": "characters/fox/unpacked.webp",
+      "size": [
+        1501,
+        2176
+      ],
+      "source_sha256": "1e072a520c5f5230b21bc1193bb6936a607a40567f73b0bbbd281763b6263387"
+    },
+    {
+      "slug": "queen",
+      "source_file": "lihui-guaidao-queen.png",
+      "path": "characters/queen/unpacked.webp",
+      "size": [
+        1531,
+        1844
+      ],
+      "source_sha256": "6969e9809d9b956a2837ba17cd5f5bfb9d133d034377c94b35e8978a2e7cc84a"
+    },
+    {
+      "slug": "phoebe",
+      "source_file": "lihui-guaidao-phoebe.png",
+      "path": "characters/phoebe/unpacked.webp",
+      "size": [
+        1185,
+        1984
+      ],
+      "source_sha256": "f8b1d904a158e24907f71ee5c95e0b913b86b6afd80077f341f6e90ad2bd7165"
+    },
+    {
+      "slug": "chord",
+      "source_file": "lihui-guaidao-chord.png",
+      "path": "characters/chord/unpacked.webp",
+      "size": [
+        1739,
+        2052
+      ],
+      "source_sha256": "da656efac5cc44530c9765d6f5803a7cafc85c3367673eefe747ce849e742165"
+    },
+    {
+      "slug": "closer-tropical",
+      "source_file": "lihui-guaidao-closerS.png",
+      "path": "characters/closer-tropical/unpacked.webp",
+      "size": [
+        1334,
+        1972
+      ],
+      "source_sha256": "d6971fa4a499f36a9177a968ffc73f3d8e10f7f08f23899646227d99abc773b9"
+    },
+    {
+      "slug": "moko-seaside",
+      "source_file": "Texture-Renzhimoniactivity-kotomos01.png",
+      "path": "characters/moko-seaside/unpacked.webp",
+      "size": [
+        1744,
+        1657
+      ],
+      "source_sha256": "d2deb4ce4e3bfc5d490ef505970c139a3e94ed14d2a0e9d762dd2f64b97d99b7"
+    },
+    {
+      "slug": "messa",
+      "source_file": "lihui-guaidao-doctor.png",
+      "path": "characters/messa/unpacked.webp",
+      "size": [
+        1242,
+        1500
+      ],
+      "source_sha256": "168bef9f403b071e015e91dd1dd86b1d0d53b806061de9a61291c80ca44ef3f2"
+    },
+    {
+      "slug": "navi",
+      "source_file": "lihui-guaidao-navi.png",
+      "path": "characters/navi/unpacked.webp",
+      "size": [
+        1091,
+        1369
+      ],
+      "source_sha256": "f19959983e00de985d80ba9621a1c28eb3a61233ce359b030ad086780efabebb"
+    },
+    {
+      "slug": "cherish",
+      "source_file": "lihui-guaidao-cherish.png",
+      "path": "characters/cherish/unpacked.webp",
+      "size": [
+        1538,
+        2194
+      ],
+      "source_sha256": "8a4efcd9a4501379ba431d5a814d383d2d0a1610f08ab0eb6d413fa29c31f8b7"
+    },
+    {
+      "slug": "noir",
+      "source_file": "Texture-Renzhimoniactivity-noir.png",
+      "path": "characters/noir/unpacked.webp",
+      "size": [
+        1310,
+        1990
+      ],
+      "source_sha256": "1e78ce982aed0d2202d0b74e62e3f092a26edb789174a336a059490f91d65bcf"
+    },
+    {
+      "slug": "mont-frostgale",
+      "source_file": "lihui-guaidao-montManwu.png",
+      "path": "characters/mont-frostgale/unpacked.webp",
+      "size": [
+        1140,
+        2400
+      ],
+      "source_sha256": "0c33fff54dfef7d3c6bc27825b799f622c273e3b28842ca8ccf8491c541080b3"
+    },
+    {
+      "slug": "howler",
+      "source_file": "lihui-guaidao-howler.png",
+      "path": "characters/howler/unpacked.webp",
+      "size": [
+        1230,
+        1847
+      ],
+      "source_sha256": "bf43af16fb86615aeecf2170143975c04b643b74df1d6f7e966130ee4fb59a30"
+    },
+    {
+      "slug": "violet",
+      "source_file": "lihui-guaidao-violet.png",
+      "path": "characters/violet/unpacked.webp",
+      "size": [
+        1786,
+        2156
+      ],
+      "source_sha256": "6c0831f0eff56832e74190be5c8e122e23dd11429d80973a7580489bd51f24be"
+    },
+    {
+      "slug": "wind-tempest",
+      "source_file": "lihui-guaidao-windWY.png",
+      "path": "characters/wind-tempest/unpacked.webp",
+      "size": [
+        2109,
+        1793
+      ],
+      "source_sha256": "c27e6382dd240b2df8fcee8f949232a8eed47f00abd5f9b0e042c67056e523fb"
+    },
+    {
+      "slug": "rin-firecracker",
+      "source_file": "lihui-guaidao-rinN.png",
+      "path": "characters/rin-firecracker/unpacked.webp",
+      "size": [
+        1009,
+        1625
+      ],
+      "source_sha256": "5296253749addff6846647bc55f6e275342646de690b81b0fdb197fe6bf816dc"
+    },
+    {
+      "slug": "matoi",
+      "source_file": "lihui-guaidao-matoi.png",
+      "path": "characters/matoi/unpacked.webp",
+      "size": [
+        1282,
+        1803
+      ],
+      "source_sha256": "5d05229f10a74fc6d913745927ed9ee0615c2cccda5917c6e90173268c38328c"
+    },
+    {
+      "slug": "turbo",
+      "source_file": "lihui-guaidao-turbo.png",
+      "path": "characters/turbo/unpacked.webp",
+      "size": [
+        2360,
+        2015
+      ],
+      "source_sha256": "c7f6fbe27b53837f44641be0eb487f0a2f65ae46d9fd90851b221eb5aa35e201"
+    },
+    {
+      "slug": "ange",
+      "source_file": "lihui-guaidao-ange.png",
+      "path": "characters/ange/unpacked.webp",
+      "size": [
+        1179,
+        1824
+      ],
+      "source_sha256": "84fb130b50bcade18dcc154336bdedae1703bea10d779dd47f3c847c8286d273"
+    },
+    {
+      "slug": "makoto",
+      "source_file": "lihui-guaidao-makoto.png",
+      "path": "characters/makoto/unpacked.webp",
+      "size": [
+        1230,
+        1672
+      ],
+      "source_sha256": "c82228c96ded37c7aa7331afeeefd38016e8bd6b7f3297ed1242491a57c2345b"
+    },
+    {
+      "slug": "yukari",
+      "source_file": "lihui-guaidao-yukari.png",
+      "path": "characters/yukari/unpacked.webp",
+      "size": [
+        1403,
+        2400
+      ],
+      "source_sha256": "d3cbcfa8fcc2304d7b0ca2f24b5e56ce0b315133fd246935792eb9ade53ec1b8"
+    },
+    {
+      "slug": "akihiko",
+      "source_file": "lihui-guaidao-akihiko.png",
+      "path": "characters/akihiko/unpacked.webp",
+      "size": [
+        1580,
+        2182
+      ],
+      "source_sha256": "f0ec53162dd86649520fb07047c41150257950c22cf73c328f68485c6b49f92f"
+    },
+    {
+      "slug": "berry",
+      "source_file": "lihui-guaidao-berry.png",
+      "path": "characters/berry/unpacked.webp",
+      "size": [
+        1413,
+        2360
+      ],
+      "source_sha256": "648833cdf3e808a7af3e0330103b80f64857dd08edc3d57ad263a815bcef7e8e"
+    },
+    {
+      "slug": "marian-beachflower",
+      "source_file": "lihui-guaidao-marianS.png",
+      "path": "characters/marian-beachflower/unpacked.webp",
+      "size": [
+        1453,
+        1784
+      ],
+      "source_sha256": "6730a80e10effe798d6376dac6ea7fb893a1b1cb7aa35fcd7369a1bedfd44a53"
+    },
+    {
+      "slug": "puppet-wavecatcher",
+      "source_file": "lihui-guaidao-puppetS.png",
+      "path": "characters/puppet-wavecatcher/unpacked.webp",
+      "size": [
+        1259,
+        905
+      ],
+      "source_sha256": "b1582ac0ad8e6ae05434a6004dfec8fa885e2120a5bc9d6e3bbb78050babc0fb"
+    },
+    {
+      "slug": "blitz",
+      "source_file": "lihui-guaidao-blitz.png",
+      "path": "characters/blitz/unpacked.webp",
+      "size": [
+        1283,
+        1967
+      ],
+      "source_sha256": "6f8e6d6fa2715695b9f6ddb1354a254a7005955aa667876fda65f984c452b2b5"
+    },
+    {
+      "slug": "bui-cosmic",
+      "source_file": "lihui-guaidao-buiC.png",
+      "path": "characters/bui-cosmic/unpacked.webp",
+      "size": [
+        2324,
+        1440
+      ],
+      "source_sha256": "02413bb274565e7385c61e029311f65f62403684469422115f3e22e93cb4a23b"
+    },
+    {
+      "slug": "kirijo",
+      "source_file": "lihui-guaidao-mitsuru.png",
+      "path": "characters/kirijo/unpacked.webp",
+      "size": [
+        1248,
+        1984
+      ],
+      "source_sha256": "7062552dd3aae20c336d2ac291f9813d841b37cfb3c0e8a298db6fe671f3eeea"
+    },
+    {
+      "slug": "fuka",
+      "source_file": "lihui-guaidao-fuka.png",
+      "path": "characters/fuka/unpacked.webp",
+      "size": [
+        644,
+        1472
+      ],
+      "source_sha256": "80d8a28ef39150da282fbbb2640d1000afd2cab25a8cec09836d0f4f1bd940e4"
+    },
+    {
+      "slug": "luce-notte",
+      "source_file": "lihui-guaidao-luceYY.png",
+      "path": "characters/luce-notte/unpacked.webp",
+      "size": [
+        1536,
+        1936
+      ],
+      "source_sha256": "bf78725dd14754f61012cd4722dfa040e6d4d12275d38afb28aee9262ee370f9"
+    },
+    {
+      "slug": "soy-pioneer",
+      "source_file": "lihui-guaidao-soyTH.png",
+      "path": "characters/soy-pioneer/unpacked.webp",
+      "size": [
+        1389,
+        1656
+      ],
+      "source_sha256": "a6d07258a7f300a6d396b78d247876f6dd906476dfd0d66e9dfe0cd189ea2aa2"
+    },
+    {
+      "slug": "j-c",
+      "source_file": "lihui-guaidao-JandC.png",
+      "path": "characters/j-c/unpacked.webp",
+      "size": [
+        1080,
+        1541
+      ],
+      "source_sha256": "0ad2fc715ad4fb159e25f091501ca9e26c1eb18464f8f70c7e674b6f44874e39"
+    },
+    {
+      "slug": "junpei",
+      "source_file": "lihui-guaidao-junpei.png",
+      "path": "characters/junpei/unpacked.webp",
+      "size": [
+        1798,
+        2400
+      ],
+      "source_sha256": "ca3f74b6f20d67681e703cf35f5b3a279977f072dce3d59a6abe85dd49246668"
+    },
+    {
+      "slug": "closer-radiance",
+      "source_file": "PC055_01_01_04_01.png",
+      "path": "characters/closer-radiance/unpacked.webp",
+      "size": [
+        2019,
+        2378
+      ],
+      "source_sha256": "79b2d1423cf9d14d9b8b4e31246473bcc44315246b2d54c3d08bd97c65258623"
+    },
+    {
+      "slug": "aegis",
+      "source_file": "PC063_thief_01_04_01.png",
+      "path": "characters/aegis/unpacked.webp",
+      "size": [
+        840,
+        1232
+      ],
+      "source_sha256": "1c9198f5c8af6e478f9948134f8b792c67dab8d0be74a9fbd6bf88e1882fb354"
+    },
+    {
+      "slug": "joker-starlight",
+      "source_file": "PC056_01_01_04_01.png",
+      "path": "characters/joker-starlight/unpacked.webp",
+      "size": [
+        1184,
+        2020
+      ],
+      "source_sha256": "54f3e37d73dc7386b0126ea7f2541f11ff7a8da8609408cd1cec4a78e0b3b35d"
+    },
+    {
+      "slug": "mona-starlight",
+      "source_file": "PC067_01_01_04_01.png",
+      "path": "characters/mona-starlight/unpacked.webp",
+      "size": [
+        697,
+        704
+      ],
+      "source_sha256": "34bba0293217312fa637e9904a029ae3ca283108d2cb8b22505d24b154a74563"
+    },
+    {
+      "slug": "miku",
+      "source_file": "PC068_01_01_04_01.png",
+      "path": "characters/miku/unpacked.webp",
+      "size": [
+        1312,
+        1376
+      ],
+      "source_sha256": "e7e0cb027f617b545b62d9b1c09793b26fc09ad4e391c8142eb8d24eb4568982"
+    },
+    {
+      "slug": "panther-starlight",
+      "source_file": "PC073_01_01_04_01.png",
+      "path": "characters/panther-starlight/unpacked.webp",
+      "size": [
+        1024,
+        1704
+      ],
+      "source_sha256": "f556173751b63232ff499d2cc2a69a5890b20698e9a33ed4dfc7306ddfb968c6"
+    },
+    {
+      "slug": "chord-summer",
+      "source_file": "PC077_01_01_04_01.png",
+      "path": "characters/chord-summer/unpacked.webp",
+      "size": [
+        558,
+        1116
+      ],
+      "source_sha256": "ed81cba9c1dc0c394e41bd9e3a5d9af93706f49ba35d2d07b1f578c3e2271f2c"
+    },
+    {
+      "slug": "kotone",
+      "source_file": "PC079_01_01_04_01.png",
+      "path": "characters/kotone/unpacked.webp",
+      "size": [
+        1302,
+        1892
+      ],
+      "source_sha256": "0ecb3bbca2c115288f7df581a52bd211ac5b3fd61ee9cca22bd203253a66d263"
+    }
+  ],
+  "retained_original": [
+    "anri",
+    "berry-summer",
+    "crow",
+    "koromaru",
+    "pinky",
+    "류지·댄싱 스타",
+    "아라가키",
+    "아마다",
+    "원더"
+  ],
+  "note": "仅人物前景；未匹配者保留原图；武器未修改；背景复用人物透明图，不使用人格面具。"
+}

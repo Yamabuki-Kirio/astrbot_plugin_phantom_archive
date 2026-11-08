@@ -29,9 +29,9 @@
   }
   .card.has-hero .head { padding-right: 52%; }
   /* 立绘统一由 base.html 的右侧全高布局处理 */
-  .hero-figure { width: 60%; }
+  .hero-figure { width: 50%; overflow: hidden; }
   /* 竖构图贴顶，横构图由 base.html 的 hero-art--wide 规则接管（contain + 贴底） */
-  .hero-figure img:not(.hero-art--wide) { object-position: right top; }
+  .hero-figure img:not(.hero-art--wide) { object-position: center top; }
 
   /* 只剩两块正文，信息栏比查询卡窄一些，把右侧让给人物 */
   .card.has-hero .content,

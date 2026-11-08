@@ -87,6 +87,11 @@ SOFTWARE.
 
 ## 3. 资料数据
 
+v0.8.2 的部分人物立绘改由用户提供的本机游戏解包前景导入，非本项目原创，
+亦非从官网 URL 抓取。对应清单标记为 `community`，原文件名与摘要见
+`data/assets/unpacked_portraits.json`；使用原生透明通道并压缩为 WebP。
+上述图片的相关权利仍归原游戏权利方，代码许可不构成图片的再授权。
+
 角色、技能、武器、攻略的中文数据来自 Lufel 社区资料，经本项目抓取与中文化后
 存入 `p5x_zh.sqlite3`。来源标记见数据库 `source_status` / `translation_status`
 字段，对外展示的措辞统一由 `archive/notices.py` 提供。
