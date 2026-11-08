@@ -27,6 +27,7 @@ import logging
 from pathlib import Path
 
 from astrbot.api.event import AstrMessageEvent, filter
+from astrbot.api.event.filter import EventMessageType
 from astrbot.api.message_components import Image
 from astrbot.api.star import Context, Star, register
 
@@ -47,6 +48,7 @@ from .archive.daily import models as daily_models
 from .archive.daily import presenter as daily_presenter
 from .archive.daily import repository as daily_repository
 from .archive.database import DatabaseMissingError, SchemaMismatchError
+from .archive.plain_commands import match_plain_command
 from .archive.image_renderer import (
     DEFAULT_MAX_CONCURRENT,
     ImageRenderer,
@@ -69,7 +71,7 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.8.1"
+PLUGIN_VERSION = "0.8.3"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME
@@ -591,6 +593,18 @@ class PhantomArchivePlugin(Star):
         return await self._deliver(event, outcome)
 
     # ------------------------------------------------------------ 指令
+
+    @filter.event_message_type(EventMessageType.ALL, priority=10000)
+    async def handle_plain_commands(self, event: AstrMessageEvent):
+        """可选的无斜杠入口，复用原处理器并阻止重复执行。"""
+        if not _conf_bool(self.config, "enable_plain_commands", False):
+            return
+        handler = match_plain_command(event.get_message_str())
+        if handler is None:
+            return
+        event.stop_event()
+        async for result in getattr(self, handler)(event):
+            yield result
 
     @filter.command("夜幕帮助")
     async def help_command(self, event: AstrMessageEvent):

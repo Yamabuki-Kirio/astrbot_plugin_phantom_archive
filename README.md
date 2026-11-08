@@ -3,7 +3,23 @@
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.8.2-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.8.3-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+
+### 不带 `/` 的指令（v0.8.3）
+
+在插件配置中打开 **兼容不带斜杠的指令**（`enable_plain_commands`，默认关闭），即可直接发送：
+
+- `夜幕帮助`
+- `p5x角色 JOKER`、`p5x技能 J&C`、`p5x攻略 汐见琴音`
+- `p5x每日运势`、`p5x运势`、`p5x今日角色`
+
+现有全部指令均支持省略 `/`，包括管理员指令（仍需原有管理员权限）。
+无斜杠查询的命令和参数必须用空格分开，不识别 `p5x角色JOKER`，也不匹配聊天句子中的指令。
+无参数指令需整条消息匹配，不接受额外文本。开启后命中的消息会停止后续处理，避免重复回复；
+若与其他插件的同名指令冲突，可关闭本开关。原有带 `/` 的命令不受本入口影响。
+
+实现参考抽卡插件 `fb00452` 的可选消息入口；本地路由与开关测试已覆盖。
+尚未在 AstrBot 实际运行环境验证指令分发及图片发送。
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)](https://www.python.org/)
 
 查询角色、技能、武器、意识、养成、操作、评价、配队与攻略，并通过可配置的

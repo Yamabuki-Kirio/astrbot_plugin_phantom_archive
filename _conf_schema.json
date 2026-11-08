@@ -1,4 +1,10 @@
 {
+  "enable_plain_commands": {
+    "description": "兼容不带斜杠的指令",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后可直接发送 夜幕帮助、p5x角色 JOKER、p5x每日运势 等。查询参数需用空格分隔；可能与其他插件同名指令冲突，按需开启。不影响原有带 / 指令。"
+  },
   "database_path": {
     "description": "p5x_zh.sqlite3 的路径，留空时使用插件 data 目录",
     "type": "string",
