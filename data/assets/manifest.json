@@ -710,14 +710,24 @@
       ]
     },
     "아라가키": {
-      "portrait": null,
-      "portraits": [],
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable",
-      "matched_by": "missing",
+      "portrait": "characters/아라가키/portrait.webp",
+      "portraits": [
+        {
+          "path": "characters/아라가키/portrait.webp",
+          "source_status": "official",
+          "source_url": "https://p3re.jp/resources/img/top/character_modal/img_character10_62be914bf13722f20f8bb1cb0512d50f.webp"
+        }
+      ],
+      "background": "characters/아라가키/portrait.webp",
+      "source_status": "official",
+      "source_url": "https://p3re.jp/resources/img/top/character_modal/img_character10_62be914bf13722f20f8bb1cb0512d50f.webp",
+      "source_page": "https://p3re.jp/",
+      "source_title": "Persona 3 Reload / ペルソナ３ リロード",
+      "source_note": "P3R official character artwork; not P5X-specific artwork",
+      "source_sha256": "18a4ea09d122bbdc310ff5da5051b0297f7868000b074300722c9511343a96a8",
+      "matched_by": "verified-official-character",
       "form_inherited": false,
-      "fetched_at": "2026-10-27T14:12:56Z"
+      "processing": "native alpha; trim transparent margins; fit 720x960; WebP q92 alpha100"
     },
     "anri": {
       "portrait": "characters/anri/1.webp",
@@ -745,14 +755,24 @@
       "fetched_at": "2026-10-27T14:12:56Z"
     },
     "아마다": {
-      "portrait": null,
-      "portraits": [],
-      "background": null,
-      "source_url": null,
-      "source_status": "unavailable",
-      "matched_by": "missing",
+      "portrait": "characters/아마다/portrait.webp",
+      "portraits": [
+        {
+          "path": "characters/아마다/portrait.webp",
+          "source_status": "official",
+          "source_url": "https://p3re.jp/resources/img/top/character_modal/img_character9_8c95abfc3076bd8cf07c14397744ddf5.webp"
+        }
+      ],
+      "background": "characters/아마다/portrait.webp",
+      "source_status": "official",
+      "source_url": "https://p3re.jp/resources/img/top/character_modal/img_character9_8c95abfc3076bd8cf07c14397744ddf5.webp",
+      "source_page": "https://p3re.jp/",
+      "source_title": "Persona 3 Reload / ペルソナ３ リロード",
+      "source_note": "P3R official character artwork; not P5X-specific artwork",
+      "source_sha256": "c09976aae40845166390e93393e054911e9625f3be3113ee3d8b94ed502485ac",
+      "matched_by": "verified-official-character",
       "form_inherited": false,
-      "fetched_at": "2026-10-27T14:12:56Z"
+      "processing": "native alpha; trim transparent margins; fit 720x960; WebP q92 alpha100"
     },
     "chord": {
       "portrait": "characters/chord/portrait.webp",

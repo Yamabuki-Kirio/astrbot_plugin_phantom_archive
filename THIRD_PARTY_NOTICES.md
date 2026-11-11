@@ -73,6 +73,7 @@ SOFTWARE.
 | 项目 | 内容 |
 | --- | --- |
 | 角色立绘来源 | 《女神异闻录：夜幕魅影》国服官网 `https://p5x.wanmei.com/js/roleData260924.js` |
+| 补充角色立绘来源 | ATLUS《女神异闻录3 Reload》官网 `https://p3re.jp/`：天田乾、荒垣真次郎；使用原生透明人物图，非 P5X 专用立绘。原图 URL、SHA256 与处理方式记录在素材清单，可用 `scripts/fetch_missing_portraits.py` 重新获取 |
 | 武器图来源 | Lufel 社区角色页实际使用的 `https://lufel.net/assets/img/character-weapon/` 素材 |
 | 获取方式 | `fetch_official_art.py` / `fetch_weapon_art.py` 下载、校验并转为 WebP |
 | 版权 | 归游戏发行方所有 |

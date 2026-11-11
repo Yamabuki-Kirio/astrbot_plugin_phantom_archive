@@ -19,6 +19,7 @@ import io
 import json
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 from PIL import Image
 
@@ -108,8 +109,8 @@ class Checker:
             self.error(f"{owner}: 有 source_url 却标成 unavailable")
         if url and not str(url).startswith(("http://", "https://")):
             self.warn(f"{owner}: source_url 不是 http(s) 地址：{url}")
-        if status == "official" and url and "wanmei.com" not in str(url):
-            self.warn(f"{owner}: 标为 official 但来源不是 p5x.wanmei.com：{url}")
+        if status == "official" and url and urlparse(str(url)).hostname not in {"p5x.wanmei.com", "p3re.jp"}:
+            self.warn(f"{owner}: 标为 official 但来源不在已核实的官网域名中：{url}")
 
 
 def main() -> int:
