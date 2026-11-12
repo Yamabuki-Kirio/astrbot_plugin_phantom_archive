@@ -1,4 +1,5 @@
 import ast
+import asyncio
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -18,7 +19,7 @@ def test_whitelist(command, entry):
     assert match_plain_command(f"{command} JOKER") == (handler if accepts_argument else None)
 
 
-@pytest.mark.parametrize("text", ["", "十连", "每日运势", "帮我查 p5x角色 JOKER", "p5x角色JOKER", "p5x每日运势怎么样", "/p5x运势"])
+@pytest.mark.parametrize("text", ["", "十连", "今天运势怎么样", "帮我查 p5x角色 JOKER", "p5x角色JOKER", "p5x每日运势怎么样", "/p5x运势"])
 def test_does_not_intercept_chat(text):
     assert match_plain_command(text) is None
 
@@ -32,6 +33,33 @@ def load_entry():
     namespace = {"AstrMessageEvent": object, "match_plain_command": match_plain_command}
     exec(compile(ast.Module(body=funcs + [handler], type_ignores=[]), "main.py", "exec"), namespace)
     return namespace["handle_plain_commands"]
+
+
+@pytest.mark.parametrize("command", ["p5x每日运势", "p5x今日运势", "p5x运势", "今日运势", "每日运势", "运势"])
+@pytest.mark.parametrize("enabled", [False, True])
+def test_fortune_without_slash_respects_plain_commands_switch(command, enabled):
+    class Event:
+        stopped = False
+
+        def get_message_str(self):
+            return command
+
+        def stop_event(self):
+            self.stopped = True
+
+    async def original(event):
+        assert event.stopped
+        yield "fortune-result"
+
+    event = Event()
+    plugin = SimpleNamespace(config={"enable_plain_commands": enabled})
+    setattr(plugin, COMMANDS[command][0], original)
+
+    async def collect():
+        return [result async for result in load_entry()(plugin, event)]
+
+    assert asyncio.run(collect()) == (["fortune-result"] if enabled else [])
+    assert event.stopped is enabled
 
 
 @pytest.mark.asyncio

@@ -695,6 +695,26 @@ class PhantomArchivePlugin(Star):
         for result in await self._daily_fortune_result(event):
             yield result
 
+    @filter.command("p5x今日运势")
+    async def daily_today_command(self, event: AstrMessageEvent):
+        for result in await self._daily_fortune_result(event):
+            yield result
+
+    @filter.command("今日运势")
+    async def fortune_today_command(self, event: AstrMessageEvent):
+        for result in await self._daily_fortune_result(event):
+            yield result
+
+    @filter.command("每日运势")
+    async def fortune_daily_command(self, event: AstrMessageEvent):
+        for result in await self._daily_fortune_result(event):
+            yield result
+
+    @filter.command("运势")
+    async def fortune_command(self, event: AstrMessageEvent):
+        for result in await self._daily_fortune_result(event):
+            yield result
+
     @filter.command("p5x今日角色")
     async def daily_character_command(self, event: AstrMessageEvent):
         """``/p5x每日运势`` 的别名。"""

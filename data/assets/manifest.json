@@ -15,7 +15,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-JandC.png",
       "source_sha256": "0ad2fc715ad4fb159e25f091501ca9e26c1eb18464f8f70c7e674b6f44874e39",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-JandC.png"
       ]
@@ -34,7 +34,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-bui.png",
       "source_sha256": "63cf97dabf7554f48bda1d6f12f51f6459a3c1b710fab67de1f490431f448397",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-bui.png"
       ]
@@ -53,7 +53,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-buiC.png",
       "source_sha256": "02413bb274565e7385c61e029311f65f62403684469422115f3e22e93cb4a23b",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-buiC.png"
       ]
@@ -97,7 +97,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-leo.png",
       "source_sha256": "5e833a94277cfdedbdf0015c837cd1d9fe0d9ec6155e777c1ff8981cb66cd0cb",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-leo.png"
       ]
@@ -116,7 +116,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-joker.png",
       "source_sha256": "47b546d2d3fec7925c695d259472507ef2a78a7264e31073fa00a509bd4214d6",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-joker.png"
       ]
@@ -135,7 +135,7 @@
       "form_inherited": false,
       "source_file": "PC056_01_01_04_01.png",
       "source_sha256": "54f3e37d73dc7386b0126ea7f2541f11ff7a8da8609408cd1cec4a78e0b3b35d",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC056_01_01_04_01.png"
       ]
@@ -154,7 +154,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-howler.png",
       "source_sha256": "bf43af16fb86615aeecf2170143975c04b643b74df1d6f7e966130ee4fb59a30",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-howler.png"
       ]
@@ -173,7 +173,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-cattle.png",
       "source_sha256": "2cfa7fd5caa9294f6d5f55529de10c1e7c336fecc0a3ed81c2c118a1be5e3e76",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-cattle.png"
       ]
@@ -229,7 +229,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-wind.png",
       "source_sha256": "24e8fab3639f7e74c33bbbb593741ebf936456971b2becd58d66bfdfa60e44ab",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-wind.png"
       ]
@@ -248,7 +248,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-windWY.png",
       "source_sha256": "c27e6382dd240b2df8fcee8f949232a8eed47f00abd5f9b0e042c67056e523fb",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-windWY.png"
       ]
@@ -267,7 +267,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-ange.png",
       "source_sha256": "84fb130b50bcade18dcc154336bdedae1703bea10d779dd47f3c847c8286d273",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-ange.png"
       ]
@@ -286,7 +286,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-cherish.png",
       "source_sha256": "8a4efcd9a4501379ba431d5a814d383d2d0a1610f08ab0eb6d413fa29c31f8b7",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-cherish.png"
       ]
@@ -305,7 +305,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-turbo.png",
       "source_sha256": "c7f6fbe27b53837f44641be0eb487f0a2f65ae46d9fd90851b221eb5aa35e201",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-turbo.png"
       ]
@@ -324,7 +324,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-queen.png",
       "source_sha256": "6969e9809d9b956a2837ba17cd5f5bfb9d133d034377c94b35e8978a2e7cc84a",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-queen.png"
       ]
@@ -343,7 +343,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-mona.png",
       "source_sha256": "00d5e36cc9ea2a8773d048e02fe68d36ea18feb4307835f69e59df7839f7eb71",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-mona.png"
       ]
@@ -362,7 +362,7 @@
       "form_inherited": false,
       "source_file": "PC067_01_01_04_01.png",
       "source_sha256": "34bba0293217312fa637e9904a029ae3ca283108d2cb8b22505d24b154a74563",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC067_01_01_04_01.png"
       ]
@@ -381,7 +381,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-closer.png",
       "source_sha256": "b0f6847a632bde5e6f62c0d06c88dd4e8867cc996fd8360345783b3fa00449ba",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-closer.png"
       ]
@@ -400,7 +400,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-closerS.png",
       "source_sha256": "d6971fa4a499f36a9177a968ffc73f3d8e10f7f08f23899646227d99abc773b9",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-closerS.png"
       ]
@@ -419,7 +419,7 @@
       "form_inherited": false,
       "source_file": "PC055_01_01_04_01.png",
       "source_sha256": "79b2d1423cf9d14d9b8b4e31246473bcc44315246b2d54c3d08bd97c65258623",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC055_01_01_04_01.png"
       ]
@@ -438,7 +438,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-mont.png",
       "source_sha256": "af6e0cd1fdab68281c7dab4a786ac8ce533146309018610272023278d50c90e3",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-mont.png"
       ]
@@ -457,7 +457,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-montManwu.png",
       "source_sha256": "0c33fff54dfef7d3c6bc27825b799f622c273e3b28842ca8ccf8491c541080b3",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-montManwu.png"
       ]
@@ -476,7 +476,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-marian.png",
       "source_sha256": "6f1df5c900f0ae584eb3ba7af52cc6717f41a1d6dc11afd94a2e0a808746df81",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-marian.png"
       ]
@@ -495,7 +495,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-marianS.png",
       "source_sha256": "6730a80e10effe798d6376dac6ea7fb893a1b1cb7aa35fcd7369a1bedfd44a53",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-marianS.png"
       ]
@@ -514,7 +514,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-matoi.png",
       "source_sha256": "5d05229f10a74fc6d913745927ed9ee0615c2cccda5917c6e90173268c38328c",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-matoi.png"
       ]
@@ -533,7 +533,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-puppet.png",
       "source_sha256": "99dc077f649da87eb4c119635d716a6847dbbbbc518bb80aa5e73cff9aca3713",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-puppet.png"
       ]
@@ -552,7 +552,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-puppetS.png",
       "source_sha256": "b1582ac0ad8e6ae05434a6004dfec8fa885e2120a5bc9d6e3bbb78050babc0fb",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-puppetS.png"
       ]
@@ -590,7 +590,7 @@
       "form_inherited": false,
       "source_file": "PC068_01_01_04_01.png",
       "source_sha256": "e7e0cb027f617b545b62d9b1c09793b26fc09ad4e391c8142eb8d24eb4568982",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC068_01_01_04_01.png"
       ]
@@ -609,7 +609,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-akihiko.png",
       "source_sha256": "f0ec53162dd86649520fb07047c41150257950c22cf73c328f68485c6b49f92f",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-akihiko.png"
       ]
@@ -647,7 +647,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-luce.png",
       "source_sha256": "b77a6aa0edd420a334c7a9e70a6d739e863034429be95f7395f03405e4577c50",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-luce.png"
       ]
@@ -666,7 +666,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-luceYY.png",
       "source_sha256": "bf78725dd14754f61012cd4722dfa040e6d4d12275d38afb28aee9262ee370f9",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-luceYY.png"
       ]
@@ -704,7 +704,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-soyTH.png",
       "source_sha256": "a6d07258a7f300a6d396b78d247876f6dd906476dfd0d66e9dfe0cd189ea2aa2",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-soyTH.png"
       ]
@@ -788,7 +788,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-chord.png",
       "source_sha256": "da656efac5cc44530c9765d6f5803a7cafc85c3367673eefe747ce849e742165",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-chord.png"
       ]
@@ -807,7 +807,7 @@
       "form_inherited": false,
       "source_file": "PC077_01_01_04_01.png",
       "source_sha256": "ed81cba9c1dc0c394e41bd9e3a5d9af93706f49ba35d2d07b1f578c3e2271f2c",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC077_01_01_04_01.png"
       ]
@@ -826,7 +826,7 @@
       "form_inherited": false,
       "source_file": "PC063_thief_01_04_01.png",
       "source_sha256": "1c9198f5c8af6e478f9948134f8b792c67dab8d0be74a9fbd6bf88e1882fb354",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC063_thief_01_04_01.png"
       ]
@@ -863,7 +863,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-panther.png",
       "source_sha256": "91920a1eaa4b592c495aed9c9364db0add5bf3b8b05c166e1f8e0328d9e38a66",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-panther.png"
       ]
@@ -882,7 +882,7 @@
       "form_inherited": false,
       "source_file": "PC073_01_01_04_01.png",
       "source_sha256": "f556173751b63232ff499d2cc2a69a5890b20698e9a33ed4dfc7306ddfb968c6",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC073_01_01_04_01.png"
       ]
@@ -920,7 +920,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-rinN.png",
       "source_sha256": "5296253749addff6846647bc55f6e275342646de690b81b0fdb197fe6bf816dc",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-rinN.png"
       ]
@@ -964,7 +964,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-fox.png",
       "source_sha256": "1e072a520c5f5230b21bc1193bb6936a607a40567f73b0bbbd281763b6263387",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-fox.png"
       ]
@@ -983,7 +983,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-phoebe.png",
       "source_sha256": "f8b1d904a158e24907f71ee5c95e0b913b86b6afd80077f341f6e90ad2bd7165",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-phoebe.png"
       ]
@@ -1002,7 +1002,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-yukari.png",
       "source_sha256": "d3cbcfa8fcc2304d7b0ca2f24b5e56ce0b315133fd246935792eb9ade53ec1b8",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-yukari.png"
       ]
@@ -1021,7 +1021,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-makoto.png",
       "source_sha256": "c82228c96ded37c7aa7331afeeefd38016e8bd6b7f3297ed1242491a57c2345b",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-makoto.png"
       ]
@@ -1059,7 +1059,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-berry.png",
       "source_sha256": "648833cdf3e808a7af3e0330103b80f64857dd08edc3d57ad263a815bcef7e8e",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-berry.png"
       ]
@@ -1096,7 +1096,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-junpei.png",
       "source_sha256": "ca3f74b6f20d67681e703cf35f5b3a279977f072dce3d59a6abe85dd49246668",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-junpei.png"
       ]
@@ -1115,7 +1115,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-vino.png",
       "source_sha256": "957acabb0b9de720aa1e3e36b72f46da2a883e8a876c21c82fe8f6c1f1f1cf22",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-vino.png"
       ]
@@ -1134,7 +1134,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-violet.png",
       "source_sha256": "6c0831f0eff56832e74190be5c8e122e23dd11429d80973a7580489bd51f24be",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-violet.png"
       ]
@@ -1153,7 +1153,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-okyann.png",
       "source_sha256": "6d5ee6db7aaa1300d30857fbd3ea5554420659d8e9b514c0d419fad2f2f5a907",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-okyann.png"
       ]
@@ -1172,7 +1172,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-blitz.png",
       "source_sha256": "6f8e6d6fa2715695b9f6ddb1354a254a7005955aa667876fda65f984c452b2b5",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-blitz.png"
       ]
@@ -1209,7 +1209,7 @@
       "form_inherited": false,
       "source_file": "PC079_01_01_04_01.png",
       "source_sha256": "0ecb3bbca2c115288f7df581a52bd211ac5b3fd61ee9cca22bd203253a66d263",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC079_01_01_04_01.png"
       ]
@@ -1228,7 +1228,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-doctor.png",
       "source_sha256": "168bef9f403b071e015e91dd1dd86b1d0d53b806061de9a61291c80ca44ef3f2",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-doctor.png"
       ]
@@ -1247,7 +1247,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-kii.png",
       "source_sha256": "1ed80808671bed11b09169e3ca829ac04361a6d0cfd99915ab821a7a29c6911f",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-kii.png"
       ]
@@ -1266,7 +1266,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-kotomo.png",
       "source_sha256": "91711cfc92d6187fe93239d67a35b465129c663548cb80311772f228f0b7c146",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-kotomo.png"
       ]
@@ -1285,7 +1285,7 @@
       "form_inherited": false,
       "source_file": "Texture-Renzhimoniactivity-kotomos01.png",
       "source_sha256": "d2deb4ce4e3bfc5d490ef505970c139a3e94ed14d2a0e9d762dd2f64b97d99b7",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "Texture-Renzhimoniactivity-kotomos01.png"
       ]
@@ -1323,7 +1323,7 @@
       "form_inherited": false,
       "source_file": "Texture-Renzhimoniactivity-noir.png",
       "source_sha256": "1e78ce982aed0d2202d0b74e62e3f092a26edb789174a336a059490f91d65bcf",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "Texture-Renzhimoniactivity-noir.png"
       ]
@@ -1342,7 +1342,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-riddle.png",
       "source_sha256": "a70d320461edb17861b2a73a2c70a43f4abd30da9361cdad445f826641385b6a",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-riddle.png"
       ]
@@ -1361,7 +1361,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-fuka.png",
       "source_sha256": "80d8a28ef39150da282fbbb2640d1000afd2cab25a8cec09836d0f4f1bd940e4",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-fuka.png"
       ]
@@ -1380,7 +1380,7 @@
       "form_inherited": false,
       "source_file": "lihui-guaidao-navi.png",
       "source_sha256": "f19959983e00de985d80ba9621a1c28eb3a61233ce359b030ad086780efabebb",
-      "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
+      "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-navi.png"
       ]

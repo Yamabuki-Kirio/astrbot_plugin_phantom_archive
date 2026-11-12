@@ -37,16 +37,16 @@ def compose(mapping_path, assets):
         slug = key.removeprefix("char:").lower().replace("·", "-").replace("&", "-")
         if slug not in manifest["characters"]:
             continue
-        canvas = Image.new("RGBA", (720, 960))
         foreground = load(record["source"][0])
-        place(canvas, foreground, 960 * HEIGHTS.get(slug, 1.5), CENTERS.get(slug, 350), 28)
+        foreground.thumbnail((1800, 1800), Image.Resampling.LANCZOS)
+        canvas = foreground
         relative = f"characters/{slug}/portrait.webp"
-        canvas.save(assets / relative, "WEBP", quality=92, method=6, alpha_quality=100)
+        canvas.save(assets / relative, "WEBP", quality=88, method=6, alpha_quality=100)
         entry = manifest["characters"][slug]
         entry.update(portrait=relative, portraits=[{"path": relative, "source_status": "community"}],
                      background=relative, layer_sources=[Path(record["source"][0]).name],
-                     processing="native-alpha; foreground only; reviewed framing; WebP q92 alpha100")
-        rows.append({"slug": slug, "path": relative, "foreground_height": HEIGHTS.get(slug, 1.5),
+                     processing="native-alpha; complete foreground bounds; max edge 1800; WebP q88 alpha100")
+        rows.append({"slug": slug, "path": relative, "size": list(canvas.size),
                      "has_back": False})
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     report = {"imported": rows}

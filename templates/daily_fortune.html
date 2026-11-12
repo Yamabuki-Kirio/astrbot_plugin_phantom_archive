@@ -102,14 +102,17 @@
 
   /* 立绘素材已统一成透明底，不再压淡 */
   [data-theme="light"] .hero-figure { opacity: 1; }
-  .card { min-height: 600px; padding: 26px 30px 24px; border: 2px solid var(--accent); }
+  body { width: 980px; }
+  .card { width: 980px; min-height: 700px; padding: 26px 30px 24px; border: 2px solid var(--accent); }
   .category { padding: 4px 16px; border-radius: 0; font-weight: 800; letter-spacing: .12em; transform: skew(-12deg); }
   .title { margin-top: 16px; font-size: 46px; overflow-wrap: anywhere; }
   .subtitle { font-size: 13px; letter-spacing: .08em; }
-  .card.has-hero .head { padding-right: 46%; }
-  .hero-figure { width: 62%; }
+  .card.has-hero .head { padding-right: 52%; }
+  .hero-bg { display: none; }
+  .hero-figure { width: 52%; top: 20px; right: 82px; bottom: 12px; }
   .hero-figure img:not(.hero-art--wide) { object-fit: contain; object-position: right bottom; }
-  .card.has-hero .content, .card.has-hero .foot { width: 55%; }
+  .hero-figure img.hero-art--wide { object-position: center center; }
+  .card.has-hero .content, .card.has-hero .foot { width: 46%; }
   .content { padding: 16px 0 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
   .lead { font-size: 13px; margin-bottom: 18px; border-left: 3px solid var(--accent); color: var(--text-2); }
   .section-heading { font-size: 12px; letter-spacing: .16em; }

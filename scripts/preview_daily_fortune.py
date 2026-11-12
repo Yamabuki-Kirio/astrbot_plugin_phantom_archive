@@ -15,11 +15,15 @@ from archive.daily import models, presenter, tarot
 
 
 def main():
+    hero_key = sys.argv[1] if len(sys.argv) > 1 else "joker"
     output = ROOT / "output/daily-redesign"
+    if hero_key != "joker":
+        output = output / hero_key
     output.mkdir(parents=True, exist_ok=True)
     resolver = AssetResolver(load_manifest(ROOT / "data/assets/manifest.json"))
     character = models.DailyCharacter(
-        key="joker", slug="joker", name="雨宫莲", element="诅咒", position="反抗", rarity=5,
+        key=hero_key, slug=hero_key, name="雨宫莲" if hero_key == "joker" else hero_key,
+        element="诅咒", position="反抗", rarity=5,
     )
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(channel="msedge", headless=True)
