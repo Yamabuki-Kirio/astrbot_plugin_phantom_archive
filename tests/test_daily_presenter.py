@@ -151,8 +151,8 @@ def test_template_is_registered():
 def test_render_page_uses_daily_template():
     page = presenter.build_page(make_fortune())
     html = image_templates.render_page(page, theme="dark")
-    # 运势卡把类别标签换成了「今日角色」，模板专属文案要在这里出现
-    assert "今日角色" in html
+    assert "DAILY FORTUNE / 每日运势" in html
+    assert f'<span class="fortune-grade">{make_fortune().grade}</span>' in html
     assert "塔罗指引" in html
     assert "仅供娱乐参考" in html
     assert "Lufel" not in html

@@ -102,6 +102,49 @@
 
   /* 立绘素材已统一成透明底，不再压淡 */
   [data-theme="light"] .hero-figure { opacity: 1; }
+  .card { min-height: 600px; padding: 26px 30px 24px; border: 2px solid var(--accent); }
+  .category { padding: 4px 16px; border-radius: 0; font-weight: 800; letter-spacing: .12em; transform: skew(-12deg); }
+  .title { margin-top: 16px; font-size: 46px; overflow-wrap: anywhere; }
+  .subtitle { font-size: 13px; letter-spacing: .08em; }
+  .card.has-hero .head { padding-right: 46%; }
+  .hero-figure { width: 62%; }
+  .hero-figure img:not(.hero-art--wide) { object-fit: contain; object-position: right bottom; }
+  .card.has-hero .content, .card.has-hero .foot { width: 55%; }
+  .content { padding: 16px 0 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+  .lead { font-size: 13px; margin-bottom: 18px; border-left: 3px solid var(--accent); color: var(--text-2); }
+  .section-heading { font-size: 12px; letter-spacing: .16em; }
+  .item { padding: 0; border: 1px solid var(--line-strong); border-radius: 0; background: var(--panel); }
+  .fortune-heading { display: flex; align-items: stretch; gap: 14px; border-bottom: 1px solid var(--line); }
+  .fortune-grade { display: flex; align-items: center; justify-content: center; flex: 0 0 104px; min-height: 94px; padding: 12px 8px; background: linear-gradient(135deg, #ed2546, #920c26); color: #fff; font-size: 40px; font-weight: 900; letter-spacing: .04em; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
+  .fortune-heading[data-grade="大吉"] .fortune-grade { background: linear-gradient(135deg, #f5d77d, #b78024); color: #30200b; }
+  .fortune-heading[data-grade="吉"] .fortune-grade { background: linear-gradient(135deg, #df4d50, #9e2739); color: #fff1e9; }
+  .fortune-heading[data-grade="平"] .fortune-grade { background: linear-gradient(135deg, #65778e, #39485e); color: #edf2fa; }
+  .fortune-heading[data-grade="凶"] .fortune-grade { background: linear-gradient(135deg, #665078, #352a48); color: #eee2f7; }
+  .fortune-heading[data-grade="大凶"] .fortune-grade {
+    background: repeating-linear-gradient(135deg, transparent 0 7px, rgba(205, 175, 232, .15) 7px 10px) left bottom / 100% 7px no-repeat, linear-gradient(135deg, #302538, #141019);
+    color: #d3b7e8;
+  }
+  .fortune-card-name { margin: 0; padding: 16px 12px 16px 0; align-self: center; font-size: 20px; font-weight: 750; line-height: 1.5; overflow-wrap: anywhere; }
+  .item-body { margin: 0; padding: 12px 16px 14px; }
+  .item-body p { font-size: 14px; line-height: 1.85; }
+  .item-body p:first-child { color: var(--text); }
+  .section + .section { margin-top: 20px; }
+  .para { padding: 12px 14px; border: 1px solid var(--line-strong); border-left: 3px solid var(--accent); background: var(--panel); }
+  .para p { font-size: 13px; line-height: 1.85; font-weight: 500; }
+  .foot { margin-top: 18px; }
+  .foot .meta, .disclaimer p { font-size: 10px; line-height: 1.65; }
 {% endblock %}
 
-{% block category_label %}今日角色{% endblock %}
+{% block category_label %}DAILY FORTUNE / 每日运势{% endblock %}
+
+{% block item_title scoped %}
+  {% set parts = block.title.rsplit('·', 1) %}
+  {% if parts|length == 2 %}
+  <div class="fortune-heading" data-grade="{{ parts[1]|trim }}">
+    <span class="fortune-grade">{{ parts[1]|trim }}</span>
+    <p class="fortune-card-name">{{ parts[0]|trim }}</p>
+  </div>
+  {% else %}
+  <p class="item-title">{{ block.title }}</p>
+  {% endif %}
+{% endblock %}

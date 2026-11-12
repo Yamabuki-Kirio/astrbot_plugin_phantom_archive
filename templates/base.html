@@ -502,7 +502,7 @@
         {%- set thumb = visual.thumbs.get(block.ref_key, "") if block.ref_key else "" %}
         {%- if thumb %}<img class="item-thumb" src="{{ thumb }}" alt="">{% endif %}
         <div class="item-main">
-          <p class="item-title">{{ block.title }}</p>
+          {% block item_title scoped %}<p class="item-title">{{ block.title }}</p>{% endblock %}
           {%- if block.lines %}
           <div class="item-body">
             {%- for line in block.lines %}
