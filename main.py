@@ -50,7 +50,7 @@ from .archive.daily import presenter as daily_presenter
 from .archive.daily import repository as daily_repository
 from .archive.database import DatabaseMissingError, SchemaMismatchError
 from .archive.official_profiles import find_profile_images
-from .archive.backgrounds import BackgroundRotation
+from .archive.backgrounds import BackgroundRotation, resolve_background_mode
 from .archive.plain_commands import match_plain_command
 from .archive.image_renderer import (
     DEFAULT_MAX_CONCURRENT,
@@ -74,7 +74,7 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.8.4"
+PLUGIN_VERSION = "0.8.5"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME
@@ -510,9 +510,12 @@ class PhantomArchivePlugin(Star):
     async def _visuals(self, event: AstrMessageEvent, pages) -> list:
         """一次查询只取一次头像，多页复用；每页各自解析主视觉。"""
         background = self._background_rotation.select(
-            rotate=_conf_bool(self.config, "card_background_rotation", True),
             fixed=str(_conf_get(self.config, "card_background", "phantom")),
-            mode=str(_conf_get(self.config, "card_background_rotation_mode", "sequential")),
+            mode=resolve_background_mode(
+                _conf_get(self.config, "card_background_mode", None),
+                legacy_rotate=_conf_bool(self.config, "card_background_rotation", True),
+                legacy_mode=_conf_get(self.config, "card_background_rotation_mode", "sequential"),
+            ),
         )
         try:
             requester = identity.from_event(event)

@@ -46,7 +46,10 @@ def test_canvas_sizes_match_background_pixels():
 def test_configuration_defaults_to_rotation():
     root = Path(__file__).resolve().parents[1]
     schema = json.loads((root / "_conf_schema.json").read_text(encoding="utf-8"))
-    assert schema["card_background_rotation"]["default"] is True
+    assert schema["card_background_mode"]["default"] == "sequential"
+    assert schema["card_background_mode"]["options"] == ["sequential", "random", "fixed"]
+    assert "card_background_rotation" not in schema
+    assert "card_background_rotation_mode" not in schema
     assert schema["card_background"]["options"] == list(BACKGROUND_FILES)
 
 
@@ -63,3 +66,12 @@ def test_random_selection_and_fixed_override(monkeypatch):
     assert selector.select(rotate=False, mode="random", fixed="reload_blue") == "reload_blue"
     assert len(calls) == 1
     assert selector.select() == "phantom"
+
+
+def test_unified_modes_and_legacy_configuration():
+    from archive.backgrounds import resolve_background_mode
+    assert resolve_background_mode() == "sequential"
+    assert resolve_background_mode(legacy_rotate=False) == "fixed"
+    assert resolve_background_mode(legacy_mode="random") == "random"
+    assert resolve_background_mode("random", legacy_rotate=False) == "random"
+    assert BackgroundRotation().select(mode="fixed", fixed="reload_blue") == "reload_blue"

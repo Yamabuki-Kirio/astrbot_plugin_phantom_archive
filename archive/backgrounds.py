@@ -23,8 +23,17 @@ class BackgroundRotation:
         self._cycle = cycle(BACKGROUND_FILES)
 
     def select(self, *, rotate: bool = True, fixed: str = "phantom", mode: str = "sequential") -> str:
-        if not rotate:
+        if not rotate or mode == "fixed":
             return normalize_background(fixed)
         if mode == "random":
             return choice(tuple(BACKGROUND_FILES))
         return next(self._cycle)
+
+
+def resolve_background_mode(mode=None, *, legacy_rotate=True, legacy_mode="sequential"):
+    """显式新配置优先；未设置时兼容旧版开关与轮换方式。"""
+    if mode in ("sequential", "random", "fixed"):
+        return mode
+    if not legacy_rotate:
+        return "fixed"
+    return "random" if legacy_mode == "random" else "sequential"
