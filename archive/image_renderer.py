@@ -210,7 +210,8 @@ def build_payload(html: str, settings: RenderSettings) -> dict[str, Any]:
         width, height = map(int, canvas.groups())
         if 128 <= width <= 4096 and 128 <= height <= 4096:
             payload["options"].update(
-                viewport_width=width, viewport_height=height, full_page=False,
+                viewport_width=width, viewport_height=height, full_page=True,
+                clip={"x": 0, "y": 0, "width": width, "height": height},
             )
     return payload
 
@@ -410,6 +411,11 @@ class ImageRenderer:
         elapsed_ms = int((time.perf_counter() - started) * 1000)
         data = bytes(buffer)
         image_format, width, height = validate_image(data, max_bytes=limit)
+        clip = payload["options"].get("clip")
+        if clip and abs(width * clip["height"] - height * clip["width"]) > max(width, height) * 2:
+            raise RenderPayloadError(
+                f"渲染服务裁切了卡片（返回 {width}×{height}），请检查服务是否支持整页截图与 clip 参数"
+            )
         return RenderedImage(
             data=data,
             image_format=image_format,

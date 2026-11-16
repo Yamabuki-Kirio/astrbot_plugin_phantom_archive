@@ -32,7 +32,8 @@ def test_each_category_embeds_selected_background(preset, category):
     from archive.image_renderer import build_payload, RenderSettings
     options = build_payload(html, RenderSettings())["options"]
     assert (options["viewport_width"], options["viewport_height"]) == (width, height)
-    assert options["full_page"] is False
+    assert options["full_page"] is True
+    assert options["clip"] == {"x": 0, "y": 0, "width": width, "height": height}
 
 
 def test_canvas_sizes_match_background_pixels():

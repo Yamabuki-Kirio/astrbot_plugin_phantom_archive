@@ -297,3 +297,19 @@ def test_render_empty_html_is_rejected():
 
     with pytest.raises(RenderPayloadError):
         asyncio.run(_renderer(lambda request: httpx.Response(200)).render("   "))
+
+
+@pytest.mark.parametrize("size,valid", [((800, 600), False), ((1482, 1062), True), ((741, 531), True)])
+def test_fixed_canvas_rejects_cropped_service_response(size, valid):
+    import asyncio
+    import io
+    from PIL import Image
+    buffer = io.BytesIO()
+    Image.new("RGB", size).save(buffer, format="PNG")
+    renderer = _renderer(lambda request: httpx.Response(200, content=buffer.getvalue()))
+    html = '<html data-canvas-width="1482" data-canvas-height="1062"></html>'
+    if valid:
+        assert asyncio.run(renderer.render(html)).width == size[0]
+    else:
+        with pytest.raises(RenderPayloadError, match="裁切"):
+            asyncio.run(renderer.render(html))
