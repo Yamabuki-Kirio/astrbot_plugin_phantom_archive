@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from dataclasses import replace
 from pathlib import Path
 
 from astrbot.api.event import AstrMessageEvent, filter
@@ -48,6 +49,8 @@ from .archive.daily import models as daily_models
 from .archive.daily import presenter as daily_presenter
 from .archive.daily import repository as daily_repository
 from .archive.database import DatabaseMissingError, SchemaMismatchError
+from .archive.official_profiles import find_profile_images
+from .archive.backgrounds import BackgroundRotation
 from .archive.plain_commands import match_plain_command
 from .archive.image_renderer import (
     DEFAULT_MAX_CONCURRENT,
@@ -71,7 +74,7 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.8.3"
+PLUGIN_VERSION = "0.8.4"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME
@@ -177,6 +180,7 @@ class PhantomArchivePlugin(Star):
         self.image_enabled = _conf_bool(self.config, "image_output_enabled", True)
         self.fallback_mode = self._read_fallback_mode()
         self.theme = self._read_theme()
+        self._background_rotation = BackgroundRotation()
         self.render_settings = RenderSettings.from_config(
             lambda key, default: _conf_get(self.config, key, default),
             theme=self.theme,
@@ -248,8 +252,8 @@ class PhantomArchivePlugin(Star):
                 configured,
                 DATA_DIR,
                 max_chars=self.max_chars,
-                rows_per_page=DEFAULT_ROWS_PER_PAGE,
-                max_pages=DEFAULT_MAX_PAGES,
+                rows_per_page=min(DEFAULT_ROWS_PER_PAGE, 10),
+                max_pages=max(DEFAULT_MAX_PAGES, 8),
             )
         except DatabaseMissingError as exc:
             self._init_error = exc
@@ -505,6 +509,11 @@ class PhantomArchivePlugin(Star):
 
     async def _visuals(self, event: AstrMessageEvent, pages) -> list:
         """一次查询只取一次头像，多页复用；每页各自解析主视觉。"""
+        background = self._background_rotation.select(
+            rotate=_conf_bool(self.config, "card_background_rotation", True),
+            fixed=str(_conf_get(self.config, "card_background", "phantom")),
+            mode=str(_conf_get(self.config, "card_background_rotation_mode", "sequential")),
+        )
         try:
             requester = identity.from_event(event)
             if self.visual_settings.show_requester_header:
@@ -520,12 +529,12 @@ class PhantomArchivePlugin(Star):
 
         return await asyncio.to_thread(
             lambda: [
-                visual_context.build(
+                replace(visual_context.build(
                     page,
                     identity=requester,
                     resolver=self._asset_resolver,
                     settings=self.visual_settings,
-                )
+                ), background_preset=background)
                 for page in pages
             ]
         )
@@ -615,6 +624,16 @@ class PhantomArchivePlugin(Star):
     async def character_command(self, event: AstrMessageEvent):
         """查询角色基本资料。"""
         name = _extract_arg(event, "p5x角色")
+        images = find_profile_images(DATA_DIR, name)
+        if images:
+            try:
+                payloads = await asyncio.to_thread(lambda: [path.read_bytes() for path in images])
+            except OSError:
+                logger.exception("官方角色信息图读取失败")
+            else:
+                for payload in payloads:
+                    yield event.chain_result([Image.fromBytes(payload)])
+                return
         for result in await self._respond(event, "character_outcome", name):
             yield result
 

@@ -28,3 +28,6 @@ raw/
 
 # 角色与武器素材随版本发布，使 Docker/GitHub 安装后无需在启动阶段联网。
 # 每一项来源与来源状态记录在 manifest.json；不要提交未登记来源的素材。
+
+# Official character profile image and index ship with the plugin.
+!data/official_profiles/

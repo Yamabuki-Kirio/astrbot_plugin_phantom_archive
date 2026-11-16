@@ -1,4 +1,21 @@
 {
+  "card_background_rotation": {
+    "description": "轮换卡片背景",
+    "type": "bool",
+    "default": true,
+    "hint": "每次图片查询依次轮换黑黄、P3蓝色、P5红色三张背景。同一次查询的多页使用同一张；重启后从黑黄开始。关闭后使用下方指定背景。"
+  },
+  "card_background": {
+    "description": "关闭轮换时使用的背景图",
+    "type": "string",
+    "default": "phantom",
+    "options": [
+      "phantom",
+      "reload_blue",
+      "phantom_red"
+    ],
+    "hint": "phantom：黑黄装饰字；reload_blue：P3蓝色月亮；phantom_red：P5红色。字体和立绘布局随背景自动适配。"
+  },
   "enable_plain_commands": {
     "description": "兼容不带斜杠的指令",
     "type": "bool",
@@ -66,7 +83,7 @@
     "default": 16
   },
   "image_theme": {
-    "description": "卡片配色：light 浅色纸面（默认），dark 暗色档案卡",
+    "description": "背景素材不可用时的回退配色：light 浅色（默认），dark 暗色；三套内置背景自动适配文字配色",
     "type": "string",
     "default": "light"
   },
@@ -139,5 +156,15 @@
     "description": "每日运势输出图片卡片；关闭或渲染失败时改发文字（内容完全相同）",
     "type": "bool",
     "default": true
+  },
+  "card_background_rotation_mode": {
+    "description": "背景轮换方式",
+    "type": "string",
+    "default": "sequential",
+    "options": [
+      "sequential",
+      "random"
+    ],
+    "hint": "sequential：按黑黄、蓝色、红色顺序轮换；random：每次查询独立随机选择，可能连续相同。同次查询分页保持一致；关闭轮换后使用固定背景。"
   }
 }

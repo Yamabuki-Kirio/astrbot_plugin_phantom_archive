@@ -139,3 +139,15 @@ def test_with_footer_sets_source_and_conflict():
 def test_page_label_format():
     page = cards.CardPage(category="角色", title="测试", page_index=2, page_total=3)
     assert page.page_label == "2/3"
+
+
+def test_next_section_moves_to_new_page_when_first_block_does_not_fit():
+    first = cards.Block(kind="bullets", lines=tuple(f"甲{i}" for i in range(5)))
+    second = cards.Block(kind="bullets", lines=tuple(f"乙{i}" for i in range(5)))
+    pages = cards.paginate(
+        "角色", "固定画布", (cards.Section("甲", (first,)), cards.Section("乙", (second,))),
+        rows_per_page=10,
+    )
+    assert len(pages) == 2
+    assert pages[0].sections[0].blocks == (first,)
+    assert pages[1].sections[0].blocks == (second,)

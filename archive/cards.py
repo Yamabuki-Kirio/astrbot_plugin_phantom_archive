@@ -203,6 +203,12 @@ def paginate(
                 push_page()
                 continue
 
+            # 该节首块在剩余空间放不下时先换页，不能因 chunk 为空
+            # 就强塞进已有内容的页面（固定比例画布会裁掉页底）。
+            if remaining[0].rows > limit and current:
+                push_page()
+                continue
+
             chunk: list[Block] = []
             chunk_rows = 0
             while remaining:

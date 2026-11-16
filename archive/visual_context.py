@@ -83,6 +83,7 @@ class VisualSettings:
 
 @dataclass(frozen=True)
 class VisualContext:
+    background_preset: str = "phantom"
     requester_name: str = ""
     requester_avatar: str = ""
     hero_image: str = ""
@@ -105,6 +106,7 @@ class VisualContext:
 
     def as_template_dict(self) -> dict:
         return {
+            "background_preset": self.background_preset,
             "show_requester": self.show_requester,
             "requester_name": self.requester_name,
             "requester_avatar": self.requester_avatar,

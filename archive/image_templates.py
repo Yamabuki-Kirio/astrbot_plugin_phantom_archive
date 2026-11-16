@@ -10,12 +10,15 @@
 from __future__ import annotations
 
 import logging
+import base64
+from functools import lru_cache
 from pathlib import Path
 from typing import Iterable, Sequence
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 
 from . import cards, notices, visual_context
+from .backgrounds import BACKGROUND_FILES, BACKGROUND_SIZES, normalize_background
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +50,15 @@ THEMES: tuple[str, ...] = (THEME_DARK, THEME_LIGHT)
 BULLET_PREFIX = "· "
 
 _environment: Environment | None = None
+
+
+@lru_cache(maxsize=3)
+def card_background_uri(preset: str = "phantom") -> str:
+    """内嵌本地背景，让远程 T2I 无需访问插件目录或外网。"""
+    path = TEMPLATE_DIR.parent / "data" / "assets" / "backgrounds" / BACKGROUND_FILES[normalize_background(preset)]
+    if not path.is_file():
+        return ""
+    return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode("ascii")
 
 
 def get_environment(template_dir: Path | None = None) -> Environment:
@@ -164,6 +176,10 @@ def build_context(
         "translation_label": page.translation_label,
         "disclaimer_lines": page.disclaimer_lines or notices.DISCLAIMER_LINES,
         "visual": visual_dict,
+        "background_preset": normalize_background(visual_dict["background_preset"]),
+        "canvas_width": BACKGROUND_SIZES[normalize_background(visual_dict["background_preset"])][0],
+        "canvas_height": BACKGROUND_SIZES[normalize_background(visual_dict["background_preset"])][1],
+        "card_background": card_background_uri(visual_dict["background_preset"]),
     }
 
 

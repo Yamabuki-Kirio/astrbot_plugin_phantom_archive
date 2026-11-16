@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import io
 import logging
+import re
 import time
 import warnings
 from dataclasses import dataclass
@@ -192,7 +193,7 @@ class RenderedImage:
 
 def build_payload(html: str, settings: RenderSettings) -> dict[str, Any]:
     """按渲染服务约定拼请求体。字段名是 ``tmpl``，写错服务端会直接报模板缺失。"""
-    return {
+    payload = {
         "tmpl": html,
         "json": {},
         "tmpldata": {},
@@ -204,6 +205,14 @@ def build_payload(html: str, settings: RenderSettings) -> dict[str, Any]:
             "timeout": settings.render_timeout_ms,
         },
     }
+    canvas = re.search(r'data-canvas-width="(\d+)" data-canvas-height="(\d+)"', html[:2048])
+    if canvas:
+        width, height = map(int, canvas.groups())
+        if 128 <= width <= 4096 and 128 <= height <= 4096:
+            payload["options"].update(
+                viewport_width=width, viewport_height=height, full_page=False,
+            )
+    return payload
 
 
 def _sniff_format(data: bytes) -> str | None:

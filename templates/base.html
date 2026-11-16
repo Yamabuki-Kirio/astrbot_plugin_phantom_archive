@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="{{ theme }}">
+<html lang="zh-CN" data-theme="{{ theme }}" data-background="{{ background_preset }}" data-canvas-width="{{ canvas_width }}" data-canvas-height="{{ canvas_height }}" style="--canvas-width:{{ canvas_width }}px;--canvas-height:{{ canvas_height }}px;">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=820, initial-scale=1">
+<meta name="viewport" content="width={{ canvas_width }}, height={{ canvas_height }}, initial-scale=1">
 <title>{{ title }}</title>
 <style>
   :root {
@@ -456,10 +456,14 @@
     color: var(--text-3);
   }
   {% block theme %}{% endblock %}
+  {% if card_background %}
+  {% include "phantom_background.css" %}
+  {% endif %}
 </style>
 </head>
 <body>
 <main class="card{% if visual.has_hero_image %} has-hero{% endif %}{% if category == "角色列表" %} is-list{% endif %}">
+  {% if card_background %}<div class="phantom-background" style="background-image:url('{{ card_background }}');"></div>{% endif %}
   {% if visual.has_hero_image %}
   <div class="hero-bg" style="background-image:url('{{ visual.background_image }}'); opacity:{{ visual.background_opacity }}; filter:blur({{ visual.background_blur }}px);"></div>
   <div class="hero-scrim"></div>

@@ -1,0 +1,240 @@
+/* 共用背景：角色、每日运势、技能、武器、攻略及名册。 */
+:root, [data-theme="light"], [data-theme="dark"] {
+  --bg: #252525;
+  --card: #252525;
+  --card-2: #202020;
+  --card-rgb: 37, 37, 37;
+  --text: #f7f7ef;
+  --text-2: #ddddda;
+  --text-3: #bdbdb5;
+  --line: rgba(255,255,235,.16);
+  --line-strong: rgba(255,255,235,.28);
+  --accent: #f7f59b;
+  --accent-soft: rgba(247,245,155,.12);
+  --panel: rgba(24,24,24,.78);
+  --panel-line: rgba(255,255,235,.15);
+  --block: rgba(255,255,235,.04);
+  --block-line: rgba(255,255,235,.12);
+}
+body { width: 980px; }
+.card {
+  width: 980px;
+  min-height: 702px;
+  padding: 26px 30px 24px;
+  border: 0;
+  background: #252525;
+  isolation: isolate;
+}
+.phantom-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+/* 禁止人物模糊背景和浅色遮罩盖住背景中的英文与几何设计。 */
+.hero-bg, .hero-scrim, .hero-top { display: none; }
+.hero-figure {
+  width: 49%;
+  top: 65px;
+  right: 42px;
+  bottom: 20px;
+}
+.hero-figure img,
+.hero-figure img:not(.hero-art--wide),
+.hero-figure img.hero-art--wide {
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 1 !important;
+}
+.requester { width: 58%; }
+.card.has-hero .head { padding-right: 49%; }
+.card.has-hero .content, .card.has-hero .foot { width: 49%; }
+.card:not(.has-hero) .content, .card:not(.has-hero) .foot { width: 92%; }
+.head { border-bottom: 0; }
+.category { color: #f7f59b; background: #292929; border-color: #f7f59b; }
+.title, [data-theme="light"] .title { color: #f7f7ef; text-shadow: 0 2px 6px #151515; }
+.content { backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; }
+.foot { position: relative; z-index: 3; padding: 10px 12px; background: rgba(24,24,24,.82); }
+.card.is-list .content { width: 100%; }
+
+/* 蓝色：留出原图左上角 RELOAD 标题，以深蓝文字配浅色信息板。 */
+[data-background="reload_blue"] {
+  --text: #082c50;
+  --text-2: #164865;
+  --text-3: #315b73;
+  --accent: #095ab1;
+  --accent-soft: rgba(9,90,177,.12);
+  --line: rgba(8,44,80,.18);
+  --line-strong: rgba(8,44,80,.28);
+  --panel: rgba(242,252,255,.93);
+  --panel-line: rgba(8,44,80,.18);
+  --block: rgba(255,255,255,.52);
+  --block-line: rgba(8,44,80,.12);
+}
+[data-background="reload_blue"] .card { padding-top: 260px; min-height: 850px; }
+[data-background="reload_blue"] .requester,
+[data-background="reload_blue"] .head { width: 51%; background: rgba(242,252,255,.94); padding: 12px 16px; margin: 0; }
+[data-background="reload_blue"] .card.has-hero .head { padding-right: 16px; }
+[data-background="reload_blue"] .title { color: #082c50; text-shadow: none; }
+[data-background="reload_blue"] .category { color: #fff; background: #095ab1; border-color: #095ab1; }
+[data-background="reload_blue"] .hero-figure { top: 145px; right: 12px; bottom: 20px; width: 46%; }
+[data-background="reload_blue"] .foot { background: rgba(242,252,255,.94); }
+[data-background="reload_blue"] .fortune-grade { color: #fff; }
+
+/* 红色：白字配暗红信息板，表头向下避开左上角标志。 */
+[data-background="phantom_red"] {
+  --text: #fff8f4;
+  --text-2: #ffe6e0;
+  --text-3: #efc8c0;
+  --accent: #fff3e9;
+  --accent-soft: rgba(255,243,233,.14);
+  --panel: rgba(30,0,7,.88);
+  --panel-line: rgba(255,220,210,.28);
+  --block: rgba(255,220,210,.06);
+}
+[data-background="phantom_red"] .card { padding-top: 92px; min-height: 750px; }
+[data-background="phantom_red"] .requester,
+[data-background="phantom_red"] .head { width: 51%; background: rgba(30,0,7,.88); padding: 12px 16px; margin: 0; }
+[data-background="phantom_red"] .card.has-hero .head { padding-right: 16px; }
+[data-background="phantom_red"] .hero-figure { width: 48%; top: 70px; right: 12px; bottom: 20px; }
+[data-background="phantom_red"] .category { background: #fff3e9; color: #790b1d; border-color: #fff3e9; }
+[data-background="phantom_red"] .foot { background: rgba(30,0,7,.88); }
+
+/* 光影统一：立绘、标题与信息块都落在同一背景上，避免剪贴感。 */
+.hero-figure { overflow: visible; }
+.hero-figure img {
+  filter: drop-shadow(0 12px 15px rgba(0,0,0,.42))
+          drop-shadow(0 3px 4px rgba(0,0,0,.24));
+}
+.title, [data-theme="light"] .title {
+  text-shadow: 0 3px 8px rgba(0,0,0,.58), 0 1px 2px rgba(0,0,0,.45);
+}
+.subtitle, .requester-name, .section-heading {
+  text-shadow: 0 2px 5px rgba(0,0,0,.42);
+}
+.category {
+  box-shadow: 0 5px 12px rgba(0,0,0,.24);
+  border-radius: 4px;
+}
+.content, .item, .para, .foot {
+  border-radius: 12px;
+  border-color: rgba(255,255,255,.10);
+  box-shadow: 0 10px 28px rgba(0,0,0,.20), 0 2px 5px rgba(0,0,0,.10);
+}
+.content {
+  background: linear-gradient(135deg, rgba(27,27,27,.70), rgba(27,27,27,.46));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.content .item, .content .para { box-shadow: none; }
+.content .item { overflow: hidden; }
+.foot { background: rgba(25,25,25,.58); backdrop-filter: blur(8px); }
+/* 运势模板本身无整体底板，只给两块主要信息托底。 */
+.fortune-heading { border-bottom-color: rgba(255,255,255,.10); }
+.fortune-grade { filter: drop-shadow(2px 3px 4px rgba(0,0,0,.22)); }
+.card:has(.fortune-heading) .content { background: transparent; box-shadow: none; backdrop-filter: none; }
+.card:has(.fortune-heading) .content .item,
+.card:has(.fortune-heading) .content .para {
+  background: linear-gradient(135deg, rgba(27,27,27,.74), rgba(27,27,27,.52));
+  box-shadow: 0 9px 24px rgba(0,0,0,.22), 0 2px 4px rgba(0,0,0,.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+[data-background="reload_blue"] .requester,
+[data-background="reload_blue"] .head,
+[data-background="phantom_red"] .requester,
+[data-background="phantom_red"] .head {
+  background: transparent;
+  border: 0;
+  padding-left: 4px;
+  box-shadow: none;
+}
+[data-background="reload_blue"] .title {
+  color: #fff;
+  text-shadow: 0 3px 10px rgba(0,53,104,.66), 0 1px 3px rgba(0,32,79,.65);
+}
+[data-background="reload_blue"] .subtitle,
+[data-background="reload_blue"] .requester-name,
+[data-background="reload_blue"] .section-heading,
+[data-background="reload_blue"] .lead {
+  color: #073b60;
+  text-shadow: 0 1px 4px rgba(255,255,255,.75);
+}
+[data-background="reload_blue"] .hero-figure img {
+  filter: drop-shadow(0 12px 15px rgba(0,49,92,.38))
+          drop-shadow(0 3px 4px rgba(0,30,75,.25));
+}
+[data-background="reload_blue"] .content,
+[data-background="reload_blue"] .card:has(.fortune-heading) .content .item,
+[data-background="reload_blue"] .card:has(.fortune-heading) .content .para {
+  background: linear-gradient(135deg, rgba(244,253,255,.86), rgba(226,247,255,.68));
+  border-color: rgba(255,255,255,.40);
+  box-shadow: 0 10px 28px rgba(0,65,112,.20), 0 2px 6px rgba(0,49,92,.12);
+}
+[data-background="reload_blue"] .card:has(.fortune-heading) .content {
+  background: transparent;
+  box-shadow: none;
+}
+[data-background="reload_blue"] .foot {
+  background: rgba(235,250,255,.70);
+  box-shadow: 0 8px 24px rgba(0,65,112,.18);
+}
+[data-background="phantom_red"] .content,
+[data-background="phantom_red"] .card:has(.fortune-heading) .content .item,
+[data-background="phantom_red"] .card:has(.fortune-heading) .content .para {
+  background: linear-gradient(135deg, rgba(37,2,9,.80), rgba(37,2,9,.58));
+}
+[data-background="phantom_red"] .card:has(.fortune-heading) .content { background: transparent; }
+[data-background="phantom_red"] .foot { background: rgba(37,2,9,.62); }
+
+/* 输出尺寸严格跟随背景原图，背景不裁切、不拉伸。 */
+body { width: var(--canvas-width); }
+.card,
+[data-background="reload_blue"] .card,
+[data-background="phantom_red"] .card {
+  width: var(--canvas-width);
+  height: var(--canvas-height);
+  min-height: 0;
+  padding: 36px 46px 30px;
+}
+[data-background="reload_blue"] .card { padding-top: 260px; }
+[data-background="phantom_red"] .card { padding-top: 105px; }
+.phantom-background { background-size: 100% 100%; }
+body { font-size: 17px; }
+.requester { margin-bottom: 18px; }
+.requester-name { font-size: 18px; }
+.requester-action { font-size: 13px; }
+.title { font-size: 44px; }
+.subtitle { font-size: 17px; }
+.card:has(.fortune-heading) .title { font-size: 54px; }
+.card:has(.fortune-heading) .content { padding-top: 18px; }
+.card:has(.fortune-heading) .item-body p { font-size: 17px; }
+.card:has(.fortune-heading) .para p { font-size: 16px; }
+.card:has(.fortune-heading) .fortune-card-name { font-size: 25px; }
+.card:has(.fortune-heading) .fortune-grade { min-height: 90px; flex-basis: 120px; }
+.card:has(.fortune-heading) .foot .meta,
+.card:has(.fortune-heading) .disclaimer p { font-size: 12px; }
+[data-background="reload_blue"] .hero-figure { top: 145px; right: 35px; bottom: 35px; }
+[data-background="phantom_red"] .hero-figure { top: 65px; right: 35px; bottom: 35px; }
+.card:has(.fortune-heading) .title { margin-top: 8px; font-size: 44px; }
+.card:has(.fortune-heading) .subtitle { margin-top: 4px; line-height: 1.4; }
+.card:has(.fortune-heading) .head { padding-top: 6px; padding-bottom: 8px; }
+.card:has(.fortune-heading) .item-body p { font-size: 16px; line-height: 1.6; }
+.card:has(.fortune-heading) .para p { font-size: 16px; line-height: 1.65; }
+.card:has(.fortune-heading) .fortune-grade { min-height: 72px; font-size: 36px; }
+.card:has(.fortune-heading) .fortune-card-name { padding-top: 10px; padding-bottom: 10px; }
+.card:has(.fortune-heading) .foot .meta,
+.card:has(.fortune-heading) .disclaimer p { font-size: 11px; line-height: 1.45; }
+.requester,
+[data-background="reload_blue"] .requester,
+[data-background="phantom_red"] .requester { padding-top: 4px; padding-bottom: 4px; }
+.requester-avatar, .requester-initial { width: 38px; height: 38px; }
+.requester-name { font-size: 16px; }
+.requester-action { font-size: 11px; }
+.requester { line-height: 1.4; }
+.card:has(.fortune-heading) .foot { margin-top: 10px; }
+.card:has(.fortune-heading) .item-body { padding-top: 8px; padding-bottom: 10px; }
+.card:has(.fortune-heading) .section + .section { margin-top: 12px; }
