@@ -154,7 +154,8 @@ def test_render_page_uses_daily_template():
     assert "DAILY FORTUNE / 每日运势" in html
     assert f'<span class="fortune-grade">{make_fortune().grade}</span>' in html
     assert "塔罗指引" in html
-    assert "仅供娱乐参考" in html
+    assert '<footer class="foot">' not in html
+    assert "资料来源：" not in html
     assert "Lufel" not in html
     assert "机器翻译" not in html
 

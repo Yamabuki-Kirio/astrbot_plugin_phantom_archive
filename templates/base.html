@@ -543,17 +543,6 @@
     {% endif %}
   </div>
 
-  {% if show_footer %}
-  <footer class="foot">
-    {% if has_conflict %}<p class="warn">{{ conflict_warning }}</p>{% endif %}
-    <p class="meta">来源：{{ source_label }}｜{{ translation_label }}</p>
-    <div class="disclaimer">
-      {%- for line in disclaimer_lines %}
-      <p>{{ line }}</p>
-      {%- endfor %}
-    </div>
-  </footer>
-  {% endif %}
 </main>
 </body>
 </html>

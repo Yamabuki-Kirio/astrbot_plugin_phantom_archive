@@ -268,3 +268,38 @@ body { font-size: 17px; }
   width: 35%; top: 28%; right: 7%; bottom: 3%;
 }
 .card.is-list .persona-figure { display: none; }
+
+/* 原生大画布上的正文显式放大，避免沿用 980px 模板的细小字号。 */
+.title, .card:has(.fortune-heading) .title { font-size: 50px; }
+.subtitle { font-size: 23px; }
+.category, .pager { font-size: 18px; }
+.requester-name { font-size: 22px; }
+.requester-action { font-size: 16px; }
+.section-heading { font-size: 24px; }
+.lead, .kv, .bullets li, .item-body p, .para p {
+  font-size: 23px; line-height: 1.5;
+}
+.item-title { font-size: 25px; }
+.foot .meta, .disclaimer p, .warn { font-size: 16px; line-height: 1.4; }
+.card:has(.fortune-heading) .subtitle { font-size: 23px; }
+.card:has(.fortune-heading) .item-body p,
+.card:has(.fortune-heading) .para p { font-size: 23px; line-height: 1.5; }
+.card:has(.fortune-heading) .fortune-card-name { font-size: 29px; }
+.card:has(.fortune-heading) .fortune-grade { font-size: 42px; }
+.card:has(.fortune-heading) .foot .meta,
+.card:has(.fortune-heading) .disclaimer p { font-size: 16px; line-height: 1.4; }
+.card:has(.fortune-heading) .content { padding-top: 6px; }
+.card:has(.fortune-heading) .lead { margin-bottom: 8px; }
+.card:has(.fortune-heading) .section-heading { margin-bottom: 6px; padding-bottom: 4px; line-height: 1.25; }
+.card:has(.fortune-heading) .section + .section { margin-top: 8px; }
+.card:has(.fortune-heading) .fortune-grade { padding: 8px; line-height: 1.2; }
+.card:has(.fortune-heading) .section-heading { margin: 0 0 4px; padding: 0; line-height: 1.2; }
+.card:has(.fortune-heading) .head { padding-top: 0; padding-bottom: 0; margin-bottom: 4px; }
+.card:has(.fortune-heading) .title { margin-top: 4px; }
+.card:has(.fortune-heading) .subtitle { margin-top: 0; }
+.card:has(.fortune-heading) .content { padding-top: 0; }
+.card:has(.fortune-heading) .lead { margin-bottom: 4px; }
+.card:has(.fortune-heading) .item-body p,
+.card:has(.fortune-heading) .para p { line-height: 1.4; }
+.card:has(.fortune-heading) .requester { margin-bottom: 6px; }
+.card:has(.fortune-heading) .requester-text { display: flex; align-items: center; gap: 14px; }

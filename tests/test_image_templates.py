@@ -106,7 +106,7 @@ def test_card_width_in_range():
     assert "width: 820px" in html
 
 
-def test_footer_only_on_last_page():
+def test_source_footer_removed_from_all_pages():
     page_one = _page(page_index=1, page_total=2, show_footer=False)
     page_two = _page(page_index=2, page_total=2, show_footer=True)
 
@@ -116,12 +116,16 @@ def test_footer_only_on_last_page():
     assert "1/2" in html_one
     assert notices.DISCLAIMER_LINES[0] not in html_one
     assert "2/2" in html_two
-    assert notices.DISCLAIMER_LINES[0] in html_two
+    assert notices.DISCLAIMER_LINES[0] not in html_two
+    for html in (html_one, html_two):
+        assert '<footer class="foot">' not in html
+        assert "来源：" not in html
+        assert "资料来源：" not in html
 
 
-def test_conflict_warning_rendered():
+def test_removed_footer_does_not_render_its_warning():
     html = image_templates.render_page(_page(has_conflict=True))
-    assert notices.NUMERIC_CONFLICT_WARNING in html
+    assert notices.NUMERIC_CONFLICT_WARNING not in html
 
 
 def test_conflict_warning_absent_when_no_conflict():

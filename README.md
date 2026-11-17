@@ -1,5 +1,7 @@
 # 夜幕档案
 
+v0.8.8：卡片正文已针对三套原生背景放大为 23px，条目标题为 25px；较长查询使用更短分页。图片底部不再展示来源、资料来源及附带说明栏，腾出的空间用于正文排版。文字回复的来源信息保持原有行为。
+
 ### 人格面具立绘（v0.8.7）
 
 配置项 **人格面具立绘**（`show_persona_art`，默认开启）会在展示人物立绘时，补充对应的人格面具后景。人物和人格面具为独立透明图层，黑黄、P3 蓝色、P5 红色背景分别适配尺寸与位置。关闭此开关后恢复原人物布局；关闭人物立绘时不会单独展示人格面具。
@@ -35,7 +37,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.8.7-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.8.8-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

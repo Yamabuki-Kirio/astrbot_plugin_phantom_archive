@@ -253,7 +253,7 @@ class PhantomArchivePlugin(Star):
                 configured,
                 DATA_DIR,
                 max_chars=self.max_chars,
-                rows_per_page=min(DEFAULT_ROWS_PER_PAGE, 10),
+                rows_per_page=min(DEFAULT_ROWS_PER_PAGE, 7),
                 max_pages=max(DEFAULT_MAX_PAGES, 8),
             )
         except DatabaseMissingError as exc:

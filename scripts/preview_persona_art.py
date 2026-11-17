@@ -17,6 +17,7 @@ from archive.asset_resolver import AssetResolver
 from archive.backgrounds import BACKGROUND_SIZES
 from archive.daily import models, presenter, tarot
 from archive.service import ArchiveService
+from archive.identity import RequesterIdentity
 
 
 def main():
@@ -24,7 +25,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     manifest = load_manifest(ROOT / "data/assets/manifest.json")
     resolver = AssetResolver(manifest)
-    service = ArchiveService(ROOT / "data/p5x_zh.sqlite3", rows_per_page=10, max_pages=8)
+    service = ArchiveService(ROOT / "data/p5x_zh.sqlite3", rows_per_page=7, max_pages=8)
     cases = []
     for slug, kind in [("joker", "character"), ("panther", "skills"), ("mont", "guide"), ("j-c", "character"), ("navi", "daily"), ("cattle", "daily")]:
         with sqlite3.connect(service.database_path.as_uri() + "?mode=ro", uri=True) as db:
@@ -49,7 +50,7 @@ def main():
             for slug, command, pages in cases:
                 # 每张分页都验证，只在总览选第一页。
                 for index, card in enumerate(pages):
-                    visual = replace(visual_context.build(card, resolver=resolver), background_preset=background)
+                    visual = replace(visual_context.build(card, resolver=resolver, identity=RequesterIdentity("preview", "字号验收")), background_preset=background)
                     assert visual.persona_image, slug
                     stem = f"{background}-{slug}-{index + 1}"
                     html = output / f"{stem}.html"
