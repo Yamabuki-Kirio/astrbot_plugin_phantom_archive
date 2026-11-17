@@ -675,6 +675,7 @@ def render_image_status(info: dict) -> str:
         f"｜头像来源：{info.get('avatar_source') or '首字符头像'}",
         f"头像下载代理：{'跟随系统环境变量' if info.get('avatar_proxy') else '直连（不读系统代理）'}",
         f"角色立绘：{'显示' if info.get('character_art') else '关闭'}"
+        f"｜人格面具立绘：{'显示' if info.get('persona_art') else '关闭'}"
         f"｜武器图：{'显示' if info.get('weapon_art') else '关闭'}",
         _manifest_line(info),
         "",

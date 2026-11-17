@@ -102,6 +102,12 @@
     "type": "bool",
     "default": true
   },
+  "show_persona_art": {
+    "description": "人格面具立绘",
+    "hint": "展示人物立绘时，同时展示配套的人格面具。缺少配套素材时仅显示人物；关闭不影响原人物立绘。",
+    "type": "bool",
+    "default": true
+  },
   "show_weapon_art": {
     "description": "武器类查询使用武器图作为主视觉与条目缩略图（缺图时逐级回退）",
     "type": "bool",

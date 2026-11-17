@@ -18,7 +18,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-JandC.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/j-c/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-JandC-02.png",
+        "source_sha256": "e50f70ce97438abcc5d0d04849fbc9c6c4e82c7d80cb1289f73a0b53bf3cb904",
+        "paired_front": "lihui-guaidao-JandC.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "bui": {
       "portrait": "characters/bui/portrait.webp",
@@ -37,7 +45,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-bui.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/bui/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-bui-02.png",
+        "source_sha256": "253ed46e1fb2d8c65115b1515fd21e9a3db6398b58adfc475c3dfc9fe0dfa8ba",
+        "paired_front": "lihui-guaidao-bui.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "bui-cosmic": {
       "portrait": "characters/bui-cosmic/portrait.webp",
@@ -56,7 +72,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-buiC.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/bui-cosmic/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-buiC-02.png",
+        "source_sha256": "b46b17ea6a117e019f00048d39015183d7980a5fe877754383ba1fb8131912e7",
+        "paired_front": "lihui-guaidao-buiC.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "pinky": {
       "portrait": "characters/pinky/1.webp",
@@ -100,7 +124,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-leo.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/leon/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-leo-02.png",
+        "source_sha256": "54f2b69879c9e6a71ebf3829dfdf4dddee28d2b5797c4c6011a2dc199d762a51",
+        "paired_front": "lihui-guaidao-leo.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "joker": {
       "portrait": "characters/joker/portrait.webp",
@@ -119,7 +151,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-joker.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/joker/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-joker-02-new.png",
+        "source_sha256": "c4454133c354e90749612eb9ca9d0966eb81037936ae90aa41bd38d4e6c3b1da",
+        "paired_front": "lihui-guaidao-joker.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "joker-starlight": {
       "portrait": "characters/joker-starlight/portrait.webp",
@@ -138,7 +178,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC056_01_01_04_01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/joker-starlight/persona.webp",
+        "source_status": "community",
+        "source_file": "PC056_01_01_04_02.png",
+        "source_sha256": "20d46984a1c1a5b632dcf43d365214a88d33ac227f27a4cd1e1d016ddf787071",
+        "paired_front": "PC056_01_01_04_01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "howler": {
       "portrait": "characters/howler/portrait.webp",
@@ -157,7 +205,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-howler.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/howler/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-howler-02.png",
+        "source_sha256": "6c6f91b64c36f3a5a1255ea2ef7d2b095bb63a882bc9e04cad08676168679cda",
+        "paired_front": "lihui-guaidao-howler.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "cattle": {
       "portrait": "characters/cattle/portrait.webp",
@@ -176,7 +232,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-cattle.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/cattle/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-cattle-02.png",
+        "source_sha256": "6c9e1a65b4c462427287aea415186e087897441f40f67d760c0beb3db34d19d3",
+        "paired_front": "lihui-guaidao-cattle.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "skull": {
       "portrait": "characters/skull/portrait.webp",
@@ -195,7 +259,15 @@
       "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
       "layer_sources": [
         "lihui-guaidao-skull.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/skull/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-skull-02.png",
+        "source_sha256": "9df63de0fce3a471ee895c36e010e9f03c137216a49ef3f6d18968ec722a016a",
+        "paired_front": "lihui-guaidao-skull.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "류지·댄싱 스타": {
       "portrait": "characters/류지·댄싱 스타/1.webp",
@@ -232,7 +304,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-wind.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/wind/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-wind-02.png",
+        "source_sha256": "944aba1781a336210ea9e17a41c55dc5f87be3236fe391fd4c3f92ab5ac79c40",
+        "paired_front": "lihui-guaidao-wind.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "wind-tempest": {
       "portrait": "characters/wind-tempest/portrait.webp",
@@ -251,7 +331,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-windWY.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/wind-tempest/persona.webp",
+        "source_status": "community",
+        "source_file": "Texture-update-windWY-persona.png",
+        "source_sha256": "d06fe09852c2a8d7ce885db02ce99e73bdf24b077e3377ee900951c670eb31c2",
+        "paired_front": "lihui-guaidao-windWY.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "ange": {
       "portrait": "characters/ange/portrait.webp",
@@ -270,7 +358,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-ange.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/ange/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-ange-02.png",
+        "source_sha256": "e0a0a7d32a039d350f7a729ab836381202315bf485b41f615885236ec1f0a6c1",
+        "paired_front": "lihui-guaidao-ange.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "cherish": {
       "portrait": "characters/cherish/portrait.webp",
@@ -289,7 +385,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-cherish.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/cherish/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-cherish-02.png",
+        "source_sha256": "9062895d5d42720b9766fbf5004c664889a84530b301c5e019a89f5a9b4c11cb",
+        "paired_front": "lihui-guaidao-cherish.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "turbo": {
       "portrait": "characters/turbo/portrait.webp",
@@ -308,7 +412,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-turbo.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/turbo/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-turbo-02.png",
+        "source_sha256": "8bd53fda45c35caf3ca64e27b0a00ecbbff5a3403c69a6fcc49c3b086d01751b",
+        "paired_front": "lihui-guaidao-turbo.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "queen": {
       "portrait": "characters/queen/portrait.webp",
@@ -327,7 +439,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-queen.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/queen/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-queen-02.png",
+        "source_sha256": "9af6c3cc133c57ba9b85dd9349312a06e45d67e59f001b79a2cbcf84eddde013",
+        "paired_front": "lihui-guaidao-queen.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "mona": {
       "portrait": "characters/mona/portrait.webp",
@@ -346,7 +466,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-mona.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/mona/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-mona-02.png",
+        "source_sha256": "ef7df81bfd73e853bca940beca96803d2f17b22087323e8b3efcae51a4a49239",
+        "paired_front": "lihui-guaidao-mona.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "mona-starlight": {
       "portrait": "characters/mona-starlight/portrait.webp",
@@ -365,7 +493,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC067_01_01_04_01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/mona-starlight/persona.webp",
+        "source_status": "community",
+        "source_file": "PC067_01_01_04_02.png",
+        "source_sha256": "b906e1ca57d1509c49a030acc6c2c86bfaa3ff802cca06f02c57983a41f54462",
+        "paired_front": "PC067_01_01_04_01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "closer": {
       "portrait": "characters/closer/portrait.webp",
@@ -384,7 +520,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-closer.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/closer/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-closer-02.png",
+        "source_sha256": "bbbbc7056d46da64a82aec0537198a0c81b614516a59a5312b767ff53030bbad",
+        "paired_front": "lihui-guaidao-closer.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "closer-tropical": {
       "portrait": "characters/closer-tropical/portrait.webp",
@@ -403,7 +547,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-closerS.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/closer-tropical/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-closerS-02.png",
+        "source_sha256": "009f8380958e4f55b4fe2cf5cea36a078f4786b1a808fe1f49778f33d164d6ab",
+        "paired_front": "lihui-guaidao-closerS.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "closer-radiance": {
       "portrait": "characters/closer-radiance/portrait.webp",
@@ -422,7 +574,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC055_01_01_04_01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/closer-radiance/persona.webp",
+        "source_status": "community",
+        "source_file": "PC055_01_01_04_02.png",
+        "source_sha256": "d1121997154de8bb53fd4d8fa5c11c94a5384536850b2d5fdfc668a06e1e55ff",
+        "paired_front": "PC055_01_01_04_01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "mont": {
       "portrait": "characters/mont/portrait.webp",
@@ -441,7 +601,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-mont.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/mont/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-mont-02.png",
+        "source_sha256": "609ca0a853d2af2c0b076699f8af7a77467964d3bbb428fd4b56f7b864b98f1f",
+        "paired_front": "lihui-guaidao-mont.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "mont-frostgale": {
       "portrait": "characters/mont-frostgale/portrait.webp",
@@ -460,7 +628,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-montManwu.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/mont-frostgale/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-montManwu-02.png",
+        "source_sha256": "5d7ba92ff4c8e4c012704d2453a98f41c91f8507b32b0206414caaba454ab92f",
+        "paired_front": "lihui-guaidao-montManwu.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "marian": {
       "portrait": "characters/marian/portrait.webp",
@@ -479,7 +655,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-marian.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/marian/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-marian02.png",
+        "source_sha256": "cbc309ada225915b6c1b40a0331126315dc0930e2d8d2780bfb3855fa1f49223",
+        "paired_front": "lihui-guaidao-marian.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "marian-beachflower": {
       "portrait": "characters/marian-beachflower/portrait.webp",
@@ -498,7 +682,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-marianS.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/marian-beachflower/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-marianS-02.png",
+        "source_sha256": "248c9d2aca4fb71685d0617266f7041ab281f9b6a911234d83abf55e4d04cc51",
+        "paired_front": "lihui-guaidao-marianS.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "matoi": {
       "portrait": "characters/matoi/portrait.webp",
@@ -517,7 +709,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-matoi.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/matoi/persona.webp",
+        "source_status": "community",
+        "source_file": "Texture-update-matoi-persona.png",
+        "source_sha256": "29ec6cf43fa3b9a2fc0d728197e5475c36facb8df2455913608e0af1fffda342",
+        "paired_front": "lihui-guaidao-matoi.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "puppet": {
       "portrait": "characters/puppet/portrait.webp",
@@ -536,7 +736,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-puppet.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/puppet/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-puppet-02.png",
+        "source_sha256": "559697b6c98f5e605f2e96738b99f7e0e9b8b9cf8524c9a279069b56cda7102b",
+        "paired_front": "lihui-guaidao-puppet.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "puppet-wavecatcher": {
       "portrait": "characters/puppet-wavecatcher/portrait.webp",
@@ -555,7 +763,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-puppetS.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/puppet-wavecatcher/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-puppetS-02.png",
+        "source_sha256": "a6a32224397759571a1fe714052704ca21e57237a4a73e4d2def696d3a33c3d5",
+        "paired_front": "lihui-guaidao-puppetS.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "kirijo": {
       "portrait": "characters/kirijo/portrait.webp",
@@ -574,7 +790,15 @@
       "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
       "layer_sources": [
         "lihui-guaidao-mitsuru.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/kirijo/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-mitsuru-02.png",
+        "source_sha256": "35a1c49302e30e4cd075f103cefd3277054edde0ed4890374389b330c4010108",
+        "paired_front": "lihui-guaidao-mitsuru.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "miku": {
       "portrait": "characters/miku/portrait.webp",
@@ -593,7 +817,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC068_01_01_04_01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/miku/persona.webp",
+        "source_status": "community",
+        "source_file": "PC068_01_01_04_02.png",
+        "source_sha256": "c42df9b88a420a73be46c3aaea3ed59ccc68ec725960ed40922726b3f126aed0",
+        "paired_front": "PC068_01_01_04_01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "akihiko": {
       "portrait": "characters/akihiko/portrait.webp",
@@ -612,7 +844,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-akihiko.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/akihiko/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-akihiko-02.png",
+        "source_sha256": "1c7bb9dd64296d45863e181b0a13078231f58b3945da6921737f60b2555121cc",
+        "paired_front": "lihui-guaidao-akihiko.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "fleuret": {
       "portrait": "characters/fleuret/portrait.webp",
@@ -631,7 +871,15 @@
       "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
       "layer_sources": [
         "lihui-guaidao-seiji.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/fleuret/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-seiji-02.png",
+        "source_sha256": "6c3025f90f8b25080ef28b66b59cb44d9cffae9c25f59c9ded24cd2703a0be18",
+        "paired_front": "lihui-guaidao-seiji.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "luce": {
       "portrait": "characters/luce/portrait.webp",
@@ -650,7 +898,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-luce.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/luce/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-luce-02.png",
+        "source_sha256": "2c89de526094c718fcce4f75418b045ed5571449e703db597a3f830443d3979c",
+        "paired_front": "lihui-guaidao-luce.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "luce-notte": {
       "portrait": "characters/luce-notte/portrait.webp",
@@ -669,7 +925,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-luceYY.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/luce-notte/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-luceYY-02.png",
+        "source_sha256": "069160eab33ae6f0db80756c2b88ff0ffd8bb09f0e0c49ee15334cb92db98eca",
+        "paired_front": "lihui-guaidao-luceYY.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "soy": {
       "portrait": "characters/soy/portrait.webp",
@@ -688,7 +952,15 @@
       "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
       "layer_sources": [
         "lihui-guaidao-soy.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/soy/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-soy-02.png",
+        "source_sha256": "181fad4c721b3a0ffc2f7ca8931f821fb3a7d67799e975703f4a2d0daa0e78cf",
+        "paired_front": "lihui-guaidao-soy.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "soy-pioneer": {
       "portrait": "characters/soy-pioneer/portrait.webp",
@@ -707,7 +979,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-soyTH.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/soy-pioneer/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-soyTH-02.png",
+        "source_sha256": "10930a8db476072eeb82f491cc0e5b1d829723bfcb14f8dde8e7fc4584314929",
+        "paired_front": "lihui-guaidao-soyTH.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "아라가키": {
       "portrait": "characters/아라가키/portrait.webp",
@@ -791,7 +1071,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-chord.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/chord/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-chord-02.png",
+        "source_sha256": "d12deb5d5078b67e651dbc9d410fe3fb9f4d25d834ab976d01d796cd71a4aa7e",
+        "paired_front": "lihui-guaidao-chord.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "chord-summer": {
       "portrait": "characters/chord-summer/portrait.webp",
@@ -829,7 +1117,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC063_thief_01_04_01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/aegis/persona.webp",
+        "source_status": "community",
+        "source_file": "PC063_thief_01_04_02.png",
+        "source_sha256": "cb866327f0fa8b33a3b59b1f3a176ce1abc5405fe0f5ae45aa3ab9bfc2fc86c0",
+        "paired_front": "PC063_thief_01_04_01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "crow": {
       "portrait": "characters/crow/1.webp",
@@ -866,7 +1162,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-panther.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/panther/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-panther-02.png",
+        "source_sha256": "c046da9d3a50332c6eec15e4fe03066dd215ed5ff1257113315a8a414e46769a",
+        "paired_front": "lihui-guaidao-panther.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "panther-starlight": {
       "portrait": "characters/panther-starlight/portrait.webp",
@@ -885,7 +1189,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC073_01_01_04_01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/panther-starlight/persona.webp",
+        "source_status": "community",
+        "source_file": "PC073_01_01_04_02.png",
+        "source_sha256": "bed5c038ee9cd81c3fd0689e7ffe26580b4f158287357e00777e989ad1057b29",
+        "paired_front": "PC073_01_01_04_01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "rin": {
       "portrait": "characters/rin/portrait.webp",
@@ -904,7 +1216,15 @@
       "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
       "layer_sources": [
         "lihui-guaidao-rin.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/rin/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-rin-02.png",
+        "source_sha256": "6537d65c7883edbbaf73ee0636a98abad83c6dfde702d880ea9009de6f25cc0b",
+        "paired_front": "lihui-guaidao-rin.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "rin-firecracker": {
       "portrait": "characters/rin-firecracker/portrait.webp",
@@ -923,7 +1243,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-rinN.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/rin-firecracker/persona.webp",
+        "source_status": "community",
+        "source_file": "Texture-update-rinN-persona.png",
+        "source_sha256": "423e8490c666b697bad65020e2d5340a377f7a6d05fc58c3789be188a232abba",
+        "paired_front": "lihui-guaidao-rinN.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "원더": {
       "portrait": "characters/원더/1.webp",
@@ -967,7 +1295,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-fox.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/fox/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-fox-02.png",
+        "source_sha256": "7fa58903edb048348bf103d0d25756a8814170ec30d319b9ea529f76f35c73e1",
+        "paired_front": "lihui-guaidao-fox.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "phoebe": {
       "portrait": "characters/phoebe/portrait.webp",
@@ -986,7 +1322,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-phoebe.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/phoebe/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-phoebe-02.png",
+        "source_sha256": "858f7ff6df7ab08b1e3993c0983f8b6448b62e53f111fba34cfa5f03f9e173bb",
+        "paired_front": "lihui-guaidao-phoebe.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "yukari": {
       "portrait": "characters/yukari/portrait.webp",
@@ -1005,7 +1349,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-yukari.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/yukari/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-yukari-02.png",
+        "source_sha256": "7af449d47c7b88a9b33adda4cff40e558df846be2dcc3e674ec9a79d22e3a7b7",
+        "paired_front": "lihui-guaidao-yukari.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "makoto": {
       "portrait": "characters/makoto/portrait.webp",
@@ -1024,7 +1376,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-makoto.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/makoto/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-makoto-02.png",
+        "source_sha256": "250bb0979c15af450246dc979f9c805ca57ff1c61fd8d803d94626fe439c2bcd",
+        "paired_front": "lihui-guaidao-makoto.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "yuki": {
       "portrait": "characters/yuki/portrait.webp",
@@ -1043,7 +1403,15 @@
       "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
       "layer_sources": [
         "lihui-guaidao-tembin.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/yuki/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-tembin-02.png",
+        "source_sha256": "4c5869295643cf596575d9f87b6895f79cfdb04d1c0ded86dd3ad5fdf4608edc",
+        "paired_front": "lihui-guaidao-tembin.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "berry": {
       "portrait": "characters/berry/portrait.webp",
@@ -1062,7 +1430,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-berry.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/berry/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-berry-02.png",
+        "source_sha256": "daecf51ab15d6e64a47b4d73f5d0dd2701817071f405455d4860cedca2a87406",
+        "paired_front": "lihui-guaidao-berry.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "berry-summer": {
       "portrait": "characters/berry-summer/1.webp",
@@ -1099,7 +1475,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-junpei.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/junpei/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-junpei-02.png",
+        "source_sha256": "aaa4f8c2968cadc8290e9b50faaee5927935b8460bdea5c105696a079427d151",
+        "paired_front": "lihui-guaidao-junpei.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "vino": {
       "portrait": "characters/vino/portrait.webp",
@@ -1118,7 +1502,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-vino.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/vino/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-vino-02.png",
+        "source_sha256": "29ccaa74b44d70820102255028adc8a06519ee27294ac3d11b0ac4051be71067",
+        "paired_front": "lihui-guaidao-vino.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "violet": {
       "portrait": "characters/violet/portrait.webp",
@@ -1137,7 +1529,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-violet.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/violet/persona.webp",
+        "source_status": "community",
+        "source_file": "Texture-update-violet-persona.png",
+        "source_sha256": "030a8b2a0e004b0f386740dc0c2a451a6f19e97f2f2a21197651233684747c2a",
+        "paired_front": "lihui-guaidao-violet.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "okyann": {
       "portrait": "characters/okyann/portrait.webp",
@@ -1156,7 +1556,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-okyann.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/okyann/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-okyann-02.png",
+        "source_sha256": "4bb8e546326ec2c3c97cceeba0172107753aa107d14c550d4be3574dee491fb8",
+        "paired_front": "lihui-guaidao-okyann.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "blitz": {
       "portrait": "characters/blitz/portrait.webp",
@@ -1175,7 +1583,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-blitz.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/blitz/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-blitz-02.png",
+        "source_sha256": "0960cd698853b463628fc5e66b6f27fc614230207ded49a399bc2e9565de599a",
+        "paired_front": "lihui-guaidao-blitz.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "koromaru": {
       "portrait": "characters/koromaru/1.webp",
@@ -1212,7 +1628,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "PC079_01_01_04_01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/kotone/persona.webp",
+        "source_status": "community",
+        "source_file": "PC079_01_01_04_02.png",
+        "source_sha256": "6606313c1766c58b9f93ae26da91acecde0f5a56d1747369a9f4370e8ef95889",
+        "paired_front": "PC079_01_01_04_01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "messa": {
       "portrait": "characters/messa/portrait.webp",
@@ -1231,7 +1655,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-doctor.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/messa/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-doctor-02.png",
+        "source_sha256": "0fd5696c8490ff0445060f488fead92f685a495b400854c2a482bf4080f81e9d",
+        "paired_front": "lihui-guaidao-doctor.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "key": {
       "portrait": "characters/key/portrait.webp",
@@ -1250,7 +1682,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-kii.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/key/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-kii-02.png",
+        "source_sha256": "3ecf8515726ddd4f306082fc3f686652fe304d547ec9fe42e742bafa1e091102",
+        "paired_front": "lihui-guaidao-kii.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "moko": {
       "portrait": "characters/moko/portrait.webp",
@@ -1269,7 +1709,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-kotomo.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/moko/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-kotomo-02.png",
+        "source_sha256": "e5123d4af8ff668f66f41b161681a3dfcec199ae1e16df4cda2f15819b670cf9",
+        "paired_front": "lihui-guaidao-kotomo.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "moko-seaside": {
       "portrait": "characters/moko-seaside/portrait.webp",
@@ -1288,7 +1736,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "Texture-Renzhimoniactivity-kotomos01.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/moko-seaside/persona.webp",
+        "source_status": "community",
+        "source_file": "Texture-Renzhimoniactivity-kotomos02.png",
+        "source_sha256": "cae05bdde7847d71f52b241a3e79d1fc5a15d86a994a55ea1aa4066253763e5e",
+        "paired_front": "Texture-Renzhimoniactivity-kotomos01.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "sepia": {
       "portrait": "characters/sepia/portrait.webp",
@@ -1307,7 +1763,15 @@
       "processing": "native-alpha; foreground only; reviewed framing; WebP q92 alpha100",
       "layer_sources": [
         "lihui-guaidao-sepia.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/sepia/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-sepia-02.png",
+        "source_sha256": "10156285657200fd402674cb799f6d1d1a54328169ce5bd2966201d3ae526836",
+        "paired_front": "lihui-guaidao-sepia.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "noir": {
       "portrait": "characters/noir/portrait.webp",
@@ -1326,7 +1790,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "Texture-Renzhimoniactivity-noir.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/noir/persona.webp",
+        "source_status": "community",
+        "source_file": "Texture-Renzhimoniactivity-noir-02.png",
+        "source_sha256": "c2c5be806fa52db44a98e38aa7d9980c2189cac9abdbd87f236979863da4028c",
+        "paired_front": "Texture-Renzhimoniactivity-noir.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "riddle": {
       "portrait": "characters/riddle/portrait.webp",
@@ -1345,7 +1817,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-riddle.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/riddle/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-riddle-02.png",
+        "source_sha256": "db1b19d52cd3fe20392e57e142b9df3a92528c9583db8c7831b64bd4d5898721",
+        "paired_front": "lihui-guaidao-riddle.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "fuka": {
       "portrait": "characters/fuka/portrait.webp",
@@ -1364,7 +1844,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-fuka.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/fuka/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-fuka-02.png",
+        "source_sha256": "14f7f5190b9d410b23f1c95fa721a42fc79194aefe3d94142a87f627b7720853",
+        "paired_front": "lihui-guaidao-fuka.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     },
     "navi": {
       "portrait": "characters/navi/portrait.webp",
@@ -1383,7 +1871,15 @@
       "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q88 alpha100; no canvas clipping",
       "layer_sources": [
         "lihui-guaidao-navi.png"
-      ]
+      ],
+      "persona": {
+        "path": "characters/navi/persona.webp",
+        "source_status": "community",
+        "source_file": "lihui-guaidao-navi-02.png",
+        "source_sha256": "630e43919146ded806750c6c6f9551be2b4c63bfcdba30bd5b108b7092c82658",
+        "paired_front": "lihui-guaidao-navi.png",
+        "processing": "native alpha; complete alpha bounds; max edge 1800; WebP q90 alpha100"
+      }
     }
   },
   "weapons": {

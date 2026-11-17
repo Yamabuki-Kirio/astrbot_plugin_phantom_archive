@@ -1,0 +1,574 @@
+{
+  "imported": [
+    {
+      "slug": "j-c",
+      "front": "lihui-guaidao-JandC.png",
+      "back": "lihui-guaidao-JandC-02.png",
+      "size": [
+        1127,
+        1800
+      ]
+    },
+    {
+      "slug": "bui",
+      "front": "lihui-guaidao-bui.png",
+      "back": "lihui-guaidao-bui-02.png",
+      "size": [
+        1800,
+        1439
+      ]
+    },
+    {
+      "slug": "bui-cosmic",
+      "front": "lihui-guaidao-buiC.png",
+      "back": "lihui-guaidao-buiC-02.png",
+      "size": [
+        1800,
+        1534
+      ]
+    },
+    {
+      "slug": "leon",
+      "front": "lihui-guaidao-leo.png",
+      "back": "lihui-guaidao-leo-02.png",
+      "size": [
+        1800,
+        1464
+      ]
+    },
+    {
+      "slug": "joker",
+      "front": "lihui-guaidao-joker.png",
+      "back": "lihui-guaidao-joker-02-new.png",
+      "size": [
+        1800,
+        1543
+      ]
+    },
+    {
+      "slug": "joker-starlight",
+      "front": "PC056_01_01_04_01.png",
+      "back": "PC056_01_01_04_02.png",
+      "size": [
+        1628,
+        1800
+      ]
+    },
+    {
+      "slug": "howler",
+      "front": "lihui-guaidao-howler.png",
+      "back": "lihui-guaidao-howler-02.png",
+      "size": [
+        1258,
+        1800
+      ]
+    },
+    {
+      "slug": "cattle",
+      "front": "lihui-guaidao-cattle.png",
+      "back": "lihui-guaidao-cattle-02.png",
+      "size": [
+        1243,
+        1800
+      ]
+    },
+    {
+      "slug": "skull",
+      "front": "lihui-guaidao-skull.png",
+      "back": "lihui-guaidao-skull-02.png",
+      "size": [
+        1800,
+        1640
+      ]
+    },
+    {
+      "slug": "wind",
+      "front": "lihui-guaidao-wind.png",
+      "back": "lihui-guaidao-wind-02.png",
+      "size": [
+        1800,
+        1546
+      ]
+    },
+    {
+      "slug": "wind-tempest",
+      "front": "lihui-guaidao-windWY.png",
+      "back": "Texture-update-windWY-persona.png",
+      "size": [
+        1800,
+        1290
+      ]
+    },
+    {
+      "slug": "ange",
+      "front": "lihui-guaidao-ange.png",
+      "back": "lihui-guaidao-ange-02.png",
+      "size": [
+        1800,
+        982
+      ]
+    },
+    {
+      "slug": "cherish",
+      "front": "lihui-guaidao-cherish.png",
+      "back": "lihui-guaidao-cherish-02.png",
+      "size": [
+        995,
+        1800
+      ]
+    },
+    {
+      "slug": "turbo",
+      "front": "lihui-guaidao-turbo.png",
+      "back": "lihui-guaidao-turbo-02.png",
+      "size": [
+        1527,
+        1800
+      ]
+    },
+    {
+      "slug": "queen",
+      "front": "lihui-guaidao-queen.png",
+      "back": "lihui-guaidao-queen-02.png",
+      "size": [
+        1372,
+        1294
+      ]
+    },
+    {
+      "slug": "mona",
+      "front": "lihui-guaidao-mona.png",
+      "back": "lihui-guaidao-mona-02.png",
+      "size": [
+        1013,
+        1605
+      ]
+    },
+    {
+      "slug": "mona-starlight",
+      "front": "PC067_01_01_04_01.png",
+      "back": "PC067_01_01_04_02.png",
+      "size": [
+        1457,
+        1800
+      ]
+    },
+    {
+      "slug": "closer",
+      "front": "lihui-guaidao-closer.png",
+      "back": "lihui-guaidao-closer-02.png",
+      "size": [
+        1800,
+        1717
+      ]
+    },
+    {
+      "slug": "closer-tropical",
+      "front": "lihui-guaidao-closerS.png",
+      "back": "lihui-guaidao-closerS-02.png",
+      "size": [
+        1800,
+        1565
+      ]
+    },
+    {
+      "slug": "closer-radiance",
+      "front": "PC055_01_01_04_01.png",
+      "back": "PC055_01_01_04_02.png",
+      "size": [
+        1521,
+        1800
+      ]
+    },
+    {
+      "slug": "mont",
+      "front": "lihui-guaidao-mont.png",
+      "back": "lihui-guaidao-mont-02.png",
+      "size": [
+        1289,
+        1800
+      ]
+    },
+    {
+      "slug": "mont-frostgale",
+      "front": "lihui-guaidao-montManwu.png",
+      "back": "lihui-guaidao-montManwu-02.png",
+      "size": [
+        1397,
+        1800
+      ]
+    },
+    {
+      "slug": "marian",
+      "front": "lihui-guaidao-marian.png",
+      "back": "lihui-guaidao-marian02.png",
+      "size": [
+        1668,
+        1800
+      ]
+    },
+    {
+      "slug": "marian-beachflower",
+      "front": "lihui-guaidao-marianS.png",
+      "back": "lihui-guaidao-marianS-02.png",
+      "size": [
+        1800,
+        1384
+      ]
+    },
+    {
+      "slug": "matoi",
+      "front": "lihui-guaidao-matoi.png",
+      "back": "Texture-update-matoi-persona.png",
+      "size": [
+        1736,
+        1640
+      ]
+    },
+    {
+      "slug": "puppet",
+      "front": "lihui-guaidao-puppet.png",
+      "back": "lihui-guaidao-puppet-02.png",
+      "size": [
+        1590,
+        1800
+      ]
+    },
+    {
+      "slug": "puppet-wavecatcher",
+      "front": "lihui-guaidao-puppetS.png",
+      "back": "lihui-guaidao-puppetS-02.png",
+      "size": [
+        1800,
+        1735
+      ]
+    },
+    {
+      "slug": "kirijo",
+      "front": "lihui-guaidao-mitsuru.png",
+      "back": "lihui-guaidao-mitsuru-02.png",
+      "size": [
+        1800,
+        1494
+      ]
+    },
+    {
+      "slug": "miku",
+      "front": "PC068_01_01_04_01.png",
+      "back": "PC068_01_01_04_02.png",
+      "size": [
+        1800,
+        1779
+      ]
+    },
+    {
+      "slug": "akihiko",
+      "front": "lihui-guaidao-akihiko.png",
+      "back": "lihui-guaidao-akihiko-02.png",
+      "size": [
+        1550,
+        1800
+      ]
+    },
+    {
+      "slug": "fleuret",
+      "front": "lihui-guaidao-seiji.png",
+      "back": "lihui-guaidao-seiji-02.png",
+      "size": [
+        1260,
+        1800
+      ]
+    },
+    {
+      "slug": "luce",
+      "front": "lihui-guaidao-luce.png",
+      "back": "lihui-guaidao-luce-02.png",
+      "size": [
+        1643,
+        1800
+      ]
+    },
+    {
+      "slug": "luce-notte",
+      "front": "lihui-guaidao-luceYY.png",
+      "back": "lihui-guaidao-luceYY-02.png",
+      "size": [
+        1800,
+        1766
+      ]
+    },
+    {
+      "slug": "soy",
+      "front": "lihui-guaidao-soy.png",
+      "back": "lihui-guaidao-soy-02.png",
+      "size": [
+        1800,
+        1345
+      ]
+    },
+    {
+      "slug": "soy-pioneer",
+      "front": "lihui-guaidao-soyTH.png",
+      "back": "lihui-guaidao-soyTH-02.png",
+      "size": [
+        1800,
+        1630
+      ]
+    },
+    {
+      "slug": "chord",
+      "front": "lihui-guaidao-chord.png",
+      "back": "lihui-guaidao-chord-02.png",
+      "size": [
+        1024,
+        1001
+      ]
+    },
+    {
+      "slug": "aegis",
+      "front": "PC063_thief_01_04_01.png",
+      "back": "PC063_thief_01_04_02.png",
+      "size": [
+        1452,
+        1664
+      ]
+    },
+    {
+      "slug": "panther",
+      "front": "lihui-guaidao-panther.png",
+      "back": "lihui-guaidao-panther-02.png",
+      "size": [
+        1800,
+        1793
+      ]
+    },
+    {
+      "slug": "panther-starlight",
+      "front": "PC073_01_01_04_01.png",
+      "back": "PC073_01_01_04_02.png",
+      "size": [
+        1800,
+        1709
+      ]
+    },
+    {
+      "slug": "rin",
+      "front": "lihui-guaidao-rin.png",
+      "back": "lihui-guaidao-rin-02.png",
+      "size": [
+        1800,
+        1712
+      ]
+    },
+    {
+      "slug": "rin-firecracker",
+      "front": "lihui-guaidao-rinN.png",
+      "back": "Texture-update-rinN-persona.png",
+      "size": [
+        1800,
+        1543
+      ]
+    },
+    {
+      "slug": "fox",
+      "front": "lihui-guaidao-fox.png",
+      "back": "lihui-guaidao-fox-02.png",
+      "size": [
+        1464,
+        1800
+      ]
+    },
+    {
+      "slug": "phoebe",
+      "front": "lihui-guaidao-phoebe.png",
+      "back": "lihui-guaidao-phoebe-02.png",
+      "size": [
+        1674,
+        1800
+      ]
+    },
+    {
+      "slug": "yukari",
+      "front": "lihui-guaidao-yukari.png",
+      "back": "lihui-guaidao-yukari-02.png",
+      "size": [
+        1149,
+        1800
+      ]
+    },
+    {
+      "slug": "makoto",
+      "front": "lihui-guaidao-makoto.png",
+      "back": "lihui-guaidao-makoto-02.png",
+      "size": [
+        1077,
+        1800
+      ]
+    },
+    {
+      "slug": "yuki",
+      "front": "lihui-guaidao-tembin.png",
+      "back": "lihui-guaidao-tembin-02.png",
+      "size": [
+        1286,
+        1800
+      ]
+    },
+    {
+      "slug": "berry",
+      "front": "lihui-guaidao-berry.png",
+      "back": "lihui-guaidao-berry-02.png",
+      "size": [
+        1725,
+        1800
+      ]
+    },
+    {
+      "slug": "junpei",
+      "front": "lihui-guaidao-junpei.png",
+      "back": "lihui-guaidao-junpei-02.png",
+      "size": [
+        1800,
+        1468
+      ]
+    },
+    {
+      "slug": "vino",
+      "front": "lihui-guaidao-vino.png",
+      "back": "lihui-guaidao-vino-02.png",
+      "size": [
+        1800,
+        1768
+      ]
+    },
+    {
+      "slug": "violet",
+      "front": "lihui-guaidao-violet.png",
+      "back": "Texture-update-violet-persona.png",
+      "size": [
+        1800,
+        1470
+      ]
+    },
+    {
+      "slug": "okyann",
+      "front": "lihui-guaidao-okyann.png",
+      "back": "lihui-guaidao-okyann-02.png",
+      "size": [
+        1800,
+        1628
+      ]
+    },
+    {
+      "slug": "blitz",
+      "front": "lihui-guaidao-blitz.png",
+      "back": "lihui-guaidao-blitz-02.png",
+      "size": [
+        1800,
+        982
+      ]
+    },
+    {
+      "slug": "kotone",
+      "front": "PC079_01_01_04_01.png",
+      "back": "PC079_01_01_04_02.png",
+      "size": [
+        1399,
+        1800
+      ]
+    },
+    {
+      "slug": "messa",
+      "front": "lihui-guaidao-doctor.png",
+      "back": "lihui-guaidao-doctor-02.png",
+      "size": [
+        1720,
+        1800
+      ]
+    },
+    {
+      "slug": "key",
+      "front": "lihui-guaidao-kii.png",
+      "back": "lihui-guaidao-kii-02.png",
+      "size": [
+        1474,
+        1800
+      ]
+    },
+    {
+      "slug": "moko",
+      "front": "lihui-guaidao-kotomo.png",
+      "back": "lihui-guaidao-kotomo-02.png",
+      "size": [
+        1800,
+        1468
+      ]
+    },
+    {
+      "slug": "moko-seaside",
+      "front": "Texture-Renzhimoniactivity-kotomos01.png",
+      "back": "Texture-Renzhimoniactivity-kotomos02.png",
+      "size": [
+        1800,
+        1629
+      ]
+    },
+    {
+      "slug": "sepia",
+      "front": "lihui-guaidao-sepia.png",
+      "back": "lihui-guaidao-sepia-02.png",
+      "size": [
+        1709,
+        1800
+      ]
+    },
+    {
+      "slug": "noir",
+      "front": "Texture-Renzhimoniactivity-noir.png",
+      "back": "Texture-Renzhimoniactivity-noir-02.png",
+      "size": [
+        1800,
+        1368
+      ]
+    },
+    {
+      "slug": "riddle",
+      "front": "lihui-guaidao-riddle.png",
+      "back": "lihui-guaidao-riddle-02.png",
+      "size": [
+        1320,
+        1505
+      ]
+    },
+    {
+      "slug": "fuka",
+      "front": "lihui-guaidao-fuka.png",
+      "back": "lihui-guaidao-fuka-02.png",
+      "size": [
+        1787,
+        1800
+      ]
+    },
+    {
+      "slug": "navi",
+      "front": "lihui-guaidao-navi.png",
+      "back": "lihui-guaidao-navi-02.png",
+      "size": [
+        1191,
+        1658
+      ]
+    }
+  ],
+  "missing": [
+    "pinky",
+    "류지·댄싱 스타",
+    "아라가키",
+    "anri",
+    "아마다",
+    "chord-summer",
+    "crow",
+    "원더",
+    "berry-summer",
+    "koromaru"
+  ]
+}

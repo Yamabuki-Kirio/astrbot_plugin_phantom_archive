@@ -462,11 +462,12 @@
 </style>
 </head>
 <body>
-<main class="card{% if visual.has_hero_image %} has-hero{% endif %}{% if category == "角色列表" %} is-list{% endif %}">
+<main class="card{% if visual.has_hero_image %} has-hero{% endif %}{% if visual.persona_image %} has-persona{% endif %}{% if category == "角色列表" %} is-list{% endif %}">
   {% if card_background %}<div class="phantom-background" style="background-image:url('{{ card_background }}');"></div>{% endif %}
   {% if visual.has_hero_image %}
   <div class="hero-bg" style="background-image:url('{{ visual.background_image }}'); opacity:{{ visual.background_opacity }}; filter:blur({{ visual.background_blur }}px);"></div>
   <div class="hero-scrim"></div>
+  {% if visual.persona_image %}<div class="persona-figure"><img src="{{ visual.persona_image }}" alt="人格面具"></div>{% endif %}
   <div class="hero-figure{% if not visual.hero_transparent %} hero-figure--masked{% endif %}"><img class="hero-art{% if visual.hero_wide %} hero-art--wide{% endif %}" src="{{ visual.hero_image }}" style="opacity:{{ visual.hero_opacity }};" alt=""></div>
   <div class="hero-top"></div>
   {% endif %}

@@ -207,6 +207,7 @@ class PhantomArchivePlugin(Star):
         self._asset_resolver = asset_resolver.AssetResolver(
             None,
             show_character_art=self.visual_settings.show_character_art,
+            show_persona_art=self.visual_settings.show_persona_art,
             show_weapon_art=self.visual_settings.show_weapon_art,
         )
         self._avatar_provider: avatar_provider.AvatarProvider | None = None
@@ -309,6 +310,7 @@ class PhantomArchivePlugin(Star):
         self._asset_resolver = asset_resolver.AssetResolver(
             manifest if manifest.loaded else None,
             show_character_art=self.visual_settings.show_character_art,
+            show_persona_art=self.visual_settings.show_persona_art,
             show_weapon_art=self.visual_settings.show_weapon_art,
         )
         if not manifest.loaded:
@@ -806,6 +808,7 @@ class PhantomArchivePlugin(Star):
                 "dependencies": _dependency_versions(),
                 "requester_header": self.visual_settings.show_requester_header,
                 "character_art": self.visual_settings.show_character_art,
+                "persona_art": self.visual_settings.show_persona_art,
                 "weapon_art": self.visual_settings.show_weapon_art,
                 "avatar_source": self._avatar_source_chain(),
                 "avatar_proxy": self.avatar_settings.use_system_proxy,

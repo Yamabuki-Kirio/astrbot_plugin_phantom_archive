@@ -238,3 +238,33 @@ body { font-size: 17px; }
 .card:has(.fortune-heading) .foot { margin-top: 10px; }
 .card:has(.fortune-heading) .item-body { padding-top: 8px; padding-bottom: 10px; }
 .card:has(.fortune-heading) .section + .section { margin-top: 12px; }
+
+/* 两层分别 contain，保留完整透明边界；后景抬高、前景落地。 */
+.persona-figure {
+  position: absolute; pointer-events: none; z-index: 1;
+  left: 43%; right: 1%; top: 2%; bottom: 5%;
+}
+.persona-figure img {
+  width: 100%; height: 100%; object-fit: contain; object-position: center top;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,.4));
+}
+[data-background="phantom"] .has-persona .hero-figure {
+  width: 37%; top: 28%; right: 8%; bottom: 3%;
+}
+[data-background="reload_blue"] .persona-figure {
+  left: 46%; right: 0%; top: 2%; bottom: 3%;
+}
+[data-background="reload_blue"] .has-persona .hero-figure {
+  width: 34%; top: 29%; right: 7%; bottom: 3%;
+}
+[data-background="reload_blue"] .card.has-persona { padding-top: 246px; }
+[data-background="reload_blue"] .persona-figure img {
+  filter: drop-shadow(0 8px 12px rgba(0,40,85,.35));
+}
+[data-background="phantom_red"] .persona-figure {
+  left: 44%; right: 0%; top: 1%; bottom: 3%;
+}
+[data-background="phantom_red"] .has-persona .hero-figure {
+  width: 35%; top: 28%; right: 7%; bottom: 3%;
+}
+.card.is-list .persona-figure { display: none; }

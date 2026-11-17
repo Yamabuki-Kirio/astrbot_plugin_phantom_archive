@@ -30,6 +30,7 @@ MAX_BLUR = 40
 class VisualSettings:
     show_requester_header: bool = True
     show_character_art: bool = True
+    show_persona_art: bool = True
     show_weapon_art: bool = True
     background_opacity: float = DEFAULT_BACKGROUND_OPACITY
     hero_opacity: float = DEFAULT_HERO_OPACITY
@@ -72,6 +73,7 @@ class VisualSettings:
         return cls(
             show_requester_header=as_bool("show_requester_header", True),
             show_character_art=as_bool("show_character_art", True),
+            show_persona_art=as_bool("show_persona_art", True),
             show_weapon_art=as_bool("show_weapon_art", True),
             background_opacity=as_float(
                 "card_background_opacity", DEFAULT_BACKGROUND_OPACITY, MIN_OPACITY, 0.6
@@ -87,6 +89,7 @@ class VisualContext:
     requester_name: str = ""
     requester_avatar: str = ""
     hero_image: str = ""
+    persona_image: str = ""
     background_image: str = ""
     hero_kind: str = asset_resolver.HERO_NONE
     has_requester_avatar: bool = False
@@ -112,6 +115,7 @@ class VisualContext:
             "requester_avatar": self.requester_avatar,
             "has_requester_avatar": self.has_requester_avatar,
             "hero_image": self.hero_image,
+            "persona_image": self.persona_image,
             "background_image": self.background_image,
             "hero_kind": self.hero_kind,
             "has_hero_image": self.has_hero_image,
@@ -192,10 +196,19 @@ def build(
             logger.exception("解析武器缩略图失败，本次不显示缩略图")
             thumbs = {}
 
+    persona = ""
+    if (resolved is not None and resolved.hero_source == "character"
+            and settings.show_persona_art and settings.show_character_art):
+        try:
+            persona = resolver.persona_art(page.hero_key, page.owner_key) if page.hero_kind == asset_resolver.HERO_CHARACTER else resolver.persona_art(page.owner_key)
+        except Exception:
+            logger.exception("解析人格面具失败，本次保留人物立绘")
+
     return VisualContext(
         requester_name=name,
         requester_avatar=avatar,
         hero_image=hero,
+        persona_image=persona,
         background_image=background,
         hero_kind=kind,
         has_requester_avatar=bool(avatar),

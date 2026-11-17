@@ -1,5 +1,11 @@
 # 夜幕档案
 
+### 人格面具立绘（v0.8.7）
+
+配置项 **人格面具立绘**（`show_persona_art`，默认开启）会在展示人物立绘时，补充对应的人格面具后景。人物和人格面具为独立透明图层，黑黄、P3 蓝色、P5 红色背景分别适配尺寸与位置。关闭此开关后恢复原人物布局；关闭人物立绘时不会单独展示人格面具。
+
+人物与人格面具按原素材配对，缺少已确认配套素材的角色保留人物立绘。武器页展示真实武器图时不叠加人格面具；缺图回退到人物立绘时使用该人物的配套面具。直接发送的官方角色信息原图不经过卡片渲染。
+
 ### 三套背景与轮换
 
 v0.8.6 修复旧版 T2I 服务忽略视口尺寸时只截取左上角的问题：使用整页截图与显式完整画布范围，并校验返回图片比例。
@@ -29,7 +35,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.8.3-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.8.7-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

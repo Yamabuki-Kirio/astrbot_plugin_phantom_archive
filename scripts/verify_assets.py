@@ -154,6 +154,12 @@ def main() -> int:
             checker.error(f"角色 {key}: 条目不是对象")
             continue
         checker.check_entry(entry, f"角色 {key}")
+        persona = entry.get("persona")
+        if isinstance(persona, dict):
+            checker.check_entry(persona, f"角色 {key} 人格面具")
+            checker.check_file(persona.get("path") or "", f"角色 {key} 人格面具")
+            if persona.get("paired_front") != entry.get("source_file"):
+                checker.error(f"角色 {key}: 人格面具与人物来源不配套")
         if checker.check_file(entry.get("portrait") or "", f"角色 {key}"):
             char_with_portrait += 1
             if entry.get("source_status") in ("official", "community"):

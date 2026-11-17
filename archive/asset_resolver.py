@@ -63,10 +63,12 @@ class AssetResolver:
         *,
         show_character_art: bool = True,
         show_weapon_art: bool = True,
+        show_persona_art: bool = True,
     ):
         self.manifest = manifest
         self.show_character_art = show_character_art
         self.show_weapon_art = show_weapon_art
+        self.show_persona_art = show_persona_art
         self._fallback_cache: dict[str, str] = {}
 
     # ---- 基础 ----
@@ -140,6 +142,13 @@ class AssetResolver:
         portrait = self._uri(chosen.relative_path)
         background = self._uri(assets.background.relative_path) or portrait
         return portrait, background, bool(portrait)
+
+    def persona_art(self, *keys: str) -> str:
+        """人格面具只跟随真实人物立绘；缺图时不使用其他角色或占位图。"""
+        if not (self.show_character_art and self.show_persona_art):
+            return ""
+        assets = self._character_assets(tuple(key for key in keys if key))
+        return self._uri(assets.persona.relative_path) if assets else ""
 
     def _portrait_entry(self, keys: tuple[str, ...], variant: str):
         assets = self._character_assets(tuple(key for key in keys if key))

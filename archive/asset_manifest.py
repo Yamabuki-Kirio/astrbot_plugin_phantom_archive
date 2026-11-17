@@ -46,6 +46,7 @@ class CharacterAssets:
     # 同一角色的全部立绘（官网一个条目可能给好几张）。
     # 清单只写单张 portrait 时这里为空，由 all_portraits 兜底。
     portraits: tuple[AssetEntry, ...] = ()
+    persona: AssetEntry = field(default_factory=AssetEntry)
 
     @property
     def available(self) -> bool:
@@ -174,6 +175,7 @@ def parse_manifest(data: Any, root: str | Path) -> AssetManifest:
                 portrait=_entry(root_path, value, ("portrait", "image")),
                 background=_entry(root_path, value, ("background",)),
                 portraits=_entries(root_path, value.get("portraits")),
+                persona=_entry(root_path, value.get("persona"), ("path",)),
             )
 
     weapons: dict[str, AssetEntry] = {}
