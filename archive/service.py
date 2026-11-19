@@ -32,7 +32,7 @@ from .repository import (
     CONFLICT_SCOPE_WEAPON,
     ArchiveRepository,
 )
-from .search import search_characters
+from .search import search_characters, search_characters_exact
 
 DEFAULT_MAX_CHARS = 1200
 
@@ -253,6 +253,10 @@ class ArchiveService:
         with self._lock:
             characters = self._repo.list_characters()
         return tuple(sorted(characters, key=lambda item: item.source_key or ""))
+
+    def exact_character(self, term: str | None) -> SearchResult:
+        """Resolve an exact name or registered alias without fuzzy fallback."""
+        return search_characters_exact(self.list_characters(), term)
 
     def count_characters(self) -> int:
         with self._lock:

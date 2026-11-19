@@ -74,7 +74,7 @@ DATA_DIR = PLUGIN_DIR / "data"
 PLUGIN_NAME = "astrbot_plugin_phantom_archive"
 PLUGIN_AUTHOR = "Yamabuki-Kirio"
 PLUGIN_DESC = "夜幕档案：P5X 角色、武器、意识、养成、评价与配队只读查询"
-PLUGIN_VERSION = "0.8.6"
+PLUGIN_VERSION = "0.9.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME
@@ -398,7 +398,13 @@ class PhantomArchivePlugin(Star):
                 logger.warning("每日运势读取失败（%s），本次重新生成", type(exc).__name__)
                 record = None
             if record is not None:
-                return daily_models.DailyFortune.from_payload(record.payload, **identity_kwargs)
+                restored = daily_models.DailyFortune.from_payload(record.payload, **identity_kwargs)
+                if not restored.topic:
+                    topic, topic_advice = daily_engine.draw_topic(
+                        daily_engine.make_seed(daily_engine.TOPIC_SALT, date_key, platform, user_id)
+                    )
+                    restored = replace(restored, topic=topic, topic_advice=topic_advice)
+                return restored
 
         if self._service is None:
             raise daily_engine.FortuneUnavailableError("资料库不可用")
@@ -443,12 +449,29 @@ class PhantomArchivePlugin(Star):
             return fortune
         return daily_models.DailyFortune.from_payload(again.payload, **identity_kwargs)
 
-    async def _daily_fortune_result(self, event: AstrMessageEvent) -> list:
+    async def _daily_fortune_result(
+        self, event: AstrMessageEvent, character_term: str = ""
+    ) -> list:
         """接收指令 → 取身份 → 取/建结果 → 出图或出文字。"""
         if not self.daily_enabled:
             return [event.plain_result(DAILY_DISABLED_TEXT)]
         if self._service is None:
             return [event.plain_result(DAILY_UNAVAILABLE_TEXT)]
+
+        selected_character = None
+        term = (character_term or "").strip()
+        if term:
+            match = await asyncio.to_thread(self._service.exact_character, term)
+            if match.kind == "none":
+                return [
+                    event.plain_result(
+                        f"未找到角色「{term}」，请检查名称或形态写法（例如：双叶、sp素羽、周星驰、平野亚兰凛华）。"
+                    )
+                ]
+            if match.kind == "many":
+                names = "、".join(item.display_name for item in match.candidates[:6])
+                return [event.plain_result(f"「{term}」匹配到多个角色：{names}，请输入更准确的名称。")]
+            selected_character = daily_character_draw.from_character(match.character)
 
         try:
             requester = identity.from_event(event)
@@ -463,6 +486,8 @@ class PhantomArchivePlugin(Star):
                 user_id=requester.user_id,
                 display_name=requester.display_name,
             )
+            if selected_character is not None:
+                fortune = replace(fortune, character=selected_character)
         except daily_engine.FortuneUnavailableError as exc:
             logger.warning("每日运势不可用：%s", exc)
             return [event.plain_result(DAILY_UNAVAILABLE_TEXT)]
@@ -710,39 +735,46 @@ class PhantomArchivePlugin(Star):
     @filter.command("p5x每日运势")
     async def daily_fortune_command(self, event: AstrMessageEvent):
         """抽取今日角色与每日运势（同日同人结果固定）。"""
-        for result in await self._daily_fortune_result(event):
+        name = _extract_arg(event, "p5x每日运势")
+        for result in await self._daily_fortune_result(event, name):
             yield result
 
     @filter.command("p5x运势")
     async def daily_fortune_alias_command(self, event: AstrMessageEvent):
         """``/p5x每日运势`` 的别名。"""
-        for result in await self._daily_fortune_result(event):
+        name = _extract_arg(event, "p5x运势")
+        for result in await self._daily_fortune_result(event, name):
             yield result
 
     @filter.command("p5x今日运势")
     async def daily_today_command(self, event: AstrMessageEvent):
-        for result in await self._daily_fortune_result(event):
+        name = _extract_arg(event, "p5x今日运势")
+        for result in await self._daily_fortune_result(event, name):
             yield result
 
     @filter.command("今日运势")
     async def fortune_today_command(self, event: AstrMessageEvent):
-        for result in await self._daily_fortune_result(event):
+        name = _extract_arg(event, "今日运势")
+        for result in await self._daily_fortune_result(event, name):
             yield result
 
     @filter.command("每日运势")
     async def fortune_daily_command(self, event: AstrMessageEvent):
-        for result in await self._daily_fortune_result(event):
+        name = _extract_arg(event, "每日运势")
+        for result in await self._daily_fortune_result(event, name):
             yield result
 
     @filter.command("运势")
     async def fortune_command(self, event: AstrMessageEvent):
-        for result in await self._daily_fortune_result(event):
+        name = _extract_arg(event, "运势")
+        for result in await self._daily_fortune_result(event, name):
             yield result
 
     @filter.command("p5x今日角色")
     async def daily_character_command(self, event: AstrMessageEvent):
         """``/p5x每日运势`` 的别名。"""
-        for result in await self._daily_fortune_result(event):
+        name = _extract_arg(event, "p5x今日角色")
+        for result in await self._daily_fortune_result(event, name):
             yield result
 
     # ------------------------------------------------------------ 管理员指令

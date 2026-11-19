@@ -31,7 +31,25 @@ DEFAULT_TIMEZONE = "Asia/Shanghai"
 
 FORTUNE_SALT = "fortune"
 CHARACTER_SALT = "character"
+TOPIC_SALT = "topic"
 SEED_SEPARATOR = "|"
+
+TOPICS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("学业", ("把难点拆成一小步，先完成最关键的一题。", "先整理思路再开始，避免临时抱佛脚。")),
+    ("工作", ("优先处理最重要的一件事，别让琐事占满时间。", "沟通前先确认目标，合作会更顺畅。")),
+    ("财运", ("适合稳健规划，非必要消费先缓一缓。", "留意被忽略的小机会，也要核对支出。")),
+    ("社交", ("主动表达善意，清楚沟通比猜测更有效。", "给彼此一点空间，倾听会带来好回应。")),
+    ("恋爱", ("真诚说出感受，温柔的小行动胜过试探。", "先理解对方的节奏，再决定如何靠近。")),
+    ("健康", ("记得休息、补水并适度活动，照顾好自己。", "今天适合放慢一点，别忽视身体发出的信号。")),
+    ("创作", ("先留下一个粗略版本，灵感会在行动中出现。", "换个角度观察素材，尝试新的表达方式。")),
+    ("冒险", ("做好准备再出发，计划之外也保持弹性。", "可以尝试新路线，但记得确认边界与安全。")),
+)
+
+
+def draw_topic(seed: bytes) -> tuple[str, str]:
+    rng = random.Random(seed_int(seed))
+    topic, advice = TOPICS[rng.randrange(len(TOPICS))]
+    return topic, advice[rng.randrange(len(advice))]
 
 
 class FortuneUnavailableError(Exception):
@@ -138,6 +156,7 @@ def generate(
         user_id=user_id,
         characters=pool,
     )
+    topic, topic_advice = draw_topic(make_seed(TOPIC_SALT, date_key, platform_id, user_id))
     return DailyFortune(
         date_key=date_key,
         timezone=timezone,
@@ -146,6 +165,8 @@ def generate(
         display_name=display_name,
         character=chosen,
         tarot=card,
+        topic=topic,
+        topic_advice=topic_advice,
         ganzhi=ganzhi.day_ganzhi(day),
         stored=False,
     )
@@ -159,6 +180,7 @@ __all__ = [
     "character_seed",
     "date_key_of",
     "draw_fortune",
+    "draw_topic",
     "fortune_seed",
     "generate",
     "make_seed",

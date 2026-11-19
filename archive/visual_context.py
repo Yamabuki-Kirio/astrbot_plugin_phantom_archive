@@ -95,6 +95,8 @@ class VisualContext:
     has_requester_avatar: bool = False
     # 横构图立绘：模板改用 contain 贴底，避免 cover 把人物裁出画面
     hero_wide: bool = False
+    # 角色+武器等较宽立绘：放宽立绘容器，避免人物视觉偏小
+    hero_broad: bool = False
     # 立绘自带透明通道：不再叠 CSS 遮罩，否则会把人物左半身一起淡掉
     hero_transparent: bool = True
     has_hero_image: bool = False
@@ -120,6 +122,7 @@ class VisualContext:
             "hero_kind": self.hero_kind,
             "has_hero_image": self.has_hero_image,
             "hero_wide": self.hero_wide,
+            "hero_broad": self.hero_broad,
             "hero_transparent": self.hero_transparent,
             "background_opacity": round(self.background_opacity, 3),
             "hero_opacity": round(self.hero_opacity, 3),
@@ -214,6 +217,7 @@ def build(
         has_requester_avatar=bool(avatar),
         has_hero_image=bool(hero),
         hero_wide=bool(getattr(resolved, "hero_wide", False)) if resolved is not None else False,
+        hero_broad=bool(getattr(resolved, "hero_broad", False)) if resolved is not None else False,
         hero_transparent=(
             bool(getattr(resolved, "hero_transparent", True)) if resolved is not None else True
         ),

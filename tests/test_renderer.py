@@ -202,4 +202,4 @@ def test_help_message():
 def test_character_list_within_limit(service):
     text = service.character_list_message()
     assert len(text) <= service.max_chars
-    assert "当前收录 72 名角色" in text
+    assert "当前收录 73 名角色" in text

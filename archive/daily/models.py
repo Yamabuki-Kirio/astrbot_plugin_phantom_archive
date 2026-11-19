@@ -127,6 +127,8 @@ class DailyFortune:
     display_name: str = ""
     character: DailyCharacter = field(default_factory=DailyCharacter)
     tarot: TarotDraw = field(default_factory=TarotDraw)
+    topic: str = ""
+    topic_advice: str = ""
     ganzhi: str = ""
     stored: bool = False  # True = 这条是当天之前就已经存下来的
 
@@ -179,6 +181,8 @@ class DailyFortune:
         return {
             "character": self.character.to_dict(),
             "tarot": self.tarot.to_dict(),
+            "topic": self.topic,
+            "topic_advice": self.topic_advice,
             "ganzhi": self.ganzhi,
         }
 
@@ -194,6 +198,8 @@ class DailyFortune:
         return cls(
             character=DailyCharacter.from_dict(data.get("character")),
             tarot=TarotDraw.from_dict(data.get("tarot")),
+            topic=_text(data.get("topic")),
+            topic_advice=_text(data.get("topic_advice")),
             ganzhi=_text(data.get("ganzhi")),
             stored=True,
             **identity,

@@ -133,7 +133,7 @@ def test_page_structure():
 
 def test_page_has_tarot_and_advice_sections():
     headings = [section.heading for section in presenter.build_sections(make_fortune())]
-    assert headings == ["塔罗指引", "综合建议"]
+    assert headings == ["塔罗指引", "今日课题", "综合建议"]
 
 
 def test_page_disclaimer_is_daily_specific():

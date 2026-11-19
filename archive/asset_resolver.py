@@ -50,6 +50,8 @@ class ResolvedArt:
     has_real_asset: bool = False
     # 横构图（同一角色的动作大字图）：模板要用 contain 贴底，cover 会把人挤出去
     hero_wide: bool = False
+    # 角色+武器或宽画幅立绘（宽高比 >= 0.82）：需要更宽的容器避免人物主体被压小
+    hero_broad: bool = False
     # 立绘自带透明通道时不需要 CSS 遮罩融边，加了反而会把人物淡掉
     hero_transparent: bool = True
 
@@ -85,6 +87,18 @@ class AssetResolver:
     def _wide(self, relative: str) -> bool:
         """这张素材是不是横构图（决定模板用 cover 还是 contain）。"""
         return bool(relative) and image_codec.is_wide_image(self.root / relative)
+
+    def _broad(self, relative: str) -> bool:
+        """角色+武器等较宽立绘（宽高比 >= 0.82），需要更宽的展示框。"""
+        if not relative:
+            return False
+        try:
+            from PIL import Image as _PILImage
+            with _PILImage.open(self.root / relative) as img:
+                width, height = img.size
+        except Exception:
+            return False
+        return height > 0 and (width / height) >= 0.82
 
     def _transparent(self, relative: str) -> bool:
         """素材是否自带透明通道（决定模板要不要再加 CSS 遮罩融边）。"""
@@ -170,6 +184,7 @@ class AssetResolver:
                 hero_source="character",
                 has_real_asset=real,
                 hero_wide=self._wide(entry.relative_path) if entry else False,
+                hero_broad=self._broad(entry.relative_path) if entry else False,
                 hero_transparent=self._transparent(entry.relative_path) if entry else False,
             )
         return ResolvedArt(
@@ -220,6 +235,7 @@ class AssetResolver:
                 hero_source="weapon",
                 has_real_asset=True,
                 hero_wide=self._wide(entry.relative_path) if entry else False,
+                hero_broad=self._broad(entry.relative_path) if entry else False,
                 hero_transparent=self._transparent(entry.relative_path) if entry else False,
             )
         # 武器缺图 → 退回角色立绘

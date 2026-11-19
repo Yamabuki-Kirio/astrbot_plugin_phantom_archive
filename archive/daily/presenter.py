@@ -78,6 +78,10 @@ def render_text(fortune) -> str:
         lines.append("")
         lines.append(f"综合建议：{fortune.advice}")
 
+    if fortune.topic:
+        lines.append("")
+        lines.append(f"今日课题（{fortune.topic}）：{fortune.topic_advice}")
+
     lines.append("")
     lines.append(ENTERTAINMENT_NOTE)
     return "\n".join(lines)
@@ -108,9 +112,20 @@ def _advice_section(fortune) -> cards.Section:
     )
 
 
+def _topic_section(fortune) -> cards.Section:
+    return cards.Section(
+        heading="今日课题",
+        blocks=(cards.Block(kind="para", lines=(f"{fortune.topic}｜{fortune.topic_advice}",)),),
+    )
+
+
 def build_sections(fortune) -> tuple[cards.Section, ...]:
-    """两块：塔罗（评级 + 宜忌）与综合建议（结合牌义展开）。"""
-    return (_tarot_section(fortune), _advice_section(fortune))
+    """三块：塔罗指引、今日课题与综合建议。"""
+    sections = [_tarot_section(fortune)]
+    if fortune.topic:
+        sections.append(_topic_section(fortune))
+    sections.append(_advice_section(fortune))
+    return tuple(sections)
 
 
 def build_page(fortune) -> cards.CardPage:

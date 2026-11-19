@@ -1,4 +1,4 @@
-"""72 名角色全量冒烟：一次跑完三条指令，检查长度、声明、冲突准确性（§15）。"""
+"""73 名角色全量冒烟：一次跑完三条指令，检查长度、声明、冲突准确性（§15）。"""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def characters(repository):
 
 
 def test_character_count(characters):
-    assert len(characters) == 72
+    assert len(characters) == 73
 
 
 def test_all_characters_render(service, characters):
@@ -47,7 +47,7 @@ def test_characters_with_skills_render(service, characters, repository):
 
 def test_characters_with_weapons_render(service, characters, repository):
     with_weapons = [c for c in characters if repository.weapons(c.source_key)]
-    assert len(with_weapons) == 69
+    assert len(with_weapons) == 70
     for character in with_weapons:
         text = service.weapons_message(character.source_key)
         assert "技能名称" in text or notices.MISSING_WEAPON_SKILL_NAME in text

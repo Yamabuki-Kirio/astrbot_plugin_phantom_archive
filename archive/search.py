@@ -186,3 +186,22 @@ def search_characters(
             return _result(matches, normalized, limit)
 
     return SearchResult(character=None, candidates=(), term=normalized)
+
+
+def search_characters_exact(
+    characters: tuple[Character, ...], term: str | None
+) -> SearchResult:
+    """严格查找已登记的角色名、代号或别名，不尝试包含词和错字猜测。"""
+    normalized = normalize_term(term)
+    if not normalized:
+        return SearchResult(character=None, candidates=(), term="")
+    term_key = normalize_key(normalized)
+    matches = _characters_by_normalized_exact(characters, term_key)
+    if not matches:
+        matches = _characters_by_alias(characters, term_key)
+    return _result(matches, normalized, MAX_CANDIDATES) if matches else SearchResult(
+        character=None, candidates=(), term=normalized
+    )
+
+
+__all__ = ["search_characters", "search_characters_exact", "normalize_key", "normalize_term"]

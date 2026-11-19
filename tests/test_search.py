@@ -103,3 +103,14 @@ def test_normalize_term():
 def test_normalize_key():
     assert normalize_key(" 雨宫莲・星舞 ") == "雨宫莲星舞"
     assert normalize_key("JOKER-Starlight") == "jokerstarlight"
+def test_exact_character_distinguishes_base_and_sp_forms(service):
+    assert service.exact_character("双叶").character.name_zh == "佐仓双叶"
+    assert service.exact_character("素羽").character.name_zh == "新井素羽"
+    assert service.exact_character("sp素羽").character.name_zh == "新井素羽·晴光"
+    assert service.exact_character("素羽SP").character.name_zh == "新井素羽·晴光"
+    assert service.exact_character("夏日素羽").character.name_zh == "新井素羽·夏日"
+    assert service.exact_character("周星驰").character.name_zh == "雨宫莲·星舞"
+    assert service.exact_character("雨宫莲").character.name_zh == "雨宫莲"
+    assert service.exact_character("平野亚兰").character.name_zh == "平野亚兰"
+    assert service.exact_character("sp平野亚兰").character.name_zh == "平野亚兰凛华"
+    assert service.exact_character("不存在的角色").kind == "none"

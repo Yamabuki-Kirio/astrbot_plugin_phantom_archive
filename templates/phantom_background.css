@@ -251,11 +251,17 @@ body { font-size: 17px; }
 [data-background="phantom"] .has-persona .hero-figure {
   width: 37%; top: 28%; right: 8%; bottom: 3%;
 }
+[data-background="phantom"] .has-persona .hero-figure--broad {
+  width: 49%; top: 18%; right: 2%; bottom: 1%;
+}
 [data-background="reload_blue"] .persona-figure {
   left: 46%; right: 0%; top: 2%; bottom: 3%;
 }
 [data-background="reload_blue"] .has-persona .hero-figure {
   width: 34%; top: 29%; right: 7%; bottom: 3%;
+}
+[data-background="reload_blue"] .has-persona .hero-figure--broad {
+  width: 47%; top: 16%; right: 2%; bottom: 1%;
 }
 [data-background="reload_blue"] .card.has-persona { padding-top: 246px; }
 [data-background="reload_blue"] .persona-figure img {
@@ -266,6 +272,9 @@ body { font-size: 17px; }
 }
 [data-background="phantom_red"] .has-persona .hero-figure {
   width: 35%; top: 28%; right: 7%; bottom: 3%;
+}
+[data-background="phantom_red"] .has-persona .hero-figure--broad {
+  width: 48%; top: 16%; right: 2%; bottom: 1%;
 }
 .card.is-list .persona-figure { display: none; }
 
@@ -303,3 +312,24 @@ body { font-size: 17px; }
 .card:has(.fortune-heading) .para p { line-height: 1.4; }
 .card:has(.fortune-heading) .requester { margin-bottom: 6px; }
 .card:has(.fortune-heading) .requester-text { display: flex; align-items: center; gap: 14px; }
+
+/* 每日运势新增「今日课题」模块后，针对三套背景微调垂直节奏，防止底边溢出。 */
+[data-background="phantom"] .card:has(.fortune-heading) .para { padding: 10px 14px; }
+[data-background="phantom_red"] .card:has(.fortune-heading) .para { padding: 9px 14px; }
+[data-background="phantom_red"] .card:has(.fortune-heading) .item-body { padding: 8px 14px 9px; }
+[data-background="phantom_red"] .card:has(.fortune-heading) .fortune-grade { min-height: 64px; font-size: 38px; padding: 6px; }
+[data-background="phantom_red"] .card:has(.fortune-heading) .fortune-card-name { font-size: 26px; padding: 8px 10px 8px 0; }
+[data-background="phantom_red"] .card:has(.fortune-heading) .item-body p,
+[data-background="phantom_red"] .card:has(.fortune-heading) .para p { font-size: 21px; line-height: 1.38; }
+[data-background="reload_blue"] .card:has(.fortune-heading) { padding-top: 216px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .title { font-size: 44px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .subtitle { font-size: 20px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .lead { font-size: 19px; margin-bottom: 3px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .section-heading { font-size: 20px; margin-bottom: 3px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .section + .section { margin-top: 6px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .fortune-grade { min-height: 56px; font-size: 36px; padding: 6px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .fortune-card-name { font-size: 25px; padding: 7px 10px 7px 0; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .item-body { padding: 6px 12px 7px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .para { padding: 8px 12px; }
+[data-background="reload_blue"] .card:has(.fortune-heading) .item-body p,
+[data-background="reload_blue"] .card:has(.fortune-heading) .para p { font-size: 20px; line-height: 1.34; }

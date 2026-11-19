@@ -27,13 +27,13 @@ def main():
     resolver = AssetResolver(manifest)
     service = ArchiveService(ROOT / "data/p5x_zh.sqlite3", rows_per_page=7, max_pages=8)
     cases = []
-    for slug, kind in [("joker", "character"), ("panther", "skills"), ("mont", "guide"), ("j-c", "character"), ("navi", "daily"), ("cattle", "daily")]:
+    for slug, kind in [("anri-rinka", "daily"), ("joker", "character"), ("panther", "skills"), ("mont", "guide"), ("j-c", "character"), ("navi", "daily"), ("cattle", "daily")]:
         with sqlite3.connect(service.database_path.as_uri() + "?mode=ro", uri=True) as db:
             row = db.execute("SELECT source_key, slug, name_zh, codename_zh, element_zh, position_zh, rarity FROM zh_characters WHERE slug=?", (slug,)).fetchone()
         if not row:
             raise ValueError(slug)
         if kind == "daily":
-            fortune = models.DailyFortune(date_key="2026-11-17", character=models.DailyCharacter(*row), tarot=tarot.draw(random.Random(42)))
+            fortune = models.DailyFortune(date_key="2026-11-19", character=models.DailyCharacter(*row), tarot=tarot.draw(random.Random(42)))
             pages = (presenter.build_page(fortune),)
             command = "/p5x每日运势"
         else:

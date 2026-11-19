@@ -1009,6 +1009,30 @@
       "form_inherited": false,
       "processing": "native alpha; trim transparent margins; fit 720x960; WebP q92 alpha100"
     },
+    "anri-rinka": {
+      "portrait": "characters/anri-rinka/portrait.png",
+      "portraits": [
+        {
+          "path": "characters/anri-rinka/portrait.png",
+          "source_status": "community"
+        }
+      ],
+      "background": "characters/anri-rinka/portrait.png",
+      "persona": {
+        "path": "characters/anri-rinka/persona.png",
+        "source_status": "community",
+        "source_file": "codex-clipboard-1838012f-1dd8-470a-828f-59b582454fb4.png",
+        "source_sha256": "f6459183634d0b7fd18b9d7eafcb15772fcff9a30562a3fd3b46865c2a369bb5",
+        "paired_front": "official_profiles/anri-rinka/02.jpg",
+        "processing": "AI-assisted faithful super-resolution; transparent RGBA; complete bounds preserved"
+      },
+      "source_status": "community",
+      "matched_by": "official-profile-extraction",
+      "form_inherited": false,
+      "source_file": "official_profiles/anri-rinka/02.jpg",
+      "source_sha256": "1345fe9b6db7720e0bc5d3134a7c76df5d9f281afc4a8bc384ee642e446cfe9d",
+      "processing": "AI-assisted high-resolution extraction from official profile image; transparent RGBA; complete character bounds preserved"
+    },
     "anri": {
       "portrait": "characters/anri/1.webp",
       "portraits": [
