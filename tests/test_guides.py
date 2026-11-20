@@ -57,6 +57,22 @@ def test_empty_and_unknown_terms(service):
     assert "没有找到" in service.guide_message("不存在角色XYZ", "ritual")
 
 
+def test_anri_rinka_complete_kit(service, repository):
+    result = service.exact_character("平野亚兰凛华")
+    assert result.character is not None
+    skills = repository.skills(result.character.source_key)
+    assert {skill.name_zh for skill in skills} >= {"圣邪镜华", "救赎镜域", "冥天流光", "凝望光与暗"}
+    assert "暗空流光" not in {skill.name_zh for skill in skills}
+
+    weapons = repository.weapons(result.character.source_key)
+    assert [weapon.name_zh for weapon in weapons] == ["千镜的余烬"]
+    assert weapons[0].attack == 760
+
+    assert "我所描绘的" in service.guide_message("sp平野亚兰", "ritual")
+    assert "2+1" in service.guide_message("平野亚兰凛华", "operation")
+    assert "3>1>4>2" in service.guide_message("平野亚兰凛华", "setting")
+
+
 def test_all_characters_all_guides_smoke(service, repository):
     guide_types = ("review", "setting", "operation", "party", "ritual", "innate")
     for character in repository.list_characters():

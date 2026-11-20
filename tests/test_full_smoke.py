@@ -38,7 +38,7 @@ def test_all_characters_render(service, characters):
 
 def test_characters_with_skills_render(service, characters, repository):
     with_skills = [c for c in characters if repository.skills(c.source_key)]
-    assert len(with_skills) == 68
+    assert len(with_skills) == 69
     for character in with_skills:
         text = service.skills_message(character.source_key)
         assert "■" not in text  # 技能页不应出现分区符号

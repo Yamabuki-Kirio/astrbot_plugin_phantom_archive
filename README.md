@@ -1,5 +1,7 @@
 # 夜幕档案
 
+v0.9.1：补齐五星 SP 角色“平野亚兰凛华”的技能倍率、被动、意识、专武属性、加点顺序与操作循环；专武名称修正为“千镜的余烬”。普通四星平野亚兰保持不变。
+
 v0.9.0：每日运势支持指定角色与严格形态别名，例如 `运势 双叶`、`p5x运势 sp素羽`、`p5x运势 周星驰`；新增“今日课题”抽取模块，并完成三套背景及角色+武器宽构图立绘的尺寸适配。
 
 v0.8.9：五星 SP 角色“平野亚兰凛华”加入角色资料与每日运势卡池，配套人物立绘和人格面具立绘；原版四星平野亚兰保持不变。
@@ -41,7 +43,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.9.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.9.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 
