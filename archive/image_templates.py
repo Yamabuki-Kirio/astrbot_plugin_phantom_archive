@@ -28,6 +28,8 @@ TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
 # 它们共用同一套版式，只靠标题区分。
 CATEGORY_TEMPLATES: dict[str, str] = {
     "角色": "character.html",
+    "角色一图流": "yituliou_card.html",
+    "数据附表": "yituliou_table.html",
     "技能": "skill.html",
     "武器": "weapon.html",
     "角色列表": "character_list.html",
@@ -158,6 +160,33 @@ def build_context(
     if theme not in THEMES:
         theme = THEME_DARK
     visual_dict = (visual or visual_context.EMPTY_VISUAL).as_template_dict()
+    bg_preset = normalize_background(visual_dict["background_preset"])
+    canvas_width, canvas_height = BACKGROUND_SIZES[bg_preset]
+
+    yituliou_dict = None
+    if page.yituliou is not None:
+        yituliou_dict = (
+            page.yituliou.as_template_dict()
+            if hasattr(page.yituliou, "as_template_dict")
+            else page.yituliou
+        )
+        if isinstance(yituliou_dict, dict) and yituliou_dict.get("is_compact"):
+            canvas_width, canvas_height = 1480, 560
+        else:
+            canvas_width, canvas_height = 1640, 1080
+
+    yituliou_table_dict = None
+    if page.yituliou_table is not None:
+        yituliou_table_dict = (
+            page.yituliou_table.as_template_dict()
+            if hasattr(page.yituliou_table, "as_template_dict")
+            else page.yituliou_table
+        )
+        row_count = len(yituliou_table_dict.get("rows", [])) if isinstance(yituliou_table_dict, dict) else 0
+        col_count = len(yituliou_table_dict.get("columns", [])) if isinstance(yituliou_table_dict, dict) else 0
+        canvas_width = 1880 if col_count >= 10 else 1520
+        canvas_height = min(3800, max(620, 240 + row_count * 46))
+
     return {
         "theme": theme,
         "category": page.category,
@@ -176,10 +205,12 @@ def build_context(
         "translation_label": page.translation_label,
         "disclaimer_lines": page.disclaimer_lines or notices.DISCLAIMER_LINES,
         "visual": visual_dict,
-        "background_preset": normalize_background(visual_dict["background_preset"]),
-        "canvas_width": BACKGROUND_SIZES[normalize_background(visual_dict["background_preset"])][0],
-        "canvas_height": BACKGROUND_SIZES[normalize_background(visual_dict["background_preset"])][1],
-        "card_background": card_background_uri(visual_dict["background_preset"]),
+        "background_preset": bg_preset,
+        "canvas_width": canvas_width,
+        "canvas_height": canvas_height,
+        "card_background": card_background_uri(bg_preset),
+        "yituliou": yituliou_dict,
+        "yituliou_table": yituliou_table_dict,
     }
 
 

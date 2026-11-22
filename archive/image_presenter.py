@@ -18,6 +18,8 @@ RITUAL_DESC_LIMIT = 230
 REVIEW_DESC_LIMIT = 420
 
 CATEGORY_CHARACTER = "角色"
+CATEGORY_YITULIOU = "角色一图流"
+CATEGORY_TABLE = "数据附表"
 CATEGORY_SKILL = "技能"
 CATEGORY_WEAPON = "武器"
 CATEGORY_LIST = "角色列表"
@@ -356,3 +358,47 @@ def character_list_pages(
         hero_kind=HERO_ARCHIVE,
     )
     return _finish(pages, tuple(c.translation_status for c in characters), False, None)
+
+
+# ------------------------------------------------------------------ 一图流单卡 / 附表
+
+
+def yituliou_character_pages(entry) -> tuple[cards.CardPage, ...]:
+    """角色一图流：固定只输出 1 张完整信息卡片。"""
+    subtitle = renderer.join_meta(
+        [
+            entry.role or None,
+            "/".join(entry.elements) if entry.elements else None,
+            entry.obtain or None,
+        ]
+    )
+    page = cards.CardPage(
+        category=CATEGORY_YITULIOU,
+        title=entry.display_title,
+        subtitle=subtitle,
+        page_index=1,
+        page_total=1,
+        show_footer=True,
+        hero_kind=HERO_CHARACTER,
+        hero_key=entry.slug,
+        owner_key=entry.slug,
+        source_label=f"数据来源：{entry.author} 一图流攻略",
+        yituliou=entry,
+    )
+    return (page,)
+
+
+def yituliou_table_pages(table) -> tuple[cards.CardPage, ...]:
+    """一图流附表：单张完整数据表卡片。"""
+    page = cards.CardPage(
+        category=CATEGORY_TABLE,
+        title=table.title,
+        subtitle=table.subtitle,
+        page_index=1,
+        page_total=1,
+        show_footer=True,
+        hero_kind=HERO_ARCHIVE,
+        source_label=f"数据来源：{table.author} 一图流攻略",
+        yituliou_table=table,
+    )
+    return (page,)

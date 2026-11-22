@@ -1,5 +1,11 @@
 # 夜幕档案
 
+v0.10.0：接入作者「强效召唤」B 站合集专栏《磨练欲望：30S就能看懂的一图流攻略》结构化数据源（50 条角色一图流、覆盖 48 名角色含双子 3 种模式与常驻合集，以及 6 张全角色对比附表）。
+- `/p5x角色 <角色名>` 命中一图流时**固定只输出 1 张完整信息卡片**（不再分页），适配黑黄 / P3 蓝 / P5 红三套背景及透明人物+人格面具立绘；双子支持 `/p5x角色 双子反抗`、`双子救援`、`双子优越`。
+- `/p5x评价`、`/p5x养成`、`/p5x操作`、`/p5x配队` 在与原库数据重复时以一图流为准，未收录角色自动回退原数据库。
+- 新增附表查询指令：`/p5x倍率`（全角色输出定位倍率梯度表）、`/p5x辅助榜`（常见辅助提升榜单）、`/p5x榜单` / `/p5x附表`（查看全部 6 张附表），均支持无斜杠触发。
+- 补充常用社区昵称别名（`双子`、`贼头`、`星舞杏`、`水美波`、`风花`、`美鹤`、`小学生`、`初音` 等）。
+
 v0.9.1：补齐五星 SP 角色“平野亚兰凛华”的技能倍率、被动、意识、专武属性、加点顺序与操作循环；专武名称修正为“千镜的余烬”。普通四星平野亚兰保持不变。
 
 v0.9.0：每日运势支持指定角色与严格形态别名，例如 `运势 双叶`、`p5x运势 sp素羽`、`p5x运势 周星驰`；新增“今日课题”抽取模块，并完成三套背景及角色+武器宽构图立绘的尺寸适配。
@@ -43,7 +49,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.9.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.10.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 
@@ -378,6 +384,7 @@ main.py        AstrBot指令入口
 - [AstrBot](https://github.com/AstrBotDevs/AstrBot)
 - [astrbot_plugin_cyber_divination](https://github.com/ruoyuxian20-sys/astrbot_plugin_cyber_divination)：塔罗与干支数据基础
 - [Lufel](https://lufel.net/)：P5X社区资料与武器图片来源
+- **强效召唤**（B 站专栏《磨练欲望：30S就能看懂的一图流攻略》）：角色一图流与全角色倍率/辅助附表数据来源
 - 《女神异闻录：夜幕魅影》国服官网：角色立绘来源
 
 ## 使用说明

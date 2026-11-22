@@ -17,7 +17,7 @@ import threading
 from dataclasses import dataclass, replace
 from pathlib import Path
 
-from . import cards, image_presenter, notices, recommendation, renderer
+from . import cards, image_presenter, notices, recommendation, renderer, yituliou
 from .database import (
     ArchiveDatabase,
     ArchiveError,
@@ -92,6 +92,7 @@ class ArchiveService:
         self._lock = threading.Lock()
         self._db = ArchiveDatabase(self.database_path)
         self._repo = ArchiveRepository(self._db)
+        self._yituliou = yituliou.load_repository()
 
     # ---- 构造 ----
 
@@ -159,17 +160,84 @@ class ArchiveService:
 
     # ---- 对外查询：结构化结果 ----
 
-    def character_outcome(self, term: str | None) -> QueryOutcome:
+    def _locate_yituliou_mode(self, term: str) -> tuple[yituliou.YituliouEntry, ...]:
+        """仅当输入显式包含模式后缀（如「双子反抗」「J&C救援」）时直接命中一图流模式。"""
+        base, mode_hint = yituliou._extract_mode_hint(term)
+        if not mode_hint:
+            return ()
+        direct = self._yituliou.search(term)
+        if direct:
+            return direct
+        result = search_characters(self._repo, base)
+        if result.kind == "one" and result.character and result.character.slug:
+            entry = self._yituliou.find_by_slug(result.character.slug, mode=mode_hint)
+            if entry is not None:
+                return (entry,)
+        return ()
+
+    def character_outcome(self, term: str | None, *, prefer_yituliou: bool = True) -> QueryOutcome:
         with self._lock:
-            located = self._locate(term, "/p5x角色")
+            normalized = (term or "").strip()
+            if not normalized:
+                return _error(renderer.render_usage("/p5x角色", "汐见琴音"), "usage")
+
+            if prefer_yituliou:
+                mode_matches = self._locate_yituliou_mode(normalized)
+                if len(mode_matches) == 1:
+                    entry = mode_matches[0]
+                    text = yituliou.render_yituliou_text(entry, self.max_chars)
+                    pages = image_presenter.yituliou_character_pages(entry)
+                    return QueryOutcome(ok=True, text=text, pages=pages)
+
+            located = self._locate(normalized, "/p5x角色")
             if isinstance(located, QueryOutcome):
                 return located
+
+            character = located[0].character
+            if prefer_yituliou:
+                slug = (character.slug or "").strip()
+                y_matches = self._yituliou.find_all_by_slug(slug) if slug else ()
+                if len(y_matches) == 1:
+                    entry = y_matches[0]
+                    text = yituliou.render_yituliou_text(entry, self.max_chars)
+                    pages = image_presenter.yituliou_character_pages(entry)
+                    return QueryOutcome(ok=True, text=text, pages=pages)
+                if len(y_matches) > 1:
+                    lines = [f"{character.display_name}收录了 {len(y_matches)} 种一图流模式，请指定模式查询："]
+                    for idx, item in enumerate(y_matches, start=1):
+                        short_mode = item.mode.replace("模式", "")
+                        lines.append(f"{idx}. /p5x角色 {character.display_name}{short_mode}（或 /p5x角色 双子{short_mode}）")
+                    return _error("\n".join(lines), "ambiguous")
+
             profile = self._with_recommendation(
-                self._profile(located[0].character, CONFLICT_SCOPE_CHARACTER)
+                self._profile(character, CONFLICT_SCOPE_CHARACTER)
             )
             text = renderer.render_character(profile, self.max_chars)
             pages = self._paginate(image_presenter.character_pages, profile)
             return QueryOutcome(ok=True, text=text, pages=tuple(pages))
+
+    def table_outcome(self, term: str | None = None) -> QueryOutcome:
+        """查询一图流附表（留空列出全部 6 张附表）。"""
+        with self._lock:
+            normalized = (term or "").strip()
+            tables = self._yituliou.tables
+            if not normalized:
+                return _error(yituliou.render_table_list_text(tables), "usage")
+            table = None
+            if normalized.isdigit():
+                idx = int(normalized) - 1
+                if 0 <= idx < len(tables):
+                    table = tables[idx]
+            if table is None:
+                table = self._yituliou.find_table(normalized)
+            if table is None:
+                return _error(
+                    f"未找到附表“{normalized}”。\n\n" + yituliou.render_table_list_text(tables),
+                    "not_found",
+                )
+            text = yituliou.render_table_text(table)
+            pages = image_presenter.yituliou_table_pages(table)
+            return QueryOutcome(ok=True, text=text, pages=pages)
 
     def skills_outcome(self, term: str | None) -> QueryOutcome:
         with self._lock:
@@ -200,11 +268,58 @@ class ArchiveService:
             pages = self._paginate(image_presenter.character_list_pages, characters)
             return QueryOutcome(ok=True, text=text, pages=tuple(pages))
 
-    def guide_outcome(self, term: str | None, guide_type: str) -> QueryOutcome:
+    def guide_outcome(
+        self, term: str | None, guide_type: str, *, prefer_yituliou: bool = True
+    ) -> QueryOutcome:
         if guide_type not in GUIDE_COMMANDS:
             raise ValueError(f"不支持的攻略类型：{guide_type}")
         with self._lock:
-            located = self._locate(term, GUIDE_COMMANDS[guide_type])
+            normalized = (term or "").strip()
+            if not normalized:
+                return _error(renderer.render_usage(GUIDE_COMMANDS[guide_type], "汐见琴音"), "usage")
+
+            if prefer_yituliou and guide_type in ("review", "setting", "operation", "party"):
+                y_entry = None
+                mode_matches = self._locate_yituliou_mode(normalized)
+                if len(mode_matches) == 1:
+                    y_entry = mode_matches[0]
+                else:
+                    located_probe = self._locate(normalized, GUIDE_COMMANDS[guide_type])
+                    if isinstance(located_probe, QueryOutcome):
+                        return located_probe
+                    slug = (located_probe[0].character.slug or "").strip()
+                    y_matches = self._yituliou.find_all_by_slug(slug) if slug else ()
+                    if len(y_matches) == 1:
+                        y_entry = y_matches[0]
+                if y_entry is not None:
+                    raw_sections = yituliou.yituliou_guide_sections(y_entry, guide_type)
+                    if raw_sections:
+                        guide_title = renderer.GUIDE_TITLES.get(guide_type, guide_type)
+                        text = yituliou.render_yituliou_guide_text(y_entry, guide_title, raw_sections)
+                        card_sections = tuple(
+                            cards.Section(
+                                heading=heading,
+                                blocks=tuple(cards.classify_block([line]) for line in body),
+                            )
+                            for heading, body in raw_sections
+                        )
+                        subtitle = renderer.join_meta(
+                            [y_entry.role or None, "/".join(y_entry.elements) if y_entry.elements else None]
+                        )
+                        pages = cards.paginate(
+                            guide_title,
+                            y_entry.display_title,
+                            card_sections,
+                            subtitle=subtitle,
+                            rows_per_page=self.rows_per_page,
+                            max_pages=self.max_pages,
+                            hero_kind=image_presenter.HERO_CHARACTER,
+                            hero_key=y_entry.slug,
+                            owner_key=y_entry.slug,
+                        )
+                        return QueryOutcome(ok=True, text=text, pages=tuple(pages))
+
+            located = self._locate(normalized, GUIDE_COMMANDS[guide_type])
             if isinstance(located, QueryOutcome):
                 return located
             profile = self._repo.build_guide_profile(located[0].character, (guide_type,))

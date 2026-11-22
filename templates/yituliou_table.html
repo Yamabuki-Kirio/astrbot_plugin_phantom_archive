@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="{{ theme }}" data-background="{{ background_preset }}" data-canvas-width="{{ canvas_width }}" data-canvas-height="{{ canvas_height }}" style="--canvas-width:{{ canvas_width }}px;--canvas-height:{{ canvas_height }}px;">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width={{ canvas_width }}, height={{ canvas_height }}, initial-scale=1">
+<title>{{ title }}</title>
+<style>
+  :root {
+    --bg: #1c1c1e;
+    --text: #f7f7ef;
+    --text-2: #deded6;
+    --text-3: #b0b0a6;
+    --accent: #f7f59b;
+    --accent-text: #181818;
+    --panel: rgba(20, 20, 22, 0.88);
+    --panel-line: rgba(255, 255, 235, 0.14);
+    --row-alt: rgba(255, 255, 235, 0.045);
+    --head-bg: rgba(247, 245, 155, 0.16);
+    --scrim: rgba(16, 16, 18, 0.56);
+  }
+  [data-background="reload_blue"] {
+    --bg: #d9f1ff;
+    --text: #082c50;
+    --text-2: #194468;
+    --text-3: #436c8a;
+    --accent: #095ab1;
+    --accent-text: #ffffff;
+    --panel: rgba(244, 252, 255, 0.92);
+    --panel-line: rgba(8, 44, 80, 0.16);
+    --row-alt: rgba(9, 90, 177, 0.05);
+    --head-bg: rgba(9, 90, 177, 0.14);
+    --scrim: rgba(210, 240, 255, 0.48);
+  }
+  [data-background="phantom_red"] {
+    --bg: #24040a;
+    --text: #fff8f4;
+    --text-2: #fce3dd;
+    --text-3: #d9b2aa;
+    --accent: #ff4d5a;
+    --accent-text: #ffffff;
+    --panel: rgba(34, 4, 10, 0.88);
+    --panel-line: rgba(255, 224, 216, 0.22);
+    --row-alt: rgba(255, 232, 226, 0.05);
+    --head-bg: rgba(255, 77, 90, 0.22);
+    --scrim: rgba(26, 2, 7, 0.56);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: var(--canvas-width);
+    height: var(--canvas-height);
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Noto Sans SC",
+                 "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  .sheet {
+    position: relative;
+    width: var(--canvas-width);
+    height: var(--canvas-height);
+    padding: 20px 26px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    isolation: isolate;
+  }
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+  }
+  .bg-scrim { position: absolute; inset: 0; z-index: 1; background: var(--scrim); }
+  .header, .table-wrap, .footer {
+    position: relative;
+    z-index: 2;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 12px;
+  }
+  .header {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .header-top { display: flex; align-items: center; gap: 10px; }
+  .pill {
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 800;
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+  .title { font-size: 28px; font-weight: 900; }
+  .subtitle { font-size: 13.5px; color: var(--text-2); line-height: 1.45; }
+  .table-wrap {
+    flex: 1 1 auto;
+    overflow: hidden;
+    padding: 8px 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  th, td {
+    padding: 4px 7px;
+    border-bottom: 1px solid var(--panel-line);
+    text-align: left;
+    line-height: 1.28;
+  }
+  th {
+    background: var(--head-bg);
+    color: var(--accent);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  tbody tr:nth-child(even) td { background: var(--row-alt); }
+  .footer {
+    padding: 7px 14px;
+    font-size: 12px;
+    color: var(--text-3);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+</style>
+</head>
+<body>
+{% set t = yituliou_table %}
+<div class="sheet">
+  {% if card_background %}
+  <div class="bg-layer" style="background-image:url('{{ card_background }}')"></div>
+  {% endif %}
+  <div class="bg-scrim"></div>
+  <header class="header">
+    <div class="header-top">
+      <span class="pill">一图流附表</span>
+      <h1 class="title">{{ t.title }}</h1>
+    </div>
+    {% if t.subtitle %}<div class="subtitle">{{ t.subtitle }}</div>{% endif %}
+  </header>
+  <main class="table-wrap">
+    <table>
+      {% if t.columns %}
+      <thead>
+        <tr>{% for col in t.columns %}<th>{{ col }}</th>{% endfor %}</tr>
+      </thead>
+      {% endif %}
+      <tbody>
+        {% for row in t.rows %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+  <footer class="footer">
+    <span>制作版本：{% if t.version %}{{ t.version }}{% else %}最新{% endif %} · 数据来源：{{ t.author }}《磨练欲望：30S就能看懂的一图流攻略》</span>
+    {% if t.notes %}<span>{{ t.notes }}</span>{% endif %}
+  </footer>
+</div>
+</body>
+</html>

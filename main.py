@@ -652,8 +652,13 @@ class PhantomArchivePlugin(Star):
 
     @filter.command("p5x角色")
     async def character_command(self, event: AstrMessageEvent):
-        """查询角色基本资料。"""
+        """查询角色资料（命中一图流时只输出一张完整卡片）。"""
         name = _extract_arg(event, "p5x角色")
+        outcome = await self._outcome("character_outcome", name)
+        if outcome.ok or outcome.error_kind != "not_found":
+            for result in await self._deliver(event, outcome):
+                yield result
+            return
         images = find_profile_images(DATA_DIR, name)
         if images:
             try:
@@ -664,7 +669,7 @@ class PhantomArchivePlugin(Star):
                 for payload in payloads:
                     yield event.chain_result([Image.fromBytes(payload)])
                 return
-        for result in await self._respond(event, "character_outcome", name):
+        for result in await self._deliver(event, outcome):
             yield result
 
     @filter.command("p5x技能")
@@ -725,6 +730,32 @@ class PhantomArchivePlugin(Star):
     async def guides_command(self, event: AstrMessageEvent):
         name = _extract_arg(event, "p5x攻略")
         for result in await self._respond(event, "all_guides_outcome", name):
+            yield result
+
+    @filter.command("p5x榜单")
+    async def table_command(self, event: AstrMessageEvent):
+        """查询一图流附表（倍率表、辅助榜单、对比表等）。"""
+        name = _extract_arg(event, "p5x榜单")
+        for result in await self._respond(event, "table_outcome", name):
+            yield result
+
+    @filter.command("p5x附表")
+    async def table_alias_command(self, event: AstrMessageEvent):
+        """p5x榜单的别名。"""
+        name = _extract_arg(event, "p5x附表")
+        for result in await self._respond(event, "table_outcome", name):
+            yield result
+
+    @filter.command("p5x倍率")
+    async def dps_table_command(self, event: AstrMessageEvent):
+        """直接输出全角色输出定位倍率梯度表。"""
+        for result in await self._respond(event, "table_outcome", "dps-multiplier"):
+            yield result
+
+    @filter.command("p5x辅助榜")
+    async def support_table_command(self, event: AstrMessageEvent):
+        """直接输出常见辅助提升榜单。"""
+        for result in await self._respond(event, "table_outcome", "support-ranking"):
             yield result
 
     @filter.command("p5x抽卡记录")

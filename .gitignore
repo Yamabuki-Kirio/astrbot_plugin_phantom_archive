@@ -31,3 +31,6 @@ raw/
 
 # Official character profile image and index ship with the plugin.
 !data/official_profiles/
+
+# 一图流结构化数据源（角色一图流 + 附表）随插件版本发布。
+!data/yituliou/

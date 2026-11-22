@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="{{ theme }}" data-background="{{ background_preset }}" data-canvas-width="{{ canvas_width }}" data-canvas-height="{{ canvas_height }}" style="--canvas-width:{{ canvas_width }}px;--canvas-height:{{ canvas_height }}px;">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width={{ canvas_width }}, height={{ canvas_height }}, initial-scale=1">
+<title>{{ title }}</title>
+<style>
+  :root {
+    --bg: #1c1c1e;
+    --text: #f7f7ef;
+    --text-2: #deded6;
+    --text-3: #b0b0a6;
+    --accent: #f7f59b;
+    --accent-2: #ff5b5b;
+    --accent-text: #181818;
+    --accent-soft: rgba(247, 245, 155, 0.14);
+    --panel: rgba(20, 20, 22, 0.84);
+    --panel-strong: rgba(14, 14, 16, 0.90);
+    --panel-line: rgba(255, 255, 235, 0.14);
+    --chip-bg: rgba(255, 255, 235, 0.08);
+    --chip-line: rgba(255, 255, 235, 0.16);
+    --scrim: radial-gradient(120% 100% at 85% 15%, rgba(16, 16, 18, 0.28) 0%, rgba(16, 16, 18, 0.62) 100%);
+    --star: #f7c948;
+    --star-big: #ff4f5a;
+    --slot-sun: #ff6b6b;
+    --slot-moon: #66b3ff;
+    --slot-star: #ffd166;
+    --slot-earth: #72e0a8;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  }
+  [data-background="reload_blue"] {
+    --bg: #d9f1ff;
+    --text: #082c50;
+    --text-2: #194468;
+    --text-3: #436c8a;
+    --accent: #095ab1;
+    --accent-2: #d62839;
+    --accent-text: #ffffff;
+    --accent-soft: rgba(9, 90, 177, 0.12);
+    --panel: rgba(244, 252, 255, 0.90);
+    --panel-strong: rgba(255, 255, 255, 0.94);
+    --panel-line: rgba(8, 44, 80, 0.16);
+    --chip-bg: rgba(9, 90, 177, 0.08);
+    --chip-line: rgba(9, 90, 177, 0.22);
+    --scrim: linear-gradient(180deg, rgba(220, 244, 255, 0.36) 0%, rgba(206, 238, 255, 0.56) 100%);
+    --star: #d97706;
+    --star-big: #d62839;
+    --slot-sun: #c92a2a;
+    --slot-moon: #0b63b8;
+    --slot-star: #b86e00;
+    --slot-earth: #117a4d;
+    --shadow: 0 8px 22px rgba(8, 56, 102, 0.14);
+  }
+  [data-background="phantom_red"] {
+    --bg: #24040a;
+    --text: #fff8f4;
+    --text-2: #fce3dd;
+    --text-3: #d9b2aa;
+    --accent: #ff4d5a;
+    --accent-2: #ffd166;
+    --accent-text: #ffffff;
+    --accent-soft: rgba(255, 77, 90, 0.18);
+    --panel: rgba(34, 4, 10, 0.85);
+    --panel-strong: rgba(24, 2, 6, 0.92);
+    --panel-line: rgba(255, 224, 216, 0.22);
+    --chip-bg: rgba(255, 232, 226, 0.10);
+    --chip-line: rgba(255, 224, 216, 0.24);
+    --scrim: radial-gradient(120% 100% at 85% 15%, rgba(40, 2, 10, 0.26) 0%, rgba(26, 2, 7, 0.62) 100%);
+    --star: #ffd166;
+    --star-big: #ff6b6b;
+    --slot-sun: #ff7b7b;
+    --slot-moon: #8cc8ff;
+    --slot-star: #ffe07d;
+    --slot-earth: #8be8ba;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: var(--canvas-width);
+    height: var(--canvas-height);
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Noto Sans SC",
+                 "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+    font-feature-settings: "palt" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    position: relative;
+    width: var(--canvas-width);
+    height: var(--canvas-height);
+    padding: 20px 26px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    isolation: isolate;
+  }
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .bg-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--scrim);
+  }
+
+  /* ---- 顶部角色头栏 ---- */
+  .hero-header {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.42fr 1.08fr 270px;
+    gap: 14px;
+    align-items: stretch;
+    height: 196px;
+    flex: 0 0 196px;
+  }
+  .hero-id, .hero-eval, .hero-art-box {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .hero-id {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .top-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .badge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cat-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+  .mode-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  .requester-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  .requester-mini img, .requester-mini .req-init {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--panel-line);
+  }
+  .requester-mini .req-init {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--accent-text);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .char-title {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.12;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .char-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+  }
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-line);
+    color: var(--text);
+  }
+  .tag-chip.elem {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+  .alias-line {
+    font-size: 13.5px;
+    color: var(--text-3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .alias-line strong { color: var(--text-2); font-weight: 600; }
+
+  /* 评分与适用场景 */
+  .hero-eval {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .overall-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .overall-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+  }
+  .overall-value {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .overall-score {
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--star-big);
+    font-variant-numeric: tabular-nums;
+  }
+  .overall-stars {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--star-big);
+    letter-spacing: 1px;
+  }
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 12px;
+  }
+  .scenario-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--chip-bg);
+  }
+  .scenario-item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .scenario-name { color: var(--text-2); font-weight: 600; white-space: nowrap; }
+  .scenario-stars { color: var(--star); font-size: 13px; letter-spacing: 0.5px; white-space: nowrap; }
+
+  /* 人物 + 面具立绘展示框 */
+  .hero-art-box {
+    position: relative;
+    overflow: hidden;
+    background: var(--panel-strong);
+  }
+  .hero-art-box .art-persona {
+    position: absolute;
+    inset: 4px 6px 4px 12px;
+    width: calc(100% - 18px);
+    height: calc(100% - 8px);
+    object-fit: contain;
+    object-position: right top;
+    opacity: 0.58;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
+  }
+  .hero-art-box .art-char {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    padding: 4px 6px 0;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.42));
+  }
+  .hero-art-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    font-weight: 900;
+    color: var(--accent);
+    opacity: 0.35;
+  }
+
+  /* ---- 角色简评条 ---- */
+  .review-bar {
+    position: relative;
+    z-index: 2;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-left: 5px solid var(--accent);
+    border-radius: 10px;
+    padding: 9px 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    box-shadow: var(--shadow);
+  }
+  .review-tag {
+    flex: 0 0 auto;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .review-text {
+    font-size: 14.5px;
+    line-height: 1.48;
+    color: var(--text);
+  }
+
+  /* ---- 主体双栏网格 ---- */
+  .main-grid {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1.32fr 1fr;
+    gap: 12px;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    min-height: 0;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 12px;
+    padding: 11px 15px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .panel.grow { flex: 1 1 auto; min-height: 0; }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .panel-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+  .panel-note {
+    font-size: 12.5px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+
+  /* 技能简述 */
+  .skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .skill-row {
+    display: grid;
+    grid-template-columns: 98px 1fr;
+    gap: 9px;
+    align-items: baseline;
+    font-size: 14px;
+    line-height: 1.44;
+  }
+  .skill-label {
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-line);
+    color: var(--accent);
+    line-height: 1.25;
+    word-break: break-all;
+  }
+  .skill-text { color: var(--text-2); }
+
+  /* 启示卡 */
+  .rev-sets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: center;
+    font-size: 14px;
+  }
+  .rev-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .rev-kind {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .rev-kind.primary { background: var(--accent); color: var(--accent-text); }
+  .rev-kind.alt { background: var(--chip-bg); border: 1px solid var(--chip-line); color: var(--text-2); }
+  .rev-set-name { font-weight: 700; color: var(--text); }
+  .rev-set-name.muted { font-weight: 500; color: var(--text-2); }
+
+  .main-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+  }
+  .stat-slot {
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-line);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .slot-name { font-size: 12px; font-weight: 800; }
+  .slot-name.sun { color: var(--slot-sun); }
+  .slot-name.moon { color: var(--slot-moon); }
+  .slot-name.star { color: var(--slot-star); }
+  .slot-name.earth { color: var(--slot-earth); }
+  .slot-val { font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.28; }
+
+  .sub-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+  .sub-tag {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-3);
+    margin-right: 2px;
+  }
+  .sub-pill {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 99px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-line);
+    color: var(--text);
+  }
+
+  /* 循环 + 搭配 */
+  .rot-team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.12fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .rot-box { display: flex; flex-direction: column; gap: 5px; }
+  .rot-line {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .order-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 800;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  .team-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .team-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 7px;
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-line);
+    font-size: 13px;
+  }
+  .team-name { font-weight: 700; color: var(--text); }
+  .team-role { font-size: 12px; color: var(--accent); font-weight: 600; }
+
+  /* 右栏：抽取建议与提升率 */
+  .pull-headline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 7px 11px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+  }
+  .pull-advice {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--text);
+  }
+  .weapon-pill {
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 5px;
+    background: var(--panel-strong);
+    border: 1px solid var(--panel-line);
+    color: var(--accent);
+  }
+  .rate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 8px;
+  }
+  .rate-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: var(--chip-bg);
+    font-size: 13px;
+  }
+  .rate-label { color: var(--text-2); }
+  .rate-val { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* 技能升级 & 参考强度 */
+  .priority-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.42;
+  }
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .ref-table td {
+    padding: 4px 8px;
+    border: 1px solid var(--panel-line);
+    background: var(--chip-bg);
+  }
+  .ref-table td.val {
+    font-weight: 800;
+    color: var(--accent);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* Tips */
+  .tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    line-height: 1.44;
+    color: var(--text-2);
+  }
+
+  /* 精简模式（常驻合集角色） */
+  .compact-grid {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  /* 底部署名栏 */
+  .sheet-footer {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: var(--panel-strong);
+    border: 1px solid var(--panel-line);
+    font-size: 12px;
+    color: var(--text-3);
+  }
+  .footer-left { white-space: nowrap; font-weight: 600; color: var(--text-2); }
+  .footer-right { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body>
+{% set y = yituliou %}
+<div class="sheet">
+  {% if card_background %}
+  <div class="bg-layer" style="background-image:url('{{ card_background }}')"></div>
+  {% endif %}
+  <div class="bg-scrim"></div>
+
+  <!-- 顶部头栏 -->
+  <header class="hero-header">
+    <div class="hero-id">
+      <div class="top-meta-row">
+        <div class="badge-row">
+          <span class="cat-pill">角色一图流</span>
+          {% if y.mode %}<span class="mode-pill">{{ y.mode }}</span>{% endif %}
+        </div>
+        {% if visual.show_requester %}
+        <div class="requester-mini">
+          {% if visual.has_requester_avatar and visual.requester_avatar %}
+            <img src="{{ visual.requester_avatar }}" alt="">
+          {% else %}
+            <span class="req-init">{{ (visual.requester_name or '访')[:1] }}</span>
+          {% endif %}
+          <span>{{ visual.requester_name }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <h1 class="char-title">{{ y.name }}</h1>
+
+      <div class="char-tags">
+        {% if y.role %}<span class="tag-chip">{{ y.role }}</span>{% endif %}
+        {% for elem in y.elements %}<span class="tag-chip elem">{{ elem }}</span>{% endfor %}
+        {% if y.obtain %}<span class="tag-chip">{{ y.obtain }}</span>{% endif %}
+      </div>
+
+      {% if y.aliases %}
+      <div class="alias-line"><strong>常用称呼：</strong>{{ y.aliases | join("、") }}</div>
+      {% endif %}
+    </div>
+
+    <div class="hero-eval">
+      <div class="overall-row">
+        <span class="overall-label">综合推荐指数</span>
+        <div class="overall-value">
+          {% if y.overall_score %}<span class="overall-score">{{ y.overall_score }}</span>{% endif %}
+          {% if y.overall_rating %}<span class="overall-stars">{{ y.overall_rating }}</span>{% endif %}
+        </div>
+      </div>
+      {% if y.scenarios %}
+      <div class="scenario-grid">
+        {% for s in y.scenarios %}
+        <div class="scenario-item">
+          <span class="scenario-name">{{ s.label }}</span>
+          <span class="scenario-stars">{{ s.stars }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alias-line" style="white-space:normal;">常驻角色精简档案 · 展示启示卡、加点与循环核心配置</div>
+      {% endif %}
+    </div>
+
+    <div class="hero-art-box">
+      {% if visual.persona_image %}
+      <img class="art-persona" src="{{ visual.persona_image }}" alt="">
+      {% endif %}
+      {% if visual.has_hero_image and visual.hero_image %}
+      <img class="art-char" src="{{ visual.hero_image }}" alt="">
+      {% else %}
+      <div class="hero-art-fallback">{{ y.name[:1] }}</div>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if y.review %}
+  <div class="review-bar">
+    <span class="review-tag">角色简评</span>
+    <div class="review-text">{{ y.review }}</div>
+  </div>
+  {% endif %}
+
+  {% if y.is_compact %}
+  <!-- 常驻合集精简布局 -->
+  <main class="compact-grid">
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">启示卡配置</span>
+        {% if y.revelation.note %}<span class="panel-note">{{ y.revelation.note }}</span>{% endif %}
+      </div>
+      <div class="rev-sets">
+        {% if y.revelation.primary %}
+        <div class="rev-group">
+          <span class="rev-kind primary">首选</span>
+          <span class="rev-set-name">{{ y.revelation.primary | join(" / ") }}</span>
+        </div>
+        {% endif %}
+        {% if y.revelation.alternative %}
+        <div class="rev-group">
+          <span class="rev-kind alt">备选</span>
+          <span class="rev-set-name muted">{{ y.revelation.alternative | join(" / ") }}</span>
+        </div>
+        {% endif %}
+      </div>
+      {% if y.revelation.main_stats %}
+      <div class="main-stats-grid">
+        {% for m in y.revelation.main_stats %}
+        {% set cls = 'sun' if '日' in m.slot else ('moon' if '月' in m.slot else ('star' if '星' in m.slot else 'earth')) %}
+        <div class="stat-slot">
+          <span class="slot-name {{ cls }}">{{ m.slot }}</span>
+          <span class="slot-val">{{ m.stat }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if y.revelation.sub_stats %}
+      <div class="sub-stats-row">
+        <span class="sub-tag">副词条</span>
+        {% for sub in y.revelation.sub_stats %}
+        <span class="sub-pill">{{ sub }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">培养与操作</span>
+      </div>
+      {% if y.pull_advice %}
+      <div class="pull-headline">
+        <span class="pull-advice">{{ y.pull_advice }}</span>
+      </div>
+      {% endif %}
+      {% if y.skill_priority %}
+      <div>
+        <div class="panel-note" style="margin-bottom:4px;">推荐加点</div>
+        <div class="priority-text">{{ y.skill_priority }}</div>
+      </div>
+      {% endif %}
+      {% if y.rotation %}
+      <div>
+        <div class="panel-note" style="margin-bottom:4px;">技能循环</div>
+        {% for line in y.rotation %}
+        <div class="rot-line">{{ line }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </section>
+  </main>
+  {% else %}
+  <!-- 标准完整一图流双栏布局 -->
+  <main class="main-grid">
+    <!-- 左栏：技能简述 + 启示卡 + 循环/搭配 -->
+    <div class="col">
+      {% if y.skills_brief %}
+      <section class="panel grow">
+        <div class="panel-head">
+          <span class="panel-title">技能简述</span>
+        </div>
+        <div class="skill-list">
+          {% for sk in y.skills_brief %}
+          <div class="skill-row">
+            <span class="skill-label">{{ sk.label }}</span>
+            <span class="skill-text">{{ sk.text }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">启示卡配置</span>
+          {% if y.revelation.note %}<span class="panel-note">{{ y.revelation.note }}</span>{% endif %}
+        </div>
+        <div class="rev-sets">
+          {% if y.revelation.primary %}
+          <div class="rev-group">
+            <span class="rev-kind primary">首选</span>
+            <span class="rev-set-name">{{ y.revelation.primary | join(" / ") }}</span>
+          </div>
+          {% endif %}
+          {% if y.revelation.alternative %}
+          <div class="rev-group">
+            <span class="rev-kind alt">备选</span>
+            <span class="rev-set-name muted">{{ y.revelation.alternative | join(" / ") }}</span>
+          </div>
+          {% endif %}
+        </div>
+        {% if y.revelation.main_stats %}
+        <div class="main-stats-grid">
+          {% for m in y.revelation.main_stats %}
+          {% set cls = 'sun' if '日' in m.slot else ('moon' if '月' in m.slot else ('star' if '星' in m.slot else 'earth')) %}
+          <div class="stat-slot">
+            <span class="slot-name {{ cls }}">{{ m.slot }}</span>
+            <span class="slot-val">{{ m.stat }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if y.revelation.sub_stats %}
+        <div class="sub-stats-row">
+          <span class="sub-tag">副词条</span>
+          {% for sub in y.revelation.sub_stats %}
+          <span class="sub-pill">{{ sub }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">技能循环与常用搭配</span>
+          {% if y.action_order %}<span class="order-badge">常用行动顺序：{{ y.action_order }}</span>{% endif %}
+        </div>
+        <div class="rot-team-grid">
+          <div class="rot-box">
+            {% for line in y.rotation %}
+            <div class="rot-line">{{ line }}</div>
+            {% endfor %}
+          </div>
+          {% if y.teammates %}
+          <div class="team-list">
+            {% for tm in y.teammates %}
+            <div class="team-chip">
+              <span class="team-name">{{ tm.name }}</span>
+              {% if tm.tag %}<span class="team-role">{{ tm.tag }}</span>{% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </section>
+    </div>
+
+    <!-- 右栏：抽取建议与提升率 + 技能升级与参考强度 + Tips -->
+    <div class="col">
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">抽取建议与参考提升率</span>
+          {% if y.weapon_name %}<span class="weapon-pill">专武 · {{ y.weapon_name }}</span>{% endif %}
+        </div>
+        {% if y.pull_advice %}
+        <div class="pull-headline">
+          <span class="pull-advice">{{ y.pull_advice }}</span>
+        </div>
+        {% endif %}
+        {% if y.upgrade_rates %}
+        <div class="rate-grid">
+          {% for r in y.upgrade_rates %}
+          <div class="rate-item">
+            <span class="rate-label">{{ r.label }}</span>
+            <span class="rate-val">{{ r.value }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">技能升级与参考强度</span>
+          {% if y.strength_ref.note %}<span class="panel-note">{{ y.strength_ref.note }}</span>{% endif %}
+        </div>
+        {% if y.skill_priority %}
+        <div class="priority-text">{{ y.skill_priority }}</div>
+        {% endif %}
+        {% if y.strength_ref.rows %}
+        <table class="ref-table">
+          <tbody>
+            {% for row in y.strength_ref.rows %}
+            <tr>
+              <td>{{ row.left_label }}</td>
+              <td class="val">{{ row.left_value }}</td>
+              {% if row.right_label or row.right_value %}
+              <td>{{ row.right_label }}</td>
+              <td class="val">{{ row.right_value }}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </section>
+
+      {% if y.tips %}
+      <section class="panel grow">
+        <div class="panel-head">
+          <span class="panel-title">实战 Tips</span>
+        </div>
+        <div class="tips-list">
+          {% for tip in y.tips %}
+          <div>{{ tip }}</div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+  </main>
+  {% endif %}
+
+  <footer class="sheet-footer">
+    <span class="footer-left">制作版本：{% if y.version %}{{ y.version }}{% else %}最新{% endif %} · 数据来源：{{ y.author }}《磨练欲望：30S就能看懂的一图流攻略》</span>
+    {% if y.footnote %}<span class="footer-right">{{ y.footnote }}</span>{% endif %}
+  </footer>
+</div>
+</body>
+</html>

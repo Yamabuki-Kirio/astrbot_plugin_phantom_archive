@@ -93,6 +93,9 @@ class CardPage:
     # 该卡片自带的免责声明。留空时用 notices.DISCLAIMER_LINES ——
     # 每日运势讲的是随机结果，不能套「社区资料 / 机器翻译」那三行。
     disclaimer_lines: tuple[str, ...] = ()
+    # 一图流结构化数据（用于单张一图流卡片 / 附表卡片，留空不影响既有卡片）
+    yituliou: object | None = None
+    yituliou_table: object | None = None
 
     @property
     def page_label(self) -> str:
@@ -102,7 +105,7 @@ class CardPage:
 
     @property
     def has_content(self) -> bool:
-        return bool(self.sections) or bool(self.lead)
+        return bool(self.sections) or bool(self.lead) or self.yituliou is not None or self.yituliou_table is not None
 
 
 def classify_block(lines: list[str]) -> Block:
