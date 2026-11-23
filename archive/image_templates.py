@@ -170,10 +170,15 @@ def build_context(
             if hasattr(page.yituliou, "as_template_dict")
             else page.yituliou
         )
+        # 严格贴合三套背景原图比例，最大化背景与立绘舞台利用
         if isinstance(yituliou_dict, dict) and yituliou_dict.get("is_compact"):
-            canvas_width, canvas_height = 1480, 560
+            canvas_width, canvas_height = (1482, 680) if bg_preset == "phantom" else (1672, 760)
+        elif bg_preset == "phantom":
+            canvas_width, canvas_height = 1482, 980
+        elif bg_preset == "reload_blue":
+            canvas_width, canvas_height = 1672, 1130
         else:
-            canvas_width, canvas_height = 1640, 1080
+            canvas_width, canvas_height = 1672, 990
 
     yituliou_table_dict = None
     if page.yituliou_table is not None:
