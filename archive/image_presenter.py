@@ -20,6 +20,7 @@ REVIEW_DESC_LIMIT = 420
 CATEGORY_CHARACTER = "角色"
 CATEGORY_YITULIOU = "角色一图流"
 CATEGORY_TABLE = "数据附表"
+CATEGORY_PANEL_REVIEW = "面板点评"
 CATEGORY_SKILL = "技能"
 CATEGORY_WEAPON = "武器"
 CATEGORY_LIST = "角色列表"
@@ -400,5 +401,24 @@ def yituliou_table_pages(table) -> tuple[cards.CardPage, ...]:
         hero_kind=HERO_ARCHIVE,
         source_label=f"数据来源：{table.author} 一图流攻略",
         yituliou_table=table,
+    )
+    return (page,)
+
+
+def panel_review_pages(review) -> tuple[cards.CardPage, ...]:
+    """角色面板自动点评：单张点评卡片。"""
+    slug = review.parsed.character_slug
+    page = cards.CardPage(
+        category=CATEGORY_PANEL_REVIEW,
+        title=f"{review.parsed.character_name} · 面板点评",
+        subtitle=review.headline,
+        page_index=1,
+        page_total=1,
+        show_footer=True,
+        hero_kind=HERO_CHARACTER if slug else HERO_ARCHIVE,
+        hero_key=slug,
+        owner_key=slug,
+        source_label="本地 OCR 自动识别 · 对标一图流攻略",
+        panel_review=review,
     )
     return (page,)

@@ -27,6 +27,18 @@
     "default": false,
     "hint": "开启后可直接发送 夜幕帮助、p5x角色 JOKER、p5x每日运势 等。查询参数需用空格分隔；可能与其他插件同名指令冲突，按需开启。不影响原有带 / 指令。"
   },
+  "auto_panel_review_enabled": {
+    "description": "主动识图点评角色面板（纯本地 OCR，不使用 LLM）",
+    "type": "bool",
+    "default": true,
+    "hint": "开启后，当用户发送 P5X 游戏内角色面板截图时自动识别角色、属性、启示卡、武器与技能等级，并按一图流数据给出点评。非面板图片静默忽略。"
+  },
+  "auto_panel_review_cooldown_seconds": {
+    "description": "主动识图同一会话冷却秒数",
+    "type": "int",
+    "default": 10,
+    "hint": "防止同会话连续发送多张截图时频繁触发，0 表示不限速。"
+  },
   "database_path": {
     "description": "p5x_zh.sqlite3 的路径，留空时使用插件 data 目录",
     "type": "string",

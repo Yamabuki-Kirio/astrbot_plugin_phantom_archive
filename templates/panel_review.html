@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="{{ theme }}" data-background="{{ background_preset }}" data-canvas-width="{{ canvas_width }}" data-canvas-height="{{ canvas_height }}" style="--canvas-width:{{ canvas_width }}px;--canvas-height:{{ canvas_height }}px;">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width={{ canvas_width }}, height={{ canvas_height }}, initial-scale=1">
+<title>{{ title }}</title>
+<style>
+  :root {
+    --bg: #252525;
+    --text: #f7f7ef;
+    --text-2: #e6e6de;
+    --text-3: #bebeb4;
+    --accent: #f7f59b;
+    --accent-text: #181818;
+    --panel: rgba(20, 20, 22, 0.76);
+    --panel-strong: rgba(16, 16, 18, 0.85);
+    --panel-line: rgba(255, 255, 235, 0.16);
+    --chip-bg: rgba(255, 255, 235, 0.09);
+    --chip-line: rgba(255, 255, 235, 0.20);
+    --pass: #5ce08a;
+    --pass-bg: rgba(92, 224, 138, 0.14);
+    --warn: #ff7b6b;
+    --warn-bg: rgba(255, 123, 107, 0.16);
+    --info: #70baff;
+    --info-bg: rgba(112, 186, 255, 0.15);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.26);
+    --title-shadow: 0 3px 10px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  [data-background="reload_blue"] {
+    --bg: #26a7f2;
+    --text: #07284a;
+    --text-2: #123e63;
+    --text-3: #2e597a;
+    --accent: #095ab1;
+    --accent-text: #ffffff;
+    --panel: rgba(242, 252, 255, 0.82);
+    --panel-strong: rgba(248, 253, 255, 0.90);
+    --panel-line: rgba(255, 255, 255, 0.60);
+    --chip-bg: rgba(255, 255, 255, 0.65);
+    --chip-line: rgba(9, 90, 177, 0.22);
+    --pass: #0c7a43;
+    --pass-bg: rgba(12, 122, 67, 0.12);
+    --warn: #c92a2a;
+    --warn-bg: rgba(201, 42, 42, 0.12);
+    --info: #0b63b8;
+    --info-bg: rgba(11, 99, 184, 0.12);
+    --shadow: 0 8px 22px rgba(0, 56, 102, 0.18);
+    --title-shadow: 0 2px 10px rgba(255, 255, 255, 0.96), 0 0 3px #ffffff;
+  }
+  [data-background="phantom_red"] {
+    --bg: #8a0816;
+    --text: #fff8f4;
+    --text-2: #ffe8e2;
+    --text-3: #efc8c0;
+    --accent: #fff3e9;
+    --accent-text: #790b1d;
+    --panel: rgba(32, 2, 8, 0.78);
+    --panel-strong: rgba(24, 1, 6, 0.88);
+    --panel-line: rgba(255, 224, 216, 0.24);
+    --chip-bg: rgba(255, 232, 226, 0.10);
+    --chip-line: rgba(255, 224, 216, 0.25);
+    --pass: #72e89d;
+    --pass-bg: rgba(114, 232, 157, 0.15);
+    --warn: #ffd166;
+    --warn-bg: rgba(255, 209, 102, 0.18);
+    --info: #8cc8ff;
+    --info-bg: rgba(140, 200, 255, 0.15);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+    --title-shadow: 0 3px 10px rgba(0, 0, 0, 0.68), 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: var(--canvas-width);
+    height: var(--canvas-height);
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Noto Sans SC",
+                 "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    position: relative;
+    width: var(--canvas-width);
+    height: var(--canvas-height);
+    padding: 26px 34px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    isolation: isolate;
+  }
+  [data-background="reload_blue"] .sheet { padding-top: 245px; }
+  [data-background="phantom_red"] .sheet { padding-top: 96px; }
+
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  .stage-persona {
+    position: absolute;
+    z-index: 1;
+    right: 0.5%;
+    top: 2%;
+    width: 35%;
+    height: 76%;
+    pointer-events: none;
+  }
+  .stage-persona img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right top;
+    opacity: 0.88;
+    filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.42));
+  }
+  .stage-hero {
+    position: absolute;
+    z-index: 2;
+    right: 1%;
+    top: 10%;
+    bottom: 36px;
+    width: 29%;
+    pointer-events: none;
+  }
+  .stage-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right bottom;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.46));
+  }
+
+  .content-stage {
+    position: relative;
+    z-index: 3;
+    width: 74%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .title-block { display: flex; flex-direction: column; gap: 7px; }
+  .badges { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .cat-pill {
+    padding: 3px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+  .meta-pill {
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 800;
+    background: var(--panel-strong);
+    border: 1px solid var(--panel-line);
+    color: var(--text);
+  }
+  .char-title {
+    font-size: 46px;
+    font-weight: 900;
+    line-height: 1.06;
+    color: #ffffff;
+    text-shadow: var(--title-shadow);
+  }
+  [data-background="reload_blue"] .char-title { color: #06284a; }
+
+  .grade-badge {
+    min-width: 120px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    background: var(--panel-strong);
+    border: 2px solid var(--accent);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .grade-label { font-size: 13px; font-weight: 800; color: var(--text-3); }
+  .grade-val {
+    font-size: 44px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .headline-bar {
+    background: var(--panel-strong);
+    border: 1px solid var(--panel-line);
+    border-left: 5px solid var(--accent);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  .stats-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .stat-chip {
+    padding: 5px 12px;
+    border-radius: 8px;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    font-size: 14.5px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-chip .k { color: var(--text-3); }
+  .stat-chip .v { color: var(--text); font-weight: 900; font-variant-numeric: tabular-nums; }
+
+  .review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .review-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-left: 5px solid var(--info);
+    border-radius: 11px;
+    padding: 10px 15px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .review-card.pass { border-left-color: var(--pass); }
+  .review-card.warn { border-left-color: var(--warn); }
+  .review-card.info { border-left-color: var(--info); }
+
+  .rc-top {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .rc-status {
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .review-card.pass .rc-status { background: var(--pass-bg); color: var(--pass); }
+  .review-card.warn .rc-status { background: var(--warn-bg); color: var(--warn); }
+  .review-card.info .rc-status { background: var(--info-bg); color: var(--info); }
+
+  .rc-cat { font-size: 15px; font-weight: 900; color: var(--accent); }
+  .rc-summary { font-size: 15.5px; font-weight: 700; color: var(--text); line-height: 1.4; }
+  .rc-detail { font-size: 13.5px; color: var(--text-2); line-height: 1.38; }
+
+  .rotation-bar {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+  .rot-tag { color: var(--accent); font-weight: 900; margin-right: 8px; }
+
+  .footer {
+    position: relative;
+    z-index: 3;
+    width: 74%;
+    padding: 6px 14px;
+    border-radius: 7px;
+    background: var(--panel-strong);
+    border: 1px solid var(--panel-line);
+    font-size: 12.5px;
+    color: var(--text-3);
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+{% set r = panel_review %}
+<div class="sheet">
+  {% if card_background %}
+  <div class="bg-layer" style="background-image:url('{{ card_background }}')"></div>
+  {% endif %}
+
+  {% if visual.persona_image %}
+  <div class="stage-persona"><img src="{{ visual.persona_image }}" alt=""></div>
+  {% endif %}
+  {% if visual.has_hero_image and visual.hero_image %}
+  <div class="stage-hero"><img src="{{ visual.hero_image }}" alt=""></div>
+  {% endif %}
+
+  <div class="content-stage">
+    <header class="header">
+      <div class="title-block">
+        <div class="badges">
+          <span class="cat-pill">面板自动点评</span>
+          {% if r.level %}<span class="meta-pill">Lv.{{ r.level }}</span>{% endif %}
+          {% if r.total_score %}<span class="meta-pill">综合评分 {{ r.total_score }}</span>{% endif %}
+        </div>
+        <h1 class="char-title">{{ r.character_name }}</h1>
+      </div>
+      <div class="grade-badge">
+        <span class="grade-label">练度评级</span>
+        <span class="grade-val">{{ r.grade }}</span>
+      </div>
+    </header>
+
+    <div class="headline-bar">{{ r.headline }}</div>
+
+    {% if r.stats %}
+    <div class="stats-strip">
+      {% for st in r.stats %}
+      <span class="stat-chip"><span class="k">{{ st.label }}</span><span class="v">{{ st.value }}</span></span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="review-list">
+      {% for item in r["items"] %}
+      <section class="review-card {{ item.status }}">
+        <div class="rc-top">
+          <span class="rc-status">{% if item.status == 'pass' %}达标{% elif item.status == 'warn' %}可优化{% else %}参考{% endif %}</span>
+          <span class="rc-cat">{{ item.category }}</span>
+        </div>
+        <div class="rc-summary">{{ item.summary }}</div>
+        {% if item.detail %}<div class="rc-detail">{{ item.detail }}</div>{% endif %}
+      </section>
+      {% endfor %}
+    </main>
+
+    {% if r.entry and r.entry.rotation %}
+    <div class="rotation-bar">
+      <div><span class="rot-tag">推荐循环</span>{{ r.entry.rotation | join(" / ") }}</div>
+      {% if r.entry.action_order %}<span class="meta-pill">常用行动顺序：{{ r.entry.action_order }}</span>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <footer class="footer">
+    <span>本地 OCR 自动识别 · 无 LLM 视觉调用</span>
+    {% if r.entry %}
+    <span>对标版本：{{ r.entry.version }} · 数据来源：{{ r.entry.author }} 一图流攻略</span>
+    {% endif %}
+  </footer>
+</div>
+</body>
+</html>

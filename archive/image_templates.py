@@ -30,6 +30,7 @@ CATEGORY_TEMPLATES: dict[str, str] = {
     "角色": "character.html",
     "角色一图流": "yituliou_card.html",
     "数据附表": "yituliou_table.html",
+    "面板点评": "panel_review.html",
     "技能": "skill.html",
     "武器": "weapon.html",
     "角色列表": "character_list.html",
@@ -192,6 +193,20 @@ def build_context(
         canvas_width = 1880 if col_count >= 10 else 1520
         canvas_height = min(3800, max(620, 240 + row_count * 46))
 
+    panel_review_dict = None
+    if page.panel_review is not None:
+        panel_review_dict = (
+            page.panel_review.as_template_dict()
+            if hasattr(page.panel_review, "as_template_dict")
+            else page.panel_review
+        )
+        if bg_preset == "phantom":
+            canvas_width, canvas_height = 1482, 920
+        elif bg_preset == "reload_blue":
+            canvas_width, canvas_height = 1672, 1080
+        else:
+            canvas_width, canvas_height = 1672, 960
+
     return {
         "theme": theme,
         "category": page.category,
@@ -216,6 +231,7 @@ def build_context(
         "card_background": card_background_uri(bg_preset),
         "yituliou": yituliou_dict,
         "yituliou_table": yituliou_table_dict,
+        "panel_review": panel_review_dict,
     }
 
 

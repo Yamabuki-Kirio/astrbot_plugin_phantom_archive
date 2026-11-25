@@ -17,7 +17,7 @@ import threading
 from dataclasses import dataclass, replace
 from pathlib import Path
 
-from . import cards, image_presenter, notices, recommendation, renderer, yituliou
+from . import cards, image_presenter, notices, panel_review, recommendation, renderer, yituliou
 from .database import (
     ArchiveDatabase,
     ArchiveError,
@@ -238,6 +238,25 @@ class ArchiveService:
             text = yituliou.render_table_text(table)
             pages = image_presenter.yituliou_table_pages(table)
             return QueryOutcome(ok=True, text=text, pages=pages)
+
+    def review_panel_image(self, image_bytes: bytes) -> QueryOutcome | None:
+        """主动识图入口：非 P5X 角色面板截图返回 None；命中时返回单图点评结果。"""
+        with self._lock:
+            extra_chars = tuple(
+                ((c.slug or "").strip(), c.display_name)
+                for c in self._repo.list_characters()
+                if c.display_name
+            )
+        review = panel_review.analyze_panel_image(
+            image_bytes,
+            repo=self._yituliou,
+            extra_characters=extra_chars,
+        )
+        if review is None:
+            return None
+        text = panel_review.render_review_text(review)
+        pages = image_presenter.panel_review_pages(review)
+        return QueryOutcome(ok=True, text=text, pages=pages)
 
     def skills_outcome(self, term: str | None) -> QueryOutcome:
         with self._lock:

@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from dataclasses import replace
 from pathlib import Path
 
@@ -214,6 +215,7 @@ class PhantomArchivePlugin(Star):
         self._daily_store: daily_repository.DailyFortuneStore | None = None
         self._daily_store_error: Exception | None = None
         self._daily_timezone_label = daily_engine.DEFAULT_TIMEZONE
+        self._panel_cooldowns: dict[str, float] = {}
 
         self._open_service()
         self._load_assets()
@@ -644,6 +646,107 @@ class PhantomArchivePlugin(Star):
         event.stop_event()
         async for result in getattr(self, handler)(event):
             yield result
+
+    def _event_image_components(self, event: AstrMessageEvent) -> list:
+        messages = None
+        get_messages = getattr(event, "get_messages", None)
+        if callable(get_messages):
+            try:
+                messages = get_messages()
+            except Exception:  # noqa: BLE001
+                messages = None
+        if not messages:
+            msg_obj = getattr(event, "message_obj", None)
+            messages = getattr(msg_obj, "message", None)
+        if not messages:
+            return []
+        return [comp for comp in messages if isinstance(comp, Image)]
+
+    async def _read_image_component_bytes(self, comp: Image) -> bytes | None:
+        """从 AstrBot Image 组件读取原始图片字节（兼容本地路径、convert_to_file_path 与 URL）。"""
+        convert = getattr(comp, "convert_to_file_path", None)
+        if callable(convert):
+            try:
+                converted = await convert()
+                if converted:
+                    path = Path(str(converted))
+                    if path.is_file():
+                        return await asyncio.to_thread(path.read_bytes)
+            except Exception:  # noqa: BLE001
+                pass
+
+        for attr in ("file", "path"):
+            raw = str(getattr(comp, attr, "") or "").strip()
+            if raw and not raw.startswith(("http://", "https://", "base64://")):
+                local = Path(raw.removeprefix("file:///").removeprefix("file://"))
+                if local.is_file():
+                    try:
+                        return await asyncio.to_thread(local.read_bytes)
+                    except OSError:
+                        pass
+
+        url = str(getattr(comp, "url", "") or getattr(comp, "file", "") or "").strip()
+        if url.startswith(("http://", "https://")):
+            try:
+                import httpx
+
+                async with httpx.AsyncClient(timeout=12.0, follow_redirects=True) as client:
+                    resp = await client.get(url)
+                    if resp.status_code == 200 and len(resp.content) <= 12 * 1024 * 1024:
+                        return resp.content
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("拉取待识图图片失败：%s", type(exc).__name__)
+        return None
+
+    def _panel_session_key(self, event: AstrMessageEvent) -> str:
+        for attr in ("unified_msg_origin", "session_id"):
+            val = getattr(event, attr, None)
+            if val:
+                return str(val)
+        return str(getattr(event, "get_sender_id", lambda: "")() or "default")
+
+    @filter.event_message_type(EventMessageType.ALL, priority=5000)
+    async def handle_panel_image(self, event: AstrMessageEvent):
+        """主动识图：纯本地 OCR 识别 P5X 角色面板截图并按一图流点评（不使用 LLM）。"""
+        if not _conf_bool(self.config, "auto_panel_review_enabled", True):
+            return
+        if self._service is None:
+            return
+        text = (event.get_message_str() or "").strip()
+        if text.startswith("/"):
+            return
+
+        images = self._event_image_components(event)
+        if not images:
+            return
+
+        cooldown = 10
+        try:
+            cooldown = max(0, int(_conf_get(self.config, "auto_panel_review_cooldown_seconds", 10)))
+        except (TypeError, ValueError):
+            cooldown = 10
+        session_key = self._panel_session_key(event)
+        now = time.monotonic()
+        if cooldown > 0 and (now - self._panel_cooldowns.get(session_key, 0.0)) < cooldown:
+            return
+
+        for comp in images[:2]:
+            raw_bytes = await self._read_image_component_bytes(comp)
+            if not raw_bytes:
+                continue
+            try:
+                outcome = await asyncio.to_thread(self._service.review_panel_image, raw_bytes)
+            except Exception:  # noqa: BLE001
+                logger.exception("角色面板主动识图异常")
+                continue
+            if outcome is None:
+                continue
+
+            self._panel_cooldowns[session_key] = time.monotonic()
+            event.stop_event()
+            for result in await self._deliver(event, outcome):
+                yield result
+            return
 
     @filter.command("夜幕帮助")
     async def help_command(self, event: AstrMessageEvent):
