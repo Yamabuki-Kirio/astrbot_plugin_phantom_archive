@@ -789,10 +789,16 @@ class PhantomArchivePlugin(Star):
                     provider = None
 
         if provider is None:
+            logger.warning("人格化面板点评未找到可用 LLM Provider（umo=%s），降级为结构化文本", umo)
             return panel_review.render_review_text(review)
 
         system_prompt = await self._resolve_active_persona_prompt(event)
         user_prompt = panel_review.build_persona_llm_prompt(review)
+        logger.info(
+            "主动识图命中角色「%s」，调用纯文本 LLM 人格点评（persona_len=%d）",
+            review.parsed.character_name,
+            len(system_prompt),
+        )
         try:
             llm_resp = await provider.text_chat(
                 prompt=user_prompt,
@@ -802,6 +808,7 @@ class PhantomArchivePlugin(Star):
             reply = str(getattr(llm_resp, "completion_text", "") or "").strip()
             if reply:
                 return reply
+            logger.warning("人格化面板点评 LLM 返回空内容，降级为结构化文本")
         except Exception as exc:  # noqa: BLE001
             logger.warning("人格化面板点评 LLM 调用失败（%s），降级为结构化文本", type(exc).__name__)
         return panel_review.render_review_text(review)
@@ -848,8 +855,9 @@ class PhantomArchivePlugin(Star):
                 continue
 
             self._panel_cooldowns[session_key] = time.monotonic()
-            event.stop_event()
 
+            # 注意：绝不能在 yield 之前调用 event.stop_event()，否则 AstrBot 调度器
+            # 会在第一次 yield 时立即 break，导致后续文字点评无法发出。
             if send_image and outcome.has_pages and self.image_ready:
                 try:
                     rendered = await self._render_pages(event, outcome.pages)
@@ -869,6 +877,8 @@ class PhantomArchivePlugin(Star):
             elif not self.image_ready:
                 # 仅开图片但未配 T2I 时，仍降级输出结构化文本避免静默
                 yield event.plain_result(outcome.text)
+
+            event.stop_event()
             return
 
     @filter.command("夜幕帮助")

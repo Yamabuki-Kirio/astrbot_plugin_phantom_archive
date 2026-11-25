@@ -1,5 +1,7 @@
 # 夜幕档案
 
+v0.11.4：修复主动识图在同时开启图片与人格文字点评时，因提前调用 `event.stop_event()` 导致 AstrBot 调度器中断后续 LLM 文字回复的问题；补充 LLM 人格点评运行日志便于排查。
+
 v0.11.3：主动识图点评支持**当前启用人格（如 Justine 等）OC 文字回复 + 点评卡片图双开关独立控制**：
 - 依然坚持**纯本地 RapidOCR 识图（绝不把图片发给 AI 识图）**；识别并完成一图流多档数值对标后，将结构化事实注入提示词，调用当前会话启用的人格 `system_prompt` 与纯文本 LLM（`image_urls=[]`）生成完全贴合当前 Bot 人设的自然点评（LLM 不可用时自动降级为结构化文本）。
 - 设置项拆分为两个独立开关：`auto_panel_review_send_image`（发送点评卡片图，默认开启）与 `auto_panel_review_send_text`（发送当前人格文字点评，默认开启），可按需单独关闭其中任意一项。
@@ -66,7 +68,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.11.3-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.11.4-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 
