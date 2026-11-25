@@ -798,8 +798,10 @@ def render_review_text(review: PanelReview) -> str:
         f"【面板自动点评 · {p.character_name}】",
         " · ".join(x for x in meta_parts if x),
         review.headline,
-        "",
     ]
+    if p.stats:
+        lines.append("面板速览：" + " / ".join(f"{k} {v}" for k, v in p.stats))
+    lines.append("")
     icon_map = {"pass": "✅", "warn": "⚠️", "info": "💡"}
     for item in review.items:
         lines.append(f"{icon_map.get(item.status, '·')} {item.category}：{item.summary}")

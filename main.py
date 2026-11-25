@@ -744,8 +744,19 @@ class PhantomArchivePlugin(Star):
 
             self._panel_cooldowns[session_key] = time.monotonic()
             event.stop_event()
-            for result in await self._deliver(event, outcome):
-                yield result
+            output_mode = str(
+                _conf_get(self.config, "auto_panel_review_output_mode", "text") or "text"
+            ).strip().lower()
+            if output_mode == "image":
+                for result in await self._deliver(event, outcome):
+                    yield result
+            elif output_mode == "both":
+                yield event.plain_result(outcome.text)
+                if outcome.has_pages and self.image_ready:
+                    for result in await self._deliver(event, outcome):
+                        yield result
+            else:
+                yield event.plain_result(outcome.text)
             return
 
     @filter.command("夜幕帮助")

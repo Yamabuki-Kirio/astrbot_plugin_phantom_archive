@@ -1,5 +1,7 @@
 # 夜幕档案
 
+v0.11.1：主动识图点评默认改为**直接发送结构化文字评价**（含面板速览、逐项达标/可优化点评、练度评级与推荐循环），并新增配置项 `auto_panel_review_output_mode`（可选 `text` / `image` / `both`，默认 `text`）。
+
 v0.11.0：新增**纯本地主动识图点评角色面板**（基于 `rapidocr-onnxruntime` 本地 CPU OCR，不使用任何 LLM 视觉模型）。
 - 用户在群聊或私聊直接发送 P5X 游戏内角色面板截图时，自动识别角色名、等级、属性、技能等级、启示卡套装、武器名与综合评分，并对照一图流数据逐项点评（启示卡首选/备选、专武与满级、副词条数值门槛、核心技能加点）与 `S/A/B/C` 练度评级，输出单张点评卡片（无 T2I 时降级文字）。
 - 三层防误触发（尺寸比例预筛 + P5X 面板锚点校验 + 角色名匹配），非面板图片静默忽略；新增配置项 `auto_panel_review_enabled`（默认开启）与 `auto_panel_review_cooldown_seconds`（默认 10 秒冷却）。
@@ -55,7 +57,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.11.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.11.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

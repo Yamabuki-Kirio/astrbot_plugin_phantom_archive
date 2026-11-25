@@ -39,6 +39,17 @@
     "default": 10,
     "hint": "防止同会话连续发送多张截图时频繁触发，0 表示不限速。"
   },
+  "auto_panel_review_output_mode": {
+    "description": "主动识图点评输出形式",
+    "type": "string",
+    "default": "text",
+    "options": [
+      "text",
+      "image",
+      "both"
+    ],
+    "hint": "text：直接发送文字评价（默认）；image：发送点评卡片图；both：同时发送文字评价与卡片图。"
+  },
   "database_path": {
     "description": "p5x_zh.sqlite3 的路径，留空时使用插件 data 目录",
     "type": "string",
