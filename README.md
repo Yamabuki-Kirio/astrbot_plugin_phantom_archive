@@ -1,5 +1,9 @@
 # 夜幕档案
 
+v0.11.3：主动识图点评支持**当前启用人格（如 Justine 等）OC 文字回复 + 点评卡片图双开关独立控制**：
+- 依然坚持**纯本地 RapidOCR 识图（绝不把图片发给 AI 识图）**；识别并完成一图流多档数值对标后，将结构化事实注入提示词，调用当前会话启用的人格 `system_prompt` 与纯文本 LLM（`image_urls=[]`）生成完全贴合当前 Bot 人设的自然点评（LLM 不可用时自动降级为结构化文本）。
+- 设置项拆分为两个独立开关：`auto_panel_review_send_image`（发送点评卡片图，默认开启）与 `auto_panel_review_send_text`（发送当前人格文字点评，默认开启），可按需单独关闭其中任意一项。
+
 v0.11.2：深化主动识图面板点评精度与数值对标：
 - 新增左侧属性框 2× 局部精扫，补齐首行易漏数字（完整识别生命值/攻击力/防御力/速度/精力回复/伤害加成等全部 6 项面板属性）。
 - 完整解析一图流多档推荐属性值（`无心象档` / `常规心象档` / `6意识档` / 上限约束），逐档计算当前面板差值或超出值，并注明进图/站街口径。
@@ -62,7 +66,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.11.2-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.11.3-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

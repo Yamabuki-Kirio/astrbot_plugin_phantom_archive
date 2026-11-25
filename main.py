@@ -41,6 +41,7 @@ from .archive import (
     identity,
     image_templates,
     notices,
+    panel_review,
     renderer,
     visual_context,
 )
@@ -705,10 +706,114 @@ class PhantomArchivePlugin(Star):
                 return str(val)
         return str(getattr(event, "get_sender_id", lambda: "")() or "default")
 
+    async def _resolve_active_persona_prompt(self, event: AstrMessageEvent) -> str:
+        """获取当前会话生效的人格 system_prompt（如 Justine 等当前扮演人设）。"""
+        ctx = getattr(self, "context", None)
+        if ctx is None:
+            return ""
+        umo = getattr(event, "unified_msg_origin", None)
+        platform_name = ""
+        get_platform = getattr(event, "get_platform_name", None)
+        if callable(get_platform):
+            try:
+                platform_name = str(get_platform() or "")
+            except Exception:  # noqa: BLE001
+                platform_name = ""
+
+        conv_persona_id = None
+        conv_mgr = getattr(ctx, "conversation_manager", None)
+        if conv_mgr is not None and umo:
+            try:
+                cid = await conv_mgr.get_curr_conversation_id(umo)
+                if cid:
+                    conv = await conv_mgr.get_conversation(umo, cid)
+                    if conv is not None:
+                        conv_persona_id = getattr(conv, "persona_id", None)
+            except Exception:  # noqa: BLE001
+                conv_persona_id = None
+
+        persona_mgr = getattr(ctx, "persona_manager", None)
+        if persona_mgr is None:
+            return ""
+
+        persona_obj = None
+        resolve_fn = getattr(persona_mgr, "resolve_selected_persona", None)
+        if callable(resolve_fn) and umo:
+            try:
+                _, persona_obj, _, _ = await resolve_fn(
+                    umo=umo,
+                    conversation_persona_id=conv_persona_id,
+                    platform_name=platform_name,
+                )
+            except Exception:  # noqa: BLE001
+                persona_obj = None
+
+        if persona_obj is None:
+            default_fn = getattr(persona_mgr, "get_default_persona_v3", None)
+            if callable(default_fn):
+                try:
+                    persona_obj = await default_fn(umo=umo)
+                except Exception:  # noqa: BLE001
+                    persona_obj = None
+
+        if isinstance(persona_obj, dict):
+            return str(persona_obj.get("prompt") or persona_obj.get("system_prompt") or "").strip()
+        if persona_obj is not None:
+            return str(
+                getattr(persona_obj, "system_prompt", "") or getattr(persona_obj, "prompt", "") or ""
+            ).strip()
+        return ""
+
+    async def _generate_persona_review_text(
+        self, event: AstrMessageEvent, review: panel_review.PanelReview
+    ) -> str:
+        """使用当前启用人格 + 纯文本 LLM（绝不传图）生成 OC 风格面板点评；不可用时回退结构化文本。"""
+        ctx = getattr(self, "context", None)
+        if ctx is None:
+            return panel_review.render_review_text(review)
+
+        umo = getattr(event, "unified_msg_origin", None)
+        provider = None
+        get_prov_async = getattr(ctx, "get_using_provider_async", None)
+        if callable(get_prov_async):
+            try:
+                provider = await get_prov_async(umo=umo)
+            except Exception:  # noqa: BLE001
+                provider = None
+        if provider is None:
+            get_prov = getattr(ctx, "get_using_provider", None)
+            if callable(get_prov):
+                try:
+                    provider = get_prov(umo=umo)
+                except Exception:  # noqa: BLE001
+                    provider = None
+
+        if provider is None:
+            return panel_review.render_review_text(review)
+
+        system_prompt = await self._resolve_active_persona_prompt(event)
+        user_prompt = panel_review.build_persona_llm_prompt(review)
+        try:
+            llm_resp = await provider.text_chat(
+                prompt=user_prompt,
+                system_prompt=system_prompt,
+                image_urls=[],
+            )
+            reply = str(getattr(llm_resp, "completion_text", "") or "").strip()
+            if reply:
+                return reply
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("人格化面板点评 LLM 调用失败（%s），降级为结构化文本", type(exc).__name__)
+        return panel_review.render_review_text(review)
+
     @filter.event_message_type(EventMessageType.ALL, priority=5000)
     async def handle_panel_image(self, event: AstrMessageEvent):
-        """主动识图：纯本地 OCR 识别 P5X 角色面板截图并按一图流点评（不使用 LLM）。"""
+        """主动识图：纯本地 OCR 识别 P5X 角色面板截图，按配置输出卡片图与当前人格文字点评。"""
         if not _conf_bool(self.config, "auto_panel_review_enabled", True):
+            return
+        send_image = _conf_bool(self.config, "auto_panel_review_send_image", True)
+        send_text = _conf_bool(self.config, "auto_panel_review_send_text", True)
+        if not send_image and not send_text:
             return
         if self._service is None:
             return
@@ -744,18 +849,25 @@ class PhantomArchivePlugin(Star):
 
             self._panel_cooldowns[session_key] = time.monotonic()
             event.stop_event()
-            output_mode = str(
-                _conf_get(self.config, "auto_panel_review_output_mode", "text") or "text"
-            ).strip().lower()
-            if output_mode == "image":
-                for result in await self._deliver(event, outcome):
-                    yield result
-            elif output_mode == "both":
-                yield event.plain_result(outcome.text)
-                if outcome.has_pages and self.image_ready:
-                    for result in await self._deliver(event, outcome):
-                        yield result
-            else:
+
+            if send_image and outcome.has_pages and self.image_ready:
+                try:
+                    rendered = await self._render_pages(event, outcome.pages)
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("面板点评卡片渲染失败：%s", type(exc).__name__)
+                else:
+                    for img in rendered:
+                        yield event.chain_result([Image.fromBytes(img.data)])
+
+            if send_text:
+                review_obj = outcome.pages[0].panel_review if outcome.pages else None
+                if isinstance(review_obj, panel_review.PanelReview):
+                    reply_text = await self._generate_persona_review_text(event, review_obj)
+                else:
+                    reply_text = outcome.text
+                yield event.plain_result(reply_text)
+            elif not self.image_ready:
+                # 仅开图片但未配 T2I 时，仍降级输出结构化文本避免静默
                 yield event.plain_result(outcome.text)
             return
 

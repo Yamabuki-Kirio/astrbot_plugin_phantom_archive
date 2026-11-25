@@ -143,6 +143,11 @@ def test_multitier_thresholds_and_core_targets():
     assert "5452" in text
     assert "15.93%" in text
     assert "全部达成" in text
+    prompt = panel_review.build_persona_llm_prompt(review)
+    assert "汐见琴音" in prompt
+    assert "4900" in prompt
+    assert "严格保持你当前扮演的人格" in prompt
+    assert "严禁提及“OCR”" in prompt
 
 
 @pytest.mark.parametrize("bg", ["phantom", "reload_blue", "phantom_red"])

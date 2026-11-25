@@ -1084,6 +1084,78 @@ def render_review_text(review: PanelReview) -> str:
     return "\n".join(lines)
 
 
+def build_persona_llm_prompt(review: PanelReview) -> str:
+    """构造供当前启用人格（纯文本 LLM，不传图）使用的角色面板点评提示词。
+
+    所有数值均已由本地 RapidOCR 提取并与一图流完成对标，LLM 仅负责以当前人格口吻自然点评。
+    """
+    p = review.parsed
+    facts: list[str] = [
+        f"- 角色：{p.character_name}" + (f"（Lv.{p.level}）" if p.level else ""),
+    ]
+    if p.total_score:
+        facts.append(f"- 游戏内综合评分：{p.total_score}")
+    if p.stats:
+        facts.append("- 面板属性：" + "、".join(f"{k} {v}" for k, v in p.stats))
+    if p.core_targets:
+        facts.append("- 游戏核心属性目标：" + "、".join(f"{k} {v}" for k, v in p.core_targets))
+    if p.skill_levels:
+        labels = ("①技能", "②技能", "③技能", "战斗技巧")
+        facts.append(
+            "- 技能等级：" + " / ".join(f"{labels[i]} Lv.{lv}" for i, lv in enumerate(p.skill_levels[:4]))
+        )
+    if p.revelation_set:
+        facts.append(f"- 当前启示卡：{p.revelation_set}")
+    if p.weapon_name:
+        lv = f" Lv.{p.weapon_level}" if p.weapon_level else ""
+        facts.append(f"- 当前武器：{p.weapon_name}{lv}")
+
+    eval_lines: list[str] = [
+        f"- 综合练度评级：{review.grade}（{review.headline}）",
+    ]
+    status_zh = {"pass": "达标", "warn": "可优化", "info": "参考"}
+    for it in review.items:
+        line = f"- [{status_zh.get(it.status, '参考')}] {it.category}：{it.summary}"
+        if it.detail:
+            line += f"（{it.detail}）"
+        eval_lines.append(line)
+
+    extra_lines: list[str] = []
+    if review.entry is not None:
+        if review.entry.review:
+            extra_lines.append(f"- 角色定位简评：{review.entry.review}")
+        if review.entry.rotation:
+            order = f"（{review.entry.action_order}）" if review.entry.action_order else ""
+            extra_lines.append(f"- 推荐循环{order}：{' / '.join(review.entry.rotation)}")
+        if review.entry.tips:
+            extra_lines.append(f"- 实战要点：{review.entry.tips[0]}")
+
+    sections = [
+        "用户刚刚发送了一张《女神异闻录：夜幕魅影》（P5X）的角色养成面板截图。",
+        "系统已通过本地识别完成数据读取与攻略对标，以下是严格准确的面板与评估数据：",
+        "",
+        "【玩家面板数据】",
+        *facts,
+        "",
+        "【攻略对标结果】",
+        *eval_lines,
+    ]
+    if extra_lines:
+        sections.extend(["", "【补充参考】", *extra_lines])
+
+    sections.extend(
+        [
+            "",
+            "【回复要求】",
+            "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
+            "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”等出戏或机械词，直接把这些当作你自己的眼光和判断。",
+            "3. 必须忠实于上述真实数值与对标结论，不得编造未给出的数值或技能效果；先肯定亮点，再点出最值得优化的 1~2 项（若已全部达标就给予对应人设风格的认可/嘉奖，并顺带提一句实用操作或配装提醒）。",
+            "4. 控制在 100~220 字左右，分段清晰、口语自然，直接输出给用户的最终回复。",
+        ]
+    )
+    return "\n".join(sections)
+
+
 __all__ = [
     "OcrBox",
     "ParsedPanel",
@@ -1096,4 +1168,5 @@ __all__ = [
     "evaluate_panel",
     "analyze_panel_image",
     "render_review_text",
+    "build_persona_llm_prompt",
 ]
