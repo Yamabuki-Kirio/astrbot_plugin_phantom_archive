@@ -242,11 +242,13 @@ class ArchiveService:
     def review_panel_image(self, image_bytes: bytes) -> QueryOutcome | None:
         """主动识图入口：非 P5X 角色面板截图返回 None；命中时返回单图点评结果。"""
         with self._lock:
+            all_chars = self._repo.list_characters()
             extra_chars = tuple(
                 ((c.slug or "").strip(), c.display_name)
-                for c in self._repo.list_characters()
+                for c in all_chars
                 if c.display_name
             )
+            by_slug = {(c.slug or "").strip(): c for c in all_chars if c.slug}
         review = panel_review.analyze_panel_image(
             image_bytes,
             repo=self._yituliou,
@@ -254,6 +256,31 @@ class ArchiveService:
         )
         if review is None:
             return None
+
+        # 从数据库补充该角色已解锁意识（命座）中的局内暴击/穿透加成，防止 LLM 误判站街暴击率
+        char_obj = by_slug.get(review.parsed.character_slug)
+        if char_obj is not None:
+            try:
+                with self._lock:
+                    gp = self._repo.build_guide_profile(char_obj, ("ritual",))
+                ritual_hints: list[str] = []
+                max_aw = review.parsed.awareness if review.parsed.awareness is not None else 6
+                for g in gp.guides:
+                    content = g.content if isinstance(g.content, dict) else {}
+                    for k, v in content.items():
+                        text_v = str(v or "").strip()
+                        if not text_v or not any(kw in text_v for kw in ("暴击", "穿透", "破防")):
+                            continue
+                        digits = "".join(ch for ch in str(k) if ch.isdigit())
+                        if digits and int(digits) > max_aw:
+                            continue
+                        short = text_v if len(text_v) <= 80 else text_v[:79] + "…"
+                        ritual_hints.append(f"意识{digits or k}：{short}")
+                if ritual_hints:
+                    review = replace(review, in_battle_hints=tuple(ritual_hints[:3]))
+            except Exception:  # noqa: BLE001
+                pass
+
         text = panel_review.render_review_text(review)
         pages = image_presenter.panel_review_pages(review)
         return QueryOutcome(ok=True, text=text, pages=pages)

@@ -1,5 +1,7 @@
 # 夜幕档案
 
+v0.11.7：修复人格 LLM 点评把“站街暴击率”误判为“暴击率缺口过大”的问题：自动向提示词注入角色自带的局内暴击/穿透加成说明，并硬约束 LLM 严守 P5X 站街口径、只针对明确标为 `[可优化]` 的项目提建议，不擅自批斗未标红的面板数值。
+
 v0.11.6：主动识图新增**角色意识（0~6 命）与武器改造等级（0~6 改）纯本地识别**：通过锚定 OCR 等级框并检测六芒星/六瓣改造环亮瓣数，无需 AI 识图即可识别命座与改造阶数，并在点评卡片与当前人格 LLM 提示词中对 3 命及以上高命座、高改造武器重点提及与评价。
 
 v0.11.5：精简主动识图人格 LLM 点评提示词：聚焦面板本身的养成练度（属性数值、启示卡、武器、技能等级），不再输出实战打法、技能循环或操作教学，回复更紧凑自然（80~160 字）。
@@ -72,7 +74,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.11.6-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.11.7-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

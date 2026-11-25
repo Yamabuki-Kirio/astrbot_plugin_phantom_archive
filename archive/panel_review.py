@@ -151,6 +151,7 @@ class PanelReview:
     grade: str  # S | A | B | C
     headline: str
     items: tuple[ReviewItem, ...]
+    in_battle_hints: tuple[str, ...] = ()
 
     def as_template_dict(self) -> dict[str, Any]:
         entry_dict = self.entry.as_template_dict() if self.entry is not None else None
@@ -1270,6 +1271,18 @@ def render_review_text(review: PanelReview) -> str:
     return "\n".join(lines)
 
 
+def _collect_in_battle_hints(entry: yituliou.YituliouEntry | None) -> tuple[str, ...]:
+    """从一图流技能简述中提取角色自带的局内暴击/穿透/攻击自拐提示，防止 LLM 误判站街面板。"""
+    if entry is None:
+        return ()
+    hints: list[str] = []
+    keywords = ("暴击", "爆伤", "暴伤", "穿透", "破防")
+    for sk in entry.skills_brief:
+        if any(k in sk.text for k in keywords):
+            hints.append(f"{sk.label}：{sk.text}")
+    return tuple(hints[:3])
+
+
 def build_persona_llm_prompt(review: PanelReview) -> str:
     """构造供当前启用人格（纯文本 LLM，不传图）使用的角色面板点评提示词。
 
@@ -1285,7 +1298,7 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
     if p.total_score:
         facts.append(f"- 游戏内综合评分：{p.total_score}")
     if p.stats:
-        facts.append("- 面板属性：" + "、".join(f"{k} {v}" for k, v in p.stats))
+        facts.append("- 站街面板属性：" + "、".join(f"{k} {v}" for k, v in p.stats))
     if p.core_targets:
         facts.append("- 游戏核心属性目标：" + "、".join(f"{k} {v}" for k, v in p.core_targets))
     if p.skill_levels:
@@ -1310,23 +1323,40 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
             line += f"（{it.detail}）"
         eval_lines.append(line)
 
+    buff_hints = list(review.in_battle_hints) + list(_collect_in_battle_hints(review.entry))
+    # 去重保序
+    seen_hints: set[str] = set()
+    unique_hints: list[str] = []
+    for h_line in buff_hints:
+        if h_line not in seen_hints:
+            seen_hints.add(h_line)
+            unique_hints.append(h_line)
+
     sections = [
         "用户刚刚发送了一张《女神异闻录：夜幕魅影》（P5X）的角色养成面板截图。",
         "系统已通过本地识别完成数据读取与练度对标，以下是严格准确的面板与评估数据：",
         "",
-        "【玩家面板数据】",
+        "【玩家面板数据（均为站街数值，不含局内 BUFF）】",
         *facts,
         "",
         "【练度对标结果】",
         *eval_lines,
-        "",
-        "【回复要求】",
-        "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
-        "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”等出戏或机械词，直接把这些当作你自己的眼光和判断。",
-        "3. 只点评面板本身的养成练度（属性数值、启示卡套装、武器及改造等级、意识/命座、技能等级的亮点与最值得补强的 1~2 项；若意识达到 3 命及以上或武器达到高改造等级，请自然提及并给予符合人设的评价/赞许）。",
-        "4. 不要教实战打法、技能循环、操作手法、排轴或配队教学，也不要编造未给出的数值。",
-        "5. 控制在 80~160 字左右，口语自然紧凑，直接输出给用户的最终回复。",
     ]
+    if unique_hints:
+        sections.extend(["", "【该角色自带的局内加成（不体现在站街面板中）】", *(f"- {x}" for x in unique_hints[:4])])
+
+    sections.extend(
+        [
+            "",
+            "【回复要求】",
+            "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
+            "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”等出戏或机械词，直接把这些当作你自己的眼光和判断。",
+            "3. 严格遵守 P5X 站街口径：截图中均为未进战斗的站街数值，不含角色技能自拐、意识（命座）、专武特效、启示卡触发与队友提供的暴击率/穿透/攻击加成。严禁仅凭站街暴击率看起来偏低（如 20%~40%）就批评“暴击率缺口大/太低”！",
+            "4. 只能针对【练度对标结果】中明确标为 `[可优化]` 的项目指出不足，不要擅自把未标 `[可优化]` 的属性数值当成缺点批斗；若意识达到 3 命及以上或武器达到高改造等级，请自然提及并给予符合人设的评价/赞许。",
+            "5. 只点评面板本身的养成练度，不要教实战打法、技能循环、操作手法、排轴或配队教学，也不要编造未给出的数值。",
+            "6. 控制在 80~160 字左右，口语自然紧凑，直接输出给用户的最终回复。",
+        ]
+    )
     return "\n".join(sections)
 
 
