@@ -324,6 +324,8 @@
         <div class="badges">
           <span class="cat-pill">面板自动点评</span>
           {% if r.level %}<span class="meta-pill">Lv.{{ r.level }}</span>{% endif %}
+          {% if r.awareness is not none %}<span class="meta-pill">{{ r.awareness }}意识</span>{% endif %}
+          {% if r.weapon_mod is not none %}<span class="meta-pill">武器{{ r.weapon_mod }}改</span>{% endif %}
           {% if r.total_score %}<span class="meta-pill">综合评分 {{ r.total_score }}</span>{% endif %}
         </div>
         <h1 class="char-title">{{ r.character_name }}</h1>

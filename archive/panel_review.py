@@ -13,6 +13,7 @@ from __future__ import annotations
 import difflib
 import io
 import logging
+import math
 import re
 import threading
 from dataclasses import dataclass
@@ -125,6 +126,8 @@ class ParsedPanel:
     total_score: int | None
     anchor_hits: int
     core_targets: tuple[tuple[str, str], ...] = ()
+    awareness: int | None = None
+    weapon_mod: int | None = None
 
     def stat_map(self) -> dict[str, str]:
         return dict(self.stats)
@@ -160,6 +163,8 @@ class PanelReview:
             "revelation_set": self.parsed.revelation_set,
             "weapon_name": self.parsed.weapon_name,
             "weapon_level": self.parsed.weapon_level,
+            "awareness": self.parsed.awareness,
+            "weapon_mod": self.parsed.weapon_mod,
             "total_score": self.parsed.total_score,
             "grade": self.grade,
             "headline": self.headline,
@@ -512,11 +517,146 @@ def _parse_core_targets(boxes: Sequence[OcrBox]) -> tuple[tuple[str, str], ...]:
     return tuple(pairs)
 
 
+def _detect_ring_lit_count(
+    arr,
+    lum,
+    w: int,
+    h: int,
+    search_box: tuple[int, int, int, int],
+    r_in: float,
+    r_out: float,
+    angle_offset_deg: float,
+) -> int | None:
+    """定位 6 瓣空心环（意识六芒星 / 武器改造六瓣环）并统计亮白瓣数（0~6）。"""
+    import numpy as np
+
+    sx0 = max(3, min(w - 4, search_box[0]))
+    sy0 = max(3, min(h - 4, search_box[1]))
+    sx1 = max(sx0 + 1, min(w - 3, search_box[2]))
+    sy1 = max(sy0 + 1, min(h - 3, search_box[3]))
+
+    angles = np.linspace(0.0, 2.0 * math.pi, 18, endpoint=False)
+    r_mid = (r_in + r_out) / 2.0
+    best_score = -1e9
+    best_xy: tuple[int, int] | None = None
+
+    step = 2 if (sx1 - sx0) * (sy1 - sy0) > 2500 else 1
+    for cy in range(sy0, sy1, step):
+        for cx in range(sx0, sx1, step):
+            if lum[cy, cx] > 55.0:
+                continue
+            inner = float(lum[cy - 2 : cy + 3, cx - 2 : cx + 3].mean())
+            if inner > 65.0:
+                continue
+            ring_vals = []
+            for a in angles:
+                ca, sa = math.cos(a), math.sin(a)
+                for r in (r_in, r_mid):
+                    px, py = int(round(cx + r * ca)), int(round(cy + r * sa))
+                    if 0 <= px < w and 0 <= py < h:
+                        ring_vals.append(float(lum[py, px]))
+            if not ring_vals:
+                continue
+            score = (sum(ring_vals) / len(ring_vals)) - inner * 1.5
+            if score > best_score:
+                best_score = score
+                best_xy = (cx, cy)
+
+    if best_xy is None or best_score < 35.0:
+        return None
+
+    cx, cy = best_xy
+    lit = 0
+    for i in range(6):
+        a0 = math.radians(angle_offset_deg + i * 60.0 - 18.0)
+        a1 = math.radians(angle_offset_deg + i * 60.0 + 18.0)
+        lums = []
+        sats = []
+        for a in np.linspace(a0, a1, 9):
+            ca, sa = math.cos(a), math.sin(a)
+            for r in np.linspace(r_in, r_out, 7):
+                px, py = int(round(cx + r * ca)), int(round(cy + r * sa))
+                if 0 <= px < w and 0 <= py < h:
+                    R, G, B = arr[py, px]
+                    lums.append(0.299 * R + 0.587 * G + 0.114 * B)
+                    sats.append(max(R, G, B) - min(R, G, B))
+        if not lums:
+            continue
+        white_pct = sum(1 for lv, sv in zip(lums, sats) if lv >= 180.0 and sv <= 48.0) / len(lums)
+        p75 = float(np.percentile(lums, 75))
+        if white_pct >= 0.30 and p75 >= 185.0:
+            lit += 1
+    return lit
+
+
+def _detect_awareness_and_weapon_mod(
+    image_bytes: bytes, boxes: Sequence[OcrBox]
+) -> tuple[int | None, int | None]:
+    """基于相对 OCR 锚点与像素亮度，纯本地识别角色意识（0~6 命）与武器改造等级（0~6 改）。"""
+    try:
+        import numpy as np
+        from PIL import Image
+
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            rgb = img.convert("RGB")
+            w, h = rgb.size
+            arr = np.asarray(rgb, dtype=np.float32)
+    except Exception:  # noqa: BLE001
+        return None, None
+
+    lum = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
+
+    header_lv = None
+    weapon_lv = None
+    for b in boxes:
+        if not re.match(r"^lv\.?\s*\d{1,3}$", b.text.strip(), re.I):
+            continue
+        if b.nx0 < 0.42 and b.ny0 < 0.28 and header_lv is None:
+            header_lv = b
+        elif 0.27 <= b.nx0 <= 0.48 and 0.68 <= b.ny0 <= 0.85 and weapon_lv is None:
+            weapon_lv = b
+
+    awareness: int | None = None
+    if header_lv is not None:
+        x1 = header_lv.nx1 * w
+        cy_lv = header_lv.ncy * h
+        lv_h = max(8.0, (header_lv.ny1 - header_lv.ny0) * h)
+        search = (
+            int(x1 - 0.1 * lv_h),
+            int(cy_lv - 2.3 * lv_h),
+            int(x1 + 2.2 * lv_h),
+            int(cy_lv + 0.2 * lv_h),
+        )
+        awareness = _detect_ring_lit_count(
+            arr, lum, w, h, search, r_in=lv_h * 0.45, r_out=lv_h * 1.08, angle_offset_deg=-75.0
+        )
+
+    weapon_mod: int | None = None
+    if weapon_lv is not None:
+        x1 = weapon_lv.nx1 * w
+        y0 = weapon_lv.ny0 * h
+        y1 = weapon_lv.ny1 * h
+        lv_h = max(8.0, y1 - y0)
+        search = (
+            int(x1 + 2.8 * lv_h),
+            int(y0 - 2.0 * lv_h),
+            int(x1 + 6.6 * lv_h),
+            int(y1 - 0.3 * lv_h),
+        )
+        weapon_mod = _detect_ring_lit_count(
+            arr, lum, w, h, search, r_in=lv_h * 0.48, r_out=lv_h * 1.10, angle_offset_deg=-60.0
+        )
+
+    return awareness, weapon_mod
+
+
 def parse_panel_ocr(
     boxes: Sequence[OcrBox],
     repo: yituliou.YituliouRepository,
     extra_characters: Sequence[tuple[str, str]] = (),
     stats_override_boxes: Sequence[OcrBox] | None = None,
+    awareness: int | None = None,
+    weapon_mod: int | None = None,
 ) -> ParsedPanel | None:
     """将 OCR 文本框解析为结构化角色面板；非 P5X 面板返回 None。"""
     anchor_hits = _count_anchors(boxes)
@@ -573,6 +713,8 @@ def parse_panel_ocr(
         total_score=total_score,
         anchor_hits=anchor_hits,
         core_targets=core_targets,
+        awareness=awareness,
+        weapon_mod=weapon_mod,
     )
 
 
@@ -775,9 +917,11 @@ def evaluate_panel(
             )
         )
 
-    # 2. 武器点评
+    # 2. 武器与改造等级点评
     if parsed.weapon_name:
-        lv_tag = f"（Lv.{parsed.weapon_level}）" if parsed.weapon_level else ""
+        mod_part = f" · {parsed.weapon_mod}改" if parsed.weapon_mod is not None else ""
+        lv_part = f"Lv.{parsed.weapon_level}" if parsed.weapon_level else ""
+        lv_tag = f"（{lv_part}{mod_part}）" if (lv_part or mod_part) else ""
         if entry.weapon_name:
             actual_w = yituliou.normalize_key(parsed.weapon_name)
             target_w = yituliou.normalize_key(entry.weapon_name)
@@ -794,11 +938,16 @@ def evaluate_panel(
                     )
                 else:
                     pass_count += 1
+                    high_mod = (
+                        "（满改毕业）"
+                        if parsed.weapon_mod == 6
+                        else (f"（高改造 {parsed.weapon_mod}改）" if (parsed.weapon_mod or 0) >= 3 else "")
+                    )
                     items.append(
                         ReviewItem(
                             "武器配置",
                             "pass",
-                            f"已装备推荐专武「{entry.weapon_name}」{lv_tag}",
+                            f"已装备推荐专武「{entry.weapon_name}」{lv_tag}{high_mod}",
                         )
                     )
             else:
@@ -1000,6 +1149,38 @@ def evaluate_panel(
             warn_count += 1
         items.append(skill_item)
 
+    # 4.5 角色意识（命座）点评
+    if parsed.awareness is not None:
+        if parsed.awareness >= 6:
+            pass_count += 1
+            items.append(
+                ReviewItem(
+                    "意识（命座）",
+                    "pass",
+                    f"已达 6 意识（满命完全体）",
+                    detail=f"抽取建议参考：{entry.pull_advice.replace(chr(10), ' ')}" if entry.pull_advice else "",
+                )
+            )
+        elif parsed.awareness >= 3:
+            pass_count += 1
+            items.append(
+                ReviewItem(
+                    "意识（命座）",
+                    "pass",
+                    f"高命配置：{parsed.awareness} 意识（{parsed.awareness} 命）",
+                    detail=f"抽取建议参考：{entry.pull_advice.replace(chr(10), ' ')}" if entry.pull_advice else "",
+                )
+            )
+        else:
+            items.append(
+                ReviewItem(
+                    "意识（命座）",
+                    "info",
+                    f"当前 {parsed.awareness} 意识（{parsed.awareness} 命）",
+                    detail=f"抽取建议参考：{entry.pull_advice.replace(chr(10), ' ')}" if entry.pull_advice else "",
+                )
+            )
+
     # 5. 综合练度评级
     if warn_count == 0 and pass_count >= 3:
         grade = "S"
@@ -1036,13 +1217,16 @@ def analyze_panel_image(
     if not boxes or _count_anchors(boxes) < MIN_ANCHOR_HITS:
         return None
     active_repo = repo if repo is not None else yituliou.load_repository()
-    # 确认是 P5X 面板后，对左侧属性栏做 2× 局部精扫补齐易漏数字（如生命值）
+    # 确认是 P5X 面板后，对左侧属性栏做 2× 局部精扫补齐易漏数字（如生命值），并识别意识/武器改造环
     stats_crop_boxes = _run_stats_crop_ocr(image_bytes)
+    awareness, weapon_mod = _detect_awareness_and_weapon_mod(image_bytes, boxes)
     parsed = parse_panel_ocr(
         boxes,
         active_repo,
         extra_characters=extra_characters,
         stats_override_boxes=stats_crop_boxes or None,
+        awareness=awareness,
+        weapon_mod=weapon_mod,
     )
     if parsed is None:
         return None
@@ -1054,6 +1238,8 @@ def render_review_text(review: PanelReview) -> str:
     p = review.parsed
     meta_parts = [
         f"Lv.{p.level}" if p.level else "",
+        f"{p.awareness}意识" if p.awareness is not None else "",
+        f"武器{p.weapon_mod}改" if p.weapon_mod is not None else "",
         f"综合评分 {p.total_score}" if p.total_score else "",
         f"练度评级 {review.grade}",
     ]
@@ -1093,6 +1279,9 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
     facts: list[str] = [
         f"- 角色：{p.character_name}" + (f"（Lv.{p.level}）" if p.level else ""),
     ]
+    if p.awareness is not None:
+        high_aw = "（高命座）" if p.awareness >= 3 else ""
+        facts.append(f"- 角色意识（命座）：{p.awareness}命（{p.awareness}意识）{high_aw}")
     if p.total_score:
         facts.append(f"- 游戏内综合评分：{p.total_score}")
     if p.stats:
@@ -1108,7 +1297,8 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
         facts.append(f"- 当前启示卡：{p.revelation_set}")
     if p.weapon_name:
         lv = f" Lv.{p.weapon_level}" if p.weapon_level else ""
-        facts.append(f"- 当前武器：{p.weapon_name}{lv}")
+        mod = f" · {p.weapon_mod}改" if p.weapon_mod is not None else ""
+        facts.append(f"- 当前武器：{p.weapon_name}{lv}{mod}")
 
     eval_lines: list[str] = [
         f"- 综合练度评级：{review.grade}（{review.headline}）",
@@ -1133,7 +1323,7 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
         "【回复要求】",
         "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
         "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”等出戏或机械词，直接把这些当作你自己的眼光和判断。",
-        "3. 只点评面板本身的养成练度（属性数值、启示卡套装、武器、技能等级的亮点与最值得补强的 1~2 项；若已全部达标就给予对应人设风格的认可/嘉奖）。",
+        "3. 只点评面板本身的养成练度（属性数值、启示卡套装、武器及改造等级、意识/命座、技能等级的亮点与最值得补强的 1~2 项；若意识达到 3 命及以上或武器达到高改造等级，请自然提及并给予符合人设的评价/赞许）。",
         "4. 不要教实战打法、技能循环、操作手法、排轴或配队教学，也不要编造未给出的数值。",
         "5. 控制在 80~160 字左右，口语自然紧凑，直接输出给用户的最终回复。",
     ]

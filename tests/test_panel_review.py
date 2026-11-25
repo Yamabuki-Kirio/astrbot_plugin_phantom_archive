@@ -134,6 +134,8 @@ def test_multitier_thresholds_and_core_targets():
         total_score=11800,
         anchor_hits=7,
         core_targets=(("攻击力", "4500"), ("生命值", "8000")),
+        awareness=4,
+        weapon_mod=4,
     )
     review = panel_review.evaluate_panel(parsed, repo)
     text = panel_review.render_review_text(review)
@@ -143,9 +145,13 @@ def test_multitier_thresholds_and_core_targets():
     assert "5452" in text
     assert "15.93%" in text
     assert "全部达成" in text
+    assert "4意识" in text
+    assert "武器4改" in text
     prompt = panel_review.build_persona_llm_prompt(review)
     assert "汐见琴音" in prompt
     assert "4900" in prompt
+    assert "4命（4意识）（高命座）" in prompt
+    assert "4改" in prompt
     assert "严格保持你当前扮演的人格" in prompt
     assert "严禁提及“OCR”" in prompt
 
