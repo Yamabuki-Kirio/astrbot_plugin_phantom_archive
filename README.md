@@ -1,5 +1,10 @@
 # 夜幕档案
 
+v0.11.2：深化主动识图面板点评精度与数值对标：
+- 新增左侧属性框 2× 局部精扫，补齐首行易漏数字（完整识别生命值/攻击力/防御力/速度/精力回复/伤害加成等全部 6 项面板属性）。
+- 完整解析一图流多档推荐属性值（`无心象档` / `常规心象档` / `6意识档` / 上限约束），逐档计算当前面板差值或超出值，并注明进图/站街口径。
+- 同步解析游戏截图右侧「核心属性目标」并与面板逐项比对；未装专武时自动引用一图流专武提升率，附带推荐循环与核心实战提醒。
+
 v0.11.1：主动识图点评默认改为**直接发送结构化文字评价**（含面板速览、逐项达标/可优化点评、练度评级与推荐循环），并新增配置项 `auto_panel_review_output_mode`（可选 `text` / `image` / `both`，默认 `text`）。
 
 v0.11.0：新增**纯本地主动识图点评角色面板**（基于 `rapidocr-onnxruntime` 本地 CPU OCR，不使用任何 LLM 视觉模型）。
@@ -57,7 +62,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.11.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.11.2-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

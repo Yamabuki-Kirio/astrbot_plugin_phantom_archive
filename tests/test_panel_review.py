@@ -120,6 +120,31 @@ def test_evaluate_suboptimal_panel_flags_warnings():
     assert statuses["技能加点"] == "warn"
 
 
+def test_multitier_thresholds_and_core_targets():
+    repo = yituliou.load_repository()
+    parsed = panel_review.ParsedPanel(
+        character_name="汐见琴音",
+        character_slug="kotone",
+        level=100,
+        stats=(("生命值", "9800"), ("攻击力", "4900"), ("防御力", "1600")),
+        skill_levels=(10, 8, 10, 8),
+        revelation_set="【诞生】&【争执】",
+        weapon_name="四星过渡武器",
+        weapon_level=80,
+        total_score=11800,
+        anchor_hits=7,
+        core_targets=(("攻击力", "4500"), ("生命值", "8000")),
+    )
+    review = panel_review.evaluate_panel(parsed, repo)
+    text = panel_review.render_review_text(review)
+    assert "无心象档" in text
+    assert "4684" in text
+    assert "5164" in text
+    assert "5452" in text
+    assert "15.93%" in text
+    assert "全部达成" in text
+
+
 @pytest.mark.parametrize("bg", ["phantom", "reload_blue", "phantom_red"])
 def test_panel_review_card_renders_all_three_backgrounds(bg):
     repo = yituliou.load_repository()

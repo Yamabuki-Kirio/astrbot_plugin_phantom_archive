@@ -85,6 +85,7 @@ STAT_ALIASES: dict[str, str] = {
     "效果命中": "效果命中",
     "效果抵抗": "效果抵抗",
     "精力回复": "精力回复",
+    "精力恢复": "精力回复",
     "治疗效果": "治疗效果",
 }
 
@@ -123,9 +124,13 @@ class ParsedPanel:
     weapon_level: int | None
     total_score: int | None
     anchor_hits: int
+    core_targets: tuple[tuple[str, str], ...] = ()
 
     def stat_map(self) -> dict[str, str]:
         return dict(self.stats)
+
+    def target_map(self) -> dict[str, str]:
+        return dict(self.core_targets)
 
 
 @dataclass(frozen=True)
@@ -435,10 +440,83 @@ def _parse_weapon(boxes: Sequence[OcrBox]) -> tuple[str, int | None]:
     return weapon_name, weapon_level
 
 
+def _run_stats_crop_ocr(image_bytes: bytes) -> list[OcrBox]:
+    """对左侧属性框区域做 2× 放大裁剪再精扫一次，补全首行易漏数字（如生命值）。"""
+    ocr = _get_ocr()
+    if ocr is None:
+        return []
+    try:
+        from PIL import Image
+
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            w, h = img.size
+            x0, y0, x1, y1 = int(w * 0.10), int(h * 0.24), int(w * 0.46), int(h * 0.52)
+            crop = img.crop((x0, y0, x1, y1))
+            crop = crop.resize((crop.width * 2, crop.height * 2), Image.Resampling.LANCZOS)
+            buf = io.BytesIO()
+            crop.save(buf, format="PNG")
+    except Exception:  # noqa: BLE001
+        return []
+
+    with _OCR_LOCK:
+        result, _ = ocr(buf.getvalue())
+    if not result:
+        return []
+
+    cw, ch = crop.width, crop.height
+    rx0, ry0, rw, rh = 0.10, 0.24, 0.36, 0.28
+    boxes: list[OcrBox] = []
+    for raw_box, text, score in result:
+        clean = str(text or "").strip()
+        if not clean:
+            continue
+        xs = [float(pt[0]) / cw for pt in raw_box]
+        ys = [float(pt[1]) / ch for pt in raw_box]
+        boxes.append(
+            OcrBox(
+                text=clean,
+                score=float(score),
+                nx0=rx0 + min(xs) * rw,
+                ny0=ry0 + min(ys) * rh,
+                nx1=rx0 + max(xs) * rw,
+                ny1=ry0 + max(ys) * rh,
+            )
+        )
+    return boxes
+
+
+def _parse_core_targets(boxes: Sequence[OcrBox]) -> tuple[tuple[str, str], ...]:
+    """提取右侧「核心属性目标」栏位（nx: 0.65~0.95, ny: 0.36~0.64）中的目标数值。"""
+    region = [b for b in boxes if 0.65 <= b.nx0 <= 0.95 and 0.36 <= b.ny0 <= 0.64]
+    if not region:
+        return ()
+    labels: list[tuple[float, str]] = []
+    values: list[tuple[float, str]] = []
+    for b in region:
+        if "核心属性" in b.text:
+            continue
+        cleaned = _clean_ocr_label(b.text)
+        matched_label = next((lb for lb in STAT_LABELS if lb in cleaned), None)
+        if matched_label is not None:
+            labels.append((b.ncy, matched_label))
+        elif _is_stat_value(b.text):
+            values.append((b.ncy, b.text.strip()))
+    if not labels or not values:
+        return ()
+    # 右侧目标栏略微倾斜，按纵坐标从上到下顺序一一配对最稳健
+    labels.sort(key=lambda item: item[0])
+    values.sort(key=lambda item: item[0])
+    pairs: list[tuple[str, str]] = []
+    for (_, lb), (_, val) in zip(labels, values):
+        pairs.append((lb, val))
+    return tuple(pairs)
+
+
 def parse_panel_ocr(
     boxes: Sequence[OcrBox],
     repo: yituliou.YituliouRepository,
     extra_characters: Sequence[tuple[str, str]] = (),
+    stats_override_boxes: Sequence[OcrBox] | None = None,
 ) -> ParsedPanel | None:
     """将 OCR 文本框解析为结构化角色面板；非 P5X 面板返回 None。"""
     anchor_hits = _count_anchors(boxes)
@@ -467,7 +545,14 @@ def parse_panel_ocr(
             total_score = int(m.group(1))
             break
 
-    stats = _parse_stats(boxes)
+    stats = _parse_stats(stats_override_boxes if stats_override_boxes else boxes)
+    if stats_override_boxes:
+        # 若精扫缺某项，用全图结果补齐
+        merged = dict(_parse_stats(boxes))
+        merged.update(dict(stats))
+        stats = tuple((lb, merged[lb]) for lb in STAT_LABELS if lb in merged)
+
+    core_targets = _parse_core_targets(boxes)
     skill_levels = _parse_skill_levels(boxes)
     revelation_set = _parse_revelation(boxes)
     weapon_name, weapon_level = _parse_weapon(boxes)
@@ -487,6 +572,7 @@ def parse_panel_ocr(
         weapon_level=weapon_level,
         total_score=total_score,
         anchor_hits=anchor_hits,
+        core_targets=core_targets,
     )
 
 
@@ -497,17 +583,66 @@ def _normalize_rev_set(text: str) -> str:
     return re.sub(r"[\s【】\[\]《》&＆+＋·•・]", "", text or "")
 
 
-def _extract_stat_thresholds(sub_stats: Sequence[str]) -> list[tuple[str, float, bool]]:
-    """从一图流副词条中提取数值门槛，如「攻击力＞5060」→ [('攻击力', 5060.0, False)]。"""
-    thresholds: list[tuple[str, float, bool]] = []
-    pattern = re.compile(r"([\u4e00-\u9fa5]{2,4})\s*[>＞≥>=]+\s*(\d+(?:\.\d+)?)(%?)")
+@dataclass(frozen=True)
+class StatThreshold:
+    label: str
+    value: float
+    is_pct: bool
+    op: str  # ">" or "<"
+    tier: str  # "常规" | "无心象" | "6意识"
+
+
+def _extract_stat_thresholds(sub_stats: Sequence[str]) -> list[StatThreshold]:
+    """从一图流副词条中提取全部数值门槛（含常规档 / 无心象档 / 6意识档 / 上限约束）。
+
+    示例：
+      ['攻击力＞5164', '无心象＞4684', '6意识＞5452']
+      ['攻击力＞3852（无心像＞3502）', '暴击效果＞70.4%（无心像＞64%）']
+      ['①暴击（满爆）', '③效果命中（＜150%）']
+    """
+    thresholds: list[StatThreshold] = []
+    last_label: str | None = None
+    pat_labeled = re.compile(
+        r"([\u4e00-\u9fa5]{2,4})\s*[（(]?\s*([>＞≥>=<＜≤]+)\s*(\d+(?:\.\d+)?)(%?)"
+    )
+    pat_tier = re.compile(
+        r"(无心[象像]|6意识|满意识)\s*([>＞≥>=<＜≤]+)\s*(\d+(?:\.\d+)?)(%?)"
+    )
+
     for line in sub_stats:
-        for m in pattern.finditer(line):
-            raw_label, num_str, pct = m.groups()
+        line_last_label = last_label
+        # 1. 先匹配带属性名的主门槛（一条里可能有多个，如「攻击力＞3852（无心像＞3502）」）
+        for m in pat_labeled.finditer(line):
+            raw_label, raw_op, num_str, pct = m.groups()
             canonical = STAT_ALIASES.get(raw_label)
-            if canonical:
-                thresholds.append((canonical, float(num_str), bool(pct)))
+            if canonical is None:
+                continue
+            op = "<" if any(c in raw_op for c in "<＜≤") else ">"
+            thresholds.append(StatThreshold(canonical, float(num_str), bool(pct), op, "常规"))
+            line_last_label = canonical
+            last_label = canonical
+
+        # 2. 再匹配归属于最近属性的「无心象 / 6意识 / 满意识」档位
+        if line_last_label is not None:
+            for m in pat_tier.finditer(line):
+                raw_tier, raw_op, num_str, pct = m.groups()
+                tier = "无心象" if "无心" in raw_tier else "6意识"
+                op = "<" if any(c in raw_op for c in "<＜≤") else ">"
+                thresholds.append(StatThreshold(line_last_label, float(num_str), bool(pct), op, tier))
+
     return thresholds
+
+
+def _fmt_num(val: float, is_pct: bool) -> str:
+    text = f"{val:g}"
+    return f"{text}%" if is_pct else text
+
+
+def _find_weapon_upgrade_rate(entry: yituliou.YituliouEntry) -> str:
+    for r in entry.upgrade_rates:
+        if any(k in r.label for k in ("五星", "专武", "5星")):
+            return f"{r.label} {r.value}"
+    return ""
 
 
 def _evaluate_skills(
@@ -668,12 +803,18 @@ def evaluate_panel(
                     )
             else:
                 warn_count += 1
+                rate_hint = _find_weapon_upgrade_rate(entry)
+                detail_parts = []
+                if entry.pull_advice:
+                    detail_parts.append(f"抽取建议：{entry.pull_advice.replace(chr(10), ' ')}")
+                if rate_hint:
+                    detail_parts.append(f"专武提升参考：{rate_hint}")
                 items.append(
                     ReviewItem(
                         "武器配置",
                         "warn",
                         f"当前装备「{parsed.weapon_name}」{lv_tag}，非专武「{entry.weapon_name}」",
-                        detail=f"抽取建议：{entry.pull_advice.replace(chr(10), ' ')}" if entry.pull_advice else "",
+                        detail=" ｜ ".join(detail_parts),
                     )
                 )
         else:
@@ -686,41 +827,156 @@ def evaluate_panel(
                 )
             )
 
-    # 3. 核心属性 & 副词条门槛点评
+    # 3. 核心属性 & 一图流数值门槛（含多档位：无心象 / 常规 / 6意识）& 游戏内核心目标
     stat_map = parsed.stat_map()
+    target_map = parsed.target_map()
     thresholds = _extract_stat_thresholds(rev.sub_stats)
+    in_battle_note = "（一图流为进图数值，面板为站街值）" if ("进图" in rev.note or "图内" in rev.note or "战斗中" in " ".join(rev.sub_stats)) else ""
+
+    # 按属性名分组，避免同一属性拆出 3 张重复卡片
+    grouped_thresholds: dict[str, list[StatThreshold]] = {}
+    for th in thresholds:
+        grouped_thresholds.setdefault(th.label, []).append(th)
+
     threshold_checked = False
-    for label, target_val, is_pct in thresholds:
+    for label, th_list in grouped_thresholds.items():
         if label not in stat_map:
+            # 面板未露出该属性（例如解明角色不显示暴击效果、或 DPS 隐藏属性），列出目标供核对
+            tier_desc = " / ".join(
+                f"{t.tier}{t.op}{_fmt_num(t.value, t.is_pct)}" for t in th_list
+            )
+            items.append(
+                ReviewItem(
+                    f"推荐属性·{label}",
+                    "info",
+                    f"一图流推荐 {label}：{tier_desc}{in_battle_note}",
+                    detail="该属性未在分享面板首页直接显示，可在游戏内点「详情」核对",
+                )
+            )
             continue
+
         actual_num = _parse_numeric_value(stat_map[label])
         if actual_num is None:
             continue
         threshold_checked = True
-        unit = "%" if is_pct else ""
-        diff = actual_num - target_val
-        if diff >= 0:
+
+        # 先看上限约束（如 效果命中＜150%）
+        upper_ths = [t for t in th_list if t.op == "<"]
+        lower_ths = [t for t in th_list if t.op == ">"]
+
+        if upper_ths and not lower_ths:
+            t = upper_ths[0]
+            if actual_num <= t.value:
+                pass_count += 1
+                items.append(
+                    ReviewItem(
+                        f"核心属性·{label}",
+                        "pass",
+                        f"面板 {label} {stat_map[label]}，未超上限 {_fmt_num(t.value, t.is_pct)}{in_battle_note}",
+                    )
+                )
+            else:
+                warn_count += 1
+                items.append(
+                    ReviewItem(
+                        f"核心属性·{label}",
+                        "warn",
+                        f"面板 {label} {stat_map[label]}，超出推荐上限 {_fmt_num(t.value, t.is_pct)}（溢出 +{_fmt_num(actual_num - t.value, t.is_pct)}）",
+                    )
+                )
+            continue
+
+        # 下限约束：按阈值从低到高排序（通常 无心象 < 常规 < 6意识）
+        lower_ths.sort(key=lambda t: t.value)
+        base_th = next((t for t in lower_ths if t.tier == "常规"), lower_ths[0])
+        highest_met = [t for t in lower_ths if actual_num >= t.value]
+        tier_summary = " / ".join(f"{t.tier}>{_fmt_num(t.value, t.is_pct)}" for t in lower_ths)
+        game_target_hint = f"；游戏目标 {target_map[label]}" if label in target_map else ""
+
+        if actual_num >= base_th.value:
             pass_count += 1
+            top = highest_met[-1]
+            diff = actual_num - top.value
+            extra_next = ""
+            unmet = [t for t in lower_ths if actual_num < t.value]
+            if unmet:
+                nxt = unmet[0]
+                extra_next = f"（距 {nxt.tier}档 {_fmt_num(nxt.value, nxt.is_pct)} 差 {_fmt_num(nxt.value - actual_num, nxt.is_pct)}）"
             items.append(
                 ReviewItem(
                     f"核心属性·{label}",
                     "pass",
-                    f"面板 {label} {stat_map[label]}，已超过一图流门槛 {target_val:g}{unit}（+{diff:g}{unit}）",
-                    detail=f"副词条优先级：{' / '.join(rev.sub_stats)}" if rev.sub_stats else "",
+                    f"面板 {label} {stat_map[label]}，已达「{top.tier}档」{_fmt_num(top.value, top.is_pct)}（+{_fmt_num(diff, top.is_pct)}）{extra_next}",
+                    detail=f"一图流分档：{tier_summary}{game_target_hint}{in_battle_note}",
+                )
+            )
+        elif highest_met:
+            # 过了无心象档，但未到常规心象档
+            pass_count += 1
+            met = highest_met[-1]
+            gap = base_th.value - actual_num
+            items.append(
+                ReviewItem(
+                    f"核心属性·{label}",
+                    "info",
+                    f"面板 {label} {stat_map[label]}，已达「{met.tier}档」{_fmt_num(met.value, met.is_pct)}，距常规档 {_fmt_num(base_th.value, base_th.is_pct)} 尚差 {_fmt_num(gap, base_th.is_pct)}",
+                    detail=f"一图流分档：{tier_summary}{game_target_hint}{in_battle_note}",
                 )
             )
         else:
             warn_count += 1
+            first = lower_ths[0]
+            gap = first.value - actual_num
             items.append(
                 ReviewItem(
                     f"核心属性·{label}",
                     "warn",
-                    f"面板 {label} {stat_map[label]}，距一图流门槛 {target_val:g}{unit} 尚差 {-diff:g}{unit}",
-                    detail=f"副词条优先级：{' / '.join(rev.sub_stats)}" if rev.sub_stats else "",
+                    f"面板 {label} {stat_map[label]}，距一图流门槛 {_fmt_num(first.value, first.is_pct)} 尚差 {_fmt_num(gap, first.is_pct)}",
+                    detail=f"一图流分档：{tier_summary}{game_target_hint}{in_battle_note}",
                 )
             )
 
-    if not threshold_checked and (rev.sub_stats or rev.main_stats):
+    # 游戏内「核心属性目标」核对（截图右侧官方目标条）
+    if target_map:
+        met_parts = []
+        unmet_parts = []
+        for t_label, t_val_str in parsed.core_targets:
+            if t_label not in stat_map:
+                continue
+            a_num = _parse_numeric_value(stat_map[t_label])
+            t_num = _parse_numeric_value(t_val_str)
+            if a_num is None or t_num is None:
+                continue
+            if a_num >= t_num:
+                met_parts.append(f"{t_label} {stat_map[t_label]}/{t_val_str}")
+            else:
+                unmet_parts.append(f"{t_label} {stat_map[t_label]}/{t_val_str}(差{t_num - a_num:g})")
+        if unmet_parts:
+            warn_count += 1
+            items.append(
+                ReviewItem(
+                    "游戏核心目标",
+                    "warn",
+                    "未达标：" + "、".join(unmet_parts),
+                    detail=("已达标：" + " / ".join(met_parts)) if met_parts else "",
+                )
+            )
+        elif met_parts:
+            if not threshold_checked:
+                pass_count += 1
+            items.append(
+                ReviewItem(
+                    "游戏核心目标",
+                    "pass",
+                    "全部达成：" + " / ".join(met_parts),
+                    detail=(
+                        "一图流词条优先：" + " → ".join(rev.sub_stats)
+                        if (not threshold_checked and rev.sub_stats)
+                        else ""
+                    ),
+                )
+            )
+    elif not threshold_checked and (rev.sub_stats or rev.main_stats):
         panel_brief = " / ".join(f"{k} {v}" for k, v in parsed.stats[:6])
         items.append(
             ReviewItem(
@@ -772,22 +1028,29 @@ def analyze_panel_image(
     repo: yituliou.YituliouRepository | None = None,
     extra_characters: Sequence[tuple[str, str]] = (),
 ) -> PanelReview | None:
-    """端到端入口：图片字节 → 预筛 → 本地 OCR → 面板解析 → 一图流点评。非面板图返回 None。"""
+    """端到端入口：图片字节 → 预筛 → 本地 OCR → 属性区精扫 → 面板解析 → 一图流点评。"""
     ocr_res = run_ocr(image_bytes)
     if ocr_res is None:
         return None
     boxes, _ = ocr_res
-    if not boxes:
+    if not boxes or _count_anchors(boxes) < MIN_ANCHOR_HITS:
         return None
     active_repo = repo if repo is not None else yituliou.load_repository()
-    parsed = parse_panel_ocr(boxes, active_repo, extra_characters=extra_characters)
+    # 确认是 P5X 面板后，对左侧属性栏做 2× 局部精扫补齐易漏数字（如生命值）
+    stats_crop_boxes = _run_stats_crop_ocr(image_bytes)
+    parsed = parse_panel_ocr(
+        boxes,
+        active_repo,
+        extra_characters=extra_characters,
+        stats_override_boxes=stats_crop_boxes or None,
+    )
     if parsed is None:
         return None
     return evaluate_panel(parsed, active_repo)
 
 
 def render_review_text(review: PanelReview) -> str:
-    """纯文本点评输出（无 T2I 或渲染失败时使用）。"""
+    """纯文本点评输出（默认主动识图输出与无 T2I 降级均使用它）。"""
     p = review.parsed
     meta_parts = [
         f"Lv.{p.level}" if p.level else "",
@@ -802,6 +1065,7 @@ def render_review_text(review: PanelReview) -> str:
     if p.stats:
         lines.append("面板速览：" + " / ".join(f"{k} {v}" for k, v in p.stats))
     lines.append("")
+
     icon_map = {"pass": "✅", "warn": "⚠️", "info": "💡"}
     for item in review.items:
         lines.append(f"{icon_map.get(item.status, '·')} {item.category}：{item.summary}")
@@ -813,6 +1077,8 @@ def render_review_text(review: PanelReview) -> str:
             order = f"（{review.entry.action_order}）" if review.entry.action_order else ""
             lines.append("")
             lines.append(f"■ 推荐循环{order}：{' / '.join(review.entry.rotation)}")
+        if review.entry.tips:
+            lines.append(f"■ 实战提醒：{review.entry.tips[0]}")
         ver = f"v{review.entry.version} · " if review.entry.version else ""
         lines.append(f"{ver}对标数据：{review.entry.author}《磨练欲望：30S就能看懂的一图流攻略》")
     return "\n".join(lines)
