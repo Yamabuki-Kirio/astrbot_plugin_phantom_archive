@@ -2,7 +2,7 @@ name: astrbot_plugin_phantom_archive
 display_name: 夜幕档案
 desc: 面向《女神异闻录：夜幕魅影》的角色一图流、倍率/辅助榜单、技能、武器、意识、养成、评价与配队只读查询插件；每日运势支持随机或指定角色，并抽取塔罗吉凶与今日课题。
 help: 发送 /夜幕帮助 查看可用指令
-version: v0.11.4
+version: v0.11.5
 author: Yamabuki-Kirio
 repo: https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive
 astrbot_version: ">=4.16,<5"

@@ -1,5 +1,7 @@
 # 夜幕档案
 
+v0.11.5：精简主动识图人格 LLM 点评提示词：聚焦面板本身的养成练度（属性数值、启示卡、武器、技能等级），不再输出实战打法、技能循环或操作教学，回复更紧凑自然（80~160 字）。
+
 v0.11.4：修复主动识图在同时开启图片与人格文字点评时，因提前调用 `event.stop_event()` 导致 AstrBot 调度器中断后续 LLM 文字回复的问题；补充 LLM 人格点评运行日志便于排查。
 
 v0.11.3：主动识图点评支持**当前启用人格（如 Justine 等）OC 文字回复 + 点评卡片图双开关独立控制**：
@@ -68,7 +70,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.11.4-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.11.5-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

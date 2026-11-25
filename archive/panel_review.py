@@ -1120,39 +1120,23 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
             line += f"（{it.detail}）"
         eval_lines.append(line)
 
-    extra_lines: list[str] = []
-    if review.entry is not None:
-        if review.entry.review:
-            extra_lines.append(f"- 角色定位简评：{review.entry.review}")
-        if review.entry.rotation:
-            order = f"（{review.entry.action_order}）" if review.entry.action_order else ""
-            extra_lines.append(f"- 推荐循环{order}：{' / '.join(review.entry.rotation)}")
-        if review.entry.tips:
-            extra_lines.append(f"- 实战要点：{review.entry.tips[0]}")
-
     sections = [
         "用户刚刚发送了一张《女神异闻录：夜幕魅影》（P5X）的角色养成面板截图。",
-        "系统已通过本地识别完成数据读取与攻略对标，以下是严格准确的面板与评估数据：",
+        "系统已通过本地识别完成数据读取与练度对标，以下是严格准确的面板与评估数据：",
         "",
         "【玩家面板数据】",
         *facts,
         "",
-        "【攻略对标结果】",
+        "【练度对标结果】",
         *eval_lines,
+        "",
+        "【回复要求】",
+        "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
+        "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”等出戏或机械词，直接把这些当作你自己的眼光和判断。",
+        "3. 只点评面板本身的养成练度（属性数值、启示卡套装、武器、技能等级的亮点与最值得补强的 1~2 项；若已全部达标就给予对应人设风格的认可/嘉奖）。",
+        "4. 不要教实战打法、技能循环、操作手法、排轴或配队教学，也不要编造未给出的数值。",
+        "5. 控制在 80~160 字左右，口语自然紧凑，直接输出给用户的最终回复。",
     ]
-    if extra_lines:
-        sections.extend(["", "【补充参考】", *extra_lines])
-
-    sections.extend(
-        [
-            "",
-            "【回复要求】",
-            "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
-            "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”等出戏或机械词，直接把这些当作你自己的眼光和判断。",
-            "3. 必须忠实于上述真实数值与对标结论，不得编造未给出的数值或技能效果；先肯定亮点，再点出最值得优化的 1~2 项（若已全部达标就给予对应人设风格的认可/嘉奖，并顺带提一句实用操作或配装提醒）。",
-            "4. 控制在 100~220 字左右，分段清晰、口语自然，直接输出给用户的最终回复。",
-        ]
-    )
     return "\n".join(sections)
 
 
