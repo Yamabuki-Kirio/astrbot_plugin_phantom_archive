@@ -347,6 +347,21 @@
     {% endif %}
 
     <main class="review-list">
+      {% set p = r.get("progress") %}
+      {% if p and p.get("status") not in (None, "", "first") %}
+      {% set p_status = p.get("status") %}
+      {% set p_cls = 'pass' if p_status == 'improved' else ('warn' if p_status == 'regressed' else 'info') %}
+      {% set p_badge = '有提升' if p_status == 'improved' else ('有回调' if p_status == 'regressed' else ('无变化' if p_status == 'same' else '有调整')) %}
+      <section class="review-card {{ p_cls }}">
+        <div class="rc-top">
+          <span class="rc-status">{{ p_badge }}</span>
+          <span class="rc-cat">对比上次记录</span>
+        </div>
+        <div class="rc-summary">{{ p.get("headline", "") }}</div>
+        {% set p_details = p.get("improvements", []) + p.get("regressions", []) + p.get("neutral_changes", []) %}
+        {% if p_details %}<div class="rc-detail">{{ p_details | join("；") }}</div>{% endif %}
+      </section>
+      {% endif %}
       {% for item in r["items"] %}
       <section class="review-card {{ item.status }}">
         <div class="rc-top">

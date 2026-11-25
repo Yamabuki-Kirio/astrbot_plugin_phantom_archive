@@ -200,12 +200,23 @@ def build_context(
             if hasattr(page.panel_review, "as_template_dict")
             else page.panel_review
         )
-        if bg_preset == "phantom":
-            canvas_width, canvas_height = 1482, 920
-        elif bg_preset == "reload_blue":
-            canvas_width, canvas_height = 1672, 1080
+        base_w, base_h = (
+            (1482, 920)
+            if bg_preset == "phantom"
+            else ((1672, 1080) if bg_preset == "reload_blue" else (1672, 960))
+        )
+        if isinstance(panel_review_dict, dict):
+            prog = panel_review_dict.get("progress")
+            extra_card = (
+                1
+                if isinstance(prog, dict) and prog.get("status") not in (None, "", "first")
+                else 0
+            )
+            item_count = len(panel_review_dict.get("items") or []) + extra_card
         else:
-            canvas_width, canvas_height = 1672, 960
+            item_count = 4
+        canvas_width = base_w
+        canvas_height = min(1480, base_h + max(0, item_count - 4) * 78)
 
     return {
         "theme": theme,

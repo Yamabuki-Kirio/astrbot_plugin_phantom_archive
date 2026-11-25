@@ -39,8 +39,10 @@ from .archive import (
     avatar_provider,
     cards,
     identity,
+    image_presenter,
     image_templates,
     notices,
+    panel_history,
     panel_review,
     renderer,
     visual_context,
@@ -80,6 +82,7 @@ PLUGIN_VERSION = "0.9.0"
 
 DATABASE_FILENAME = "p5x_zh.sqlite3"
 DAILY_DATABASE_FILENAME = daily_repository.DAILY_DB_FILENAME
+PANEL_HISTORY_DATABASE_FILENAME = panel_history.PANEL_DB_FILENAME
 ASSETS_DIRNAME = "assets"
 MANIFEST_FILENAME = "manifest.json"
 IMAGE_CACHE_DIRNAME = "image_cache"
@@ -216,6 +219,8 @@ class PhantomArchivePlugin(Star):
         self._daily_store: daily_repository.DailyFortuneStore | None = None
         self._daily_store_error: Exception | None = None
         self._daily_timezone_label = daily_engine.DEFAULT_TIMEZONE
+        self._panel_store: panel_history.PanelHistoryStore | None = None
+        self._panel_store_error: Exception | None = None
         self._panel_cooldowns: dict[str, float] = {}
 
         self._open_service()
@@ -365,6 +370,22 @@ class PhantomArchivePlugin(Star):
             logger.error("每日运势库不可用，本次仍会返回结果但不做持久化：%s", exc)
             return None
         return self._daily_store
+
+    def _panel_store_instance(self) -> panel_history.PanelHistoryStore | None:
+        """懒建面板历史库。建不出来就返回 None —— 点评照样发送，只是不做成长对比。"""
+        if self._panel_store is not None:
+            return self._panel_store
+        if self._panel_store_error is not None:
+            return None
+        try:
+            self._panel_store = panel_history.PanelHistoryStore(
+                DATA_DIR / PANEL_HISTORY_DATABASE_FILENAME
+            )
+        except panel_history.PanelHistoryError as exc:
+            self._panel_store_error = exc
+            logger.error("面板历史库不可用，本次仍会返回点评但不做成长记录：%s", exc)
+            return None
+        return self._panel_store
 
     @staticmethod
     def _daily_candidates(characters) -> list:
@@ -856,6 +877,30 @@ class PhantomArchivePlugin(Star):
 
             self._panel_cooldowns[session_key] = time.monotonic()
 
+            review_obj = outcome.pages[0].panel_review if outcome.pages else None
+            if isinstance(review_obj, panel_review.PanelReview):
+                try:
+                    requester = identity.from_event(event)
+                    platform = identity.platform_id(event)
+                    store = self._panel_store_instance()
+                    if requester.user_id and store is not None:
+                        delta = await asyncio.to_thread(
+                            store.record_and_compare,
+                            platform_id=platform,
+                            user_id=requester.user_id,
+                            display_name=requester.display_name,
+                            parsed=review_obj.parsed,
+                            grade=review_obj.grade,
+                        )
+                        review_obj = replace(review_obj, progress=delta.as_dict())
+                        outcome = QueryOutcome(
+                            ok=True,
+                            text=panel_review.render_review_text(review_obj),
+                            pages=image_presenter.panel_review_pages(review_obj),
+                        )
+                except Exception as exc:  # noqa: BLE001 - 历史库读写失败不影响点评返回
+                    logger.warning("面板历史对比失败（%s），跳过本次记录", type(exc).__name__)
+
             # 注意：绝不能在 yield 之前调用 event.stop_event()，否则 AstrBot 调度器
             # 会在第一次 yield 时立即 break，导致后续文字点评无法发出。
             if send_image and outcome.has_pages and self.image_ready:
@@ -868,7 +913,6 @@ class PhantomArchivePlugin(Star):
                         yield event.chain_result([Image.fromBytes(img.data)])
 
             if send_text:
-                review_obj = outcome.pages[0].panel_review if outcome.pages else None
                 if isinstance(review_obj, panel_review.PanelReview):
                     reply_text = await self._generate_persona_review_text(event, review_obj)
                 else:
@@ -1143,7 +1187,10 @@ class PhantomArchivePlugin(Star):
     # ------------------------------------------------------------ 生命周期
 
     async def terminate(self):
-        """插件卸载时释放只读连接、渲染客户端、头像客户端与每日库。"""
+        """插件卸载时释放只读连接、渲染客户端、头像客户端、每日库与面板历史库。"""
+        if self._panel_store is not None:
+            self._panel_store.close()
+            self._panel_store = None
         if self._daily_store is not None:
             self._daily_store.close()
             self._daily_store = None

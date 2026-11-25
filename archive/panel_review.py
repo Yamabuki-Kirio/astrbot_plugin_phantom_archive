@@ -152,6 +152,7 @@ class PanelReview:
     headline: str
     items: tuple[ReviewItem, ...]
     in_battle_hints: tuple[str, ...] = ()
+    progress: dict[str, Any] | None = None
 
     def as_template_dict(self) -> dict[str, Any]:
         entry_dict = self.entry.as_template_dict() if self.entry is not None else None
@@ -179,6 +180,7 @@ class PanelReview:
                 for it in self.items
             ],
             "entry": entry_dict,
+            "progress": self.progress,
         }
 
 
@@ -1251,6 +1253,20 @@ def render_review_text(review: PanelReview) -> str:
     ]
     if p.stats:
         lines.append("面板速览：" + " / ".join(f"{k} {v}" for k, v in p.stats))
+
+    prog = review.progress
+    if isinstance(prog, dict) and prog.get("status") not in (None, "", "first"):
+        p_status = str(prog.get("status"))
+        p_icon = {"improved": "📈", "regressed": "📉"}.get(p_status, "➖")
+        lines.append("")
+        lines.append(f"{p_icon} 对比上次：{prog.get('headline', '')}")
+        if prog.get("improvements"):
+            lines.append("   提升：" + "；".join(str(x) for x in prog["improvements"]))
+        if prog.get("regressions"):
+            lines.append("   下降：" + "；".join(str(x) for x in prog["regressions"]))
+        if prog.get("neutral_changes"):
+            lines.append("   变更：" + "；".join(str(x) for x in prog["neutral_changes"]))
+
     lines.append("")
 
     icon_map = {"pass": "✅", "warn": "⚠️", "info": "💡"}
@@ -1345,18 +1361,56 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
     if unique_hints:
         sections.extend(["", "【该角色自带的局内加成（不体现在站街面板中）】", *(f"- {x}" for x in unique_hints[:4])])
 
-    sections.extend(
-        [
-            "",
-            "【回复要求】",
-            "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
-            "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”等出戏或机械词，直接把这些当作你自己的眼光和判断。",
-            "3. 严格遵守 P5X 站街口径：截图中均为未进战斗的站街数值，不含角色技能自拐、意识（命座）、专武特效、启示卡触发与队友提供的暴击率/穿透/攻击加成。严禁仅凭站街暴击率看起来偏低（如 20%~40%）就批评“暴击率缺口大/太低”！",
-            "4. 只能针对【练度对标结果】中明确标为 `[可优化]` 的项目指出不足，不要擅自把未标 `[可优化]` 的属性数值当成缺点批斗；若意识达到 3 命及以上或武器达到高改造等级，请自然提及并给予符合人设的评价/赞许。",
-            "5. 只点评面板本身的养成练度，不要教实战打法、技能循环、操作手法、排轴或配队教学，也不要编造未给出的数值。",
-            "6. 控制在 80~160 字左右，口语自然紧凑，直接输出给用户的最终回复。",
-        ]
-    )
+    prog = review.progress
+    progress_rule = ""
+    if isinstance(prog, dict) and prog.get("status"):
+        p_status = str(prog["status"])
+        p_lines: list[str] = [f"- 对比结论：{prog.get('headline', '')}"]
+        if prog.get("improvements"):
+            p_lines.append("- 具体提升项：" + "；".join(str(x) for x in prog["improvements"]))
+        if prog.get("regressions"):
+            p_lines.append("- 具体下降项：" + "；".join(str(x) for x in prog["regressions"]))
+        if prog.get("neutral_changes"):
+            p_lines.append("- 装备/配装变动：" + "；".join(str(x) for x in prog["neutral_changes"]))
+
+        if p_status == "improved":
+            progress_rule = (
+                "5. 这次对比上次有明显提升！请在点评中以符合你人设的语气热情/赞许地夸奖玩家这次具体提升的地方（例如评分/命座/武器改造/核心属性/技能等级的上涨）。"
+            )
+        elif p_status == "same":
+            progress_rule = (
+                "5. 玩家这次发来的面板与上次相比没有任何变化（练度尚未提升，可能是重复发了同一张图）。请用符合你人设的语气轻轻调侃或督促玩家继续培养提升。"
+            )
+        elif p_status == "regressed":
+            progress_rule = (
+                "5. 这次面板数值对比上次有所下降，请用符合你人设的语气点出具体下降的指标，关心或询问是不是误换了启示卡或武器。"
+            )
+        elif p_status == "adjusted":
+            progress_rule = (
+                "5. 这次面板与上次相比有换装或属性平调变动，请结合变更点以人设口吻简单评价这次配装取舍。"
+            )
+        else:  # first
+            progress_rule = (
+                "5. 这是你第一次见到该用户提交这位角色的面板，可以自然提一句已记下这份练度，期待之后看到进一步成长。"
+            )
+
+        sections.extend(["", "【与该用户上次提交的同一角色面板对比】", *p_lines])
+
+    rules = [
+        "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
+        "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”“数据库/快照”等出戏或机械词，直接把这些当作你自己的记忆与判断。",
+        "3. 严格遵守 P5X 站街口径：截图中均为未进战斗的站街数值，不含角色技能自拐、意识（命座）、专武特效、启示卡触发与队友提供的暴击率/穿透/攻击加成。严禁仅凭站街暴击率看起来偏低（如 20%~40%）就批评“暴击率缺口大/太低”！",
+        "4. 只能针对【练度对标结果】中明确标为 `[可优化]` 的项目指出不足，不要擅自把未标 `[可优化]` 的属性数值当成缺点批斗；若意识达到 3 命及以上或武器达到高改造等级，请自然提及并给予符合人设的评价/赞许。",
+    ]
+    if progress_rule:
+        rules.append(progress_rule)
+        rules.append("6. 只点评面板本身的养成练度与成长变化，不要教实战打法、技能循环、操作手法、排轴或配队教学，也不要编造未给出的数值。")
+        rules.append("7. 控制在 90~180 字左右，口语自然紧凑，直接输出给用户的最终回复。")
+    else:
+        rules.append("5. 只点评面板本身的养成练度，不要教实战打法、技能循环、操作手法、排轴或配队教学，也不要编造未给出的数值。")
+        rules.append("6. 控制在 90~180 字左右，口语自然紧凑，直接输出给用户的最终回复。")
+
+    sections.extend(["", "【回复要求】", *rules])
     return "\n".join(sections)
 
 

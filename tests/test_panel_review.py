@@ -12,8 +12,10 @@ from archive import (
     asset_manifest,
     asset_resolver,
     identity,
+    image_presenter,
     image_renderer,
     image_templates,
+    panel_history,
     panel_review,
     service,
     visual_context,
@@ -186,3 +188,157 @@ def test_panel_review_card_renders_all_three_backgrounds(bg):
     settings = image_renderer.RenderSettings(endpoint="http://t2i.invalid/render")
     payload = image_renderer.build_payload(html, settings)
     assert "clip" in payload["options"]
+
+
+def test_panel_history_store_tracks_improvements_same_regression_and_isolation(tmp_path):
+    with pytest.raises(panel_history.PanelHistoryError):
+        panel_history.PanelHistoryStore(tmp_path / "p5x_zh.sqlite3")
+
+    store = panel_history.PanelHistoryStore(tmp_path / panel_history.PANEL_DB_FILENAME)
+    repo = yituliou.load_repository()
+    try:
+        base_panel = panel_review.ParsedPanel(
+            character_name="佐仓双叶",
+            character_slug="navi",
+            level=90,
+            stats=(("生命值", "9000"), ("攻击力", "4800"), ("防御力", "1500")),
+            skill_levels=(8, 8, 8, 1),
+            revelation_set="【决心】&【职责】",
+            weapon_name="HACK专业型",
+            weapon_level=70,
+            total_score=10500,
+            anchor_hits=7,
+            awareness=1,
+            weapon_mod=0,
+        )
+        base_review = panel_review.evaluate_panel(base_panel, repo)
+
+        # 1. 首次提交
+        delta1 = store.record_and_compare(
+            platform_id="qq",
+            user_id="1001",
+            display_name="十眼",
+            parsed=base_panel,
+            grade=base_review.grade,
+        )
+        assert delta1.status == "first"
+        assert delta1.record_count == 1
+        assert store.count() == 1
+
+        # 2. 相同面板重复提交：判定无变化且不插入重复行
+        delta_same = store.record_and_compare(
+            platform_id="qq",
+            user_id="1001",
+            display_name="十眼",
+            parsed=base_panel,
+            grade=base_review.grade,
+        )
+        assert delta_same.status == "same"
+        assert delta_same.record_count == 1
+        assert store.count() == 1
+        same_review = replace(base_review, progress=delta_same.as_dict())
+        same_prompt = panel_review.build_persona_llm_prompt(same_review)
+        assert "没有任何变化" in same_prompt
+        same_text = panel_review.render_review_text(same_review)
+        assert "对比上次" in same_text
+
+        # 3. 练度明显提升：评分/意识1->3/武器改造0->4/攻击力/技能提升
+        upgraded_panel = panel_review.ParsedPanel(
+            character_name="佐仓双叶",
+            character_slug="navi",
+            level=100,
+            stats=(("生命值", "11017"), ("攻击力", "7149"), ("防御力", "1927")),
+            skill_levels=(13, 10, 13, 1),
+            revelation_set="【决心】&【职责】",
+            weapon_name="HACK专业型",
+            weapon_level=80,
+            total_score=13076,
+            anchor_hits=8,
+            awareness=3,
+            weapon_mod=4,
+        )
+        upgraded_review = panel_review.evaluate_panel(upgraded_panel, repo)
+        delta_up = store.record_and_compare(
+            platform_id="qq",
+            user_id="1001",
+            display_name="十眼",
+            parsed=upgraded_panel,
+            grade=upgraded_review.grade,
+        )
+        assert delta_up.status == "improved"
+        assert delta_up.record_count == 2
+        assert store.count() == 2
+        assert any("1命→3命" in item for item in delta_up.improvements)
+        assert any("0改→4改" in item for item in delta_up.improvements)
+        assert any("4800→7149" in item for item in delta_up.improvements)
+        assert any("10500→13076" in item for item in delta_up.improvements)
+
+        up_review = replace(upgraded_review, progress=delta_up.as_dict())
+        up_text = panel_review.render_review_text(up_review)
+        assert "📈 对比上次" in up_text
+        assert "1命→3命" in up_text
+        up_prompt = panel_review.build_persona_llm_prompt(up_review)
+        assert "这次对比上次有明显提升" in up_prompt
+        assert "0改→4改" in up_prompt
+
+        # 校验带 progress 卡片渲染 & 动态增高画布
+        page = image_presenter.panel_review_pages(up_review)[0]
+        ctx = image_templates.build_context(page, theme="dark")
+        assert ctx["canvas_height"] >= 920
+        html = image_templates.render_page(page, theme="dark")
+        assert "对比上次记录" in html
+        assert "有提升" in html
+        assert "1命→3命" in html
+
+        # 4. 回调测试（评分与攻击力下降）
+        regressed_panel = panel_review.ParsedPanel(
+            character_name="佐仓双叶",
+            character_slug="navi",
+            level=100,
+            stats=(("生命值", "9500"), ("攻击力", "4500"), ("防御力", "1600")),
+            skill_levels=(13, 10, 13, 1),
+            revelation_set="【决心】&【职责】",
+            weapon_name="HACK专业型",
+            weapon_level=80,
+            total_score=9800,
+            anchor_hits=8,
+            awareness=3,
+            weapon_mod=4,
+        )
+        regressed_review = panel_review.evaluate_panel(regressed_panel, repo)
+        delta_down = store.record_and_compare(
+            platform_id="qq",
+            user_id="1001",
+            display_name="十眼",
+            parsed=regressed_panel,
+            grade=regressed_review.grade,
+        )
+        assert delta_down.status == "regressed"
+        assert delta_down.regressions
+        assert store.count() == 3
+
+        # 5. 不同用户 & 不同角色相互隔离
+        delta_other_user = store.record_and_compare(
+            platform_id="qq",
+            user_id="2002",
+            display_name="其他用户",
+            parsed=upgraded_panel,
+            grade=upgraded_review.grade,
+        )
+        assert delta_other_user.status == "first"
+
+        kotone_panel = replace(
+            upgraded_panel,
+            character_name="汐见琴音",
+            character_slug="kotone",
+        )
+        delta_other_char = store.record_and_compare(
+            platform_id="qq",
+            user_id="1001",
+            display_name="十眼",
+            parsed=kotone_panel,
+            grade="A",
+        )
+        assert delta_other_char.status == "first"
+    finally:
+        store.close()

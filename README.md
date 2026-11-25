@@ -1,5 +1,9 @@
 # 夜幕档案
 
+v0.12.0：新增**用户角色面板历史存档与成长对比反应**（独立可写库 `data/p5x_panel_history.sqlite3`，不触碰只读资料库 `p5x_zh.sqlite3`）：
+- 自动记录「同一用户 + 同一角色」的历次面板快照（综合评分、等级、意识命座、武器与改造阶数、启示卡、技能等级、各项属性与评级）。
+- 同一用户再次发送同一角色面板时，自动量化对比是否有提升、无变化或回调，并在点评卡片顶部、结构化文字以及当前人格 LLM 提示词中同步注入对比结论，让 Bot 按人设做出「夸奖提升 / 督促无变化 / 关心回调」的针对性反应。
+
 v0.11.7：修复人格 LLM 点评把“站街暴击率”误判为“暴击率缺口过大”的问题：自动向提示词注入角色自带的局内暴击/穿透加成说明，并硬约束 LLM 严守 P5X 站街口径、只针对明确标为 `[可优化]` 的项目提建议，不擅自批斗未标红的面板数值。
 
 v0.11.6：主动识图新增**角色意识（0~6 命）与武器改造等级（0~6 改）纯本地识别**：通过锚定 OCR 等级框并检测六芒星/六瓣改造环亮瓣数，无需 AI 识图即可识别命座与改造阶数，并在点评卡片与当前人格 LLM 提示词中对 3 命及以上高命座、高改造武器重点提及与评价。
@@ -74,7 +78,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.11.7-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.12.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 
