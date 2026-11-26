@@ -342,3 +342,82 @@ def test_panel_history_store_tracks_improvements_same_regression_and_isolation(t
         assert delta_other_char.status == "first"
     finally:
         store.close()
+
+
+def test_progression_icon_templates_loaded():
+    tmpls = panel_review._load_progression_templates()
+    assert tmpls is not None
+    assert len(tmpls["awareness"]) == 7
+    assert len(tmpls["weapon"]) == 7
+    assert tmpls["awareness_petal_mask"].ndim == 2
+    assert int((tmpls["awareness_petal_mask"] > 0).sum()) > 100
+
+
+@pytest.mark.parametrize("weapon_lvl", [0, 1, 2, 3, 4, 5, 6])
+def test_detect_synthetic_weapon_mod_levels(weapon_lvl):
+    from PIL import Image
+
+    tmpls = panel_review._load_progression_templates()
+    assert tmpls is not None
+
+    w, h = 1024, 469
+    canvas = Image.new("RGB", (w, h), (35, 28, 52))
+    # 模拟武器卡紫色斜底与右下角改造六瓣环
+    canvas.paste(Image.new("RGB", (140, 120), (88, 52, 138)), (310, 290))
+    icon = Image.fromarray(tmpls["weapon"][weapon_lvl], mode="RGBA").resize(
+        (38, 38), Image.Resampling.LANCZOS
+    )
+    canvas.paste(icon, (396, 336), icon)
+
+    buf = io.BytesIO()
+    canvas.save(buf, format="PNG")
+    boxes = [
+        panel_review.OcrBox("Lv.80", 0.99, 0.307, 0.770, 0.341, 0.800),
+    ]
+    awareness, weapon_mod = panel_review._detect_awareness_and_weapon_mod(buf.getvalue(), boxes)
+    assert awareness is None
+    assert weapon_mod == weapon_lvl
+
+
+@pytest.mark.parametrize("aw_lvl", [0, 1, 2, 3, 4, 5, 6])
+def test_detect_synthetic_awareness_levels_including_rainbow(aw_lvl):
+    from PIL import Image
+
+    tmpls = panel_review._load_progression_templates()
+    assert tmpls is not None
+
+    w, h = 1024, 469
+    canvas = Image.new("RGB", (w, h), (18, 18, 22))
+    # 模拟左上角角色铭牌浅灰紫渐变背景及右上角倾斜意识六芒星（+16°）
+    canvas.paste(Image.new("RGB", (160, 62), (96, 92, 128)), (180, 52))
+    icon = (
+        Image.fromarray(tmpls["awareness"][aw_lvl], mode="RGBA")
+        .rotate(-16.0, resample=Image.Resampling.BICUBIC, expand=False)
+        .resize((55, 55), Image.Resampling.LANCZOS)
+    )
+    canvas.paste(icon, (262, 46), icon)
+
+    buf = io.BytesIO()
+    canvas.save(buf, format="PNG")
+    boxes = [
+        panel_review.OcrBox("LV.100", 0.99, 0.217, 0.188, 0.256, 0.228),
+    ]
+    awareness, weapon_mod = panel_review._detect_awareness_and_weapon_mod(buf.getvalue(), boxes)
+    assert awareness == aw_lvl
+    assert weapon_mod is None
+
+
+def test_detect_progression_badges_returns_none_on_blank_roi():
+    from PIL import Image
+
+    w, h = 1024, 469
+    canvas = Image.new("RGB", (w, h), (42, 36, 58))
+    buf = io.BytesIO()
+    canvas.save(buf, format="PNG")
+    boxes = [
+        panel_review.OcrBox("LV.100", 0.99, 0.217, 0.188, 0.256, 0.228),
+        panel_review.OcrBox("Lv.80", 0.99, 0.307, 0.770, 0.341, 0.800),
+    ]
+    awareness, weapon_mod = panel_review._detect_awareness_and_weapon_mod(buf.getvalue(), boxes)
+    assert awareness is None
+    assert weapon_mod is None

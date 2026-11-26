@@ -90,9 +90,16 @@ STAT_ALIASES: dict[str, str] = {
     "治疗效果": "治疗效果",
 }
 
+PROGRESSION_ICONS_DIR = (
+    Path(__file__).resolve().parent.parent / "data" / "assets" / "progression_icons"
+)
+
 _OCR_LOCK = threading.Lock()
 _OCR_INSTANCE: Any = None
 _OCR_UNAVAILABLE: bool = False
+_PROGRESSION_TEMPLATES_LOCK = threading.Lock()
+_PROGRESSION_TEMPLATES: dict[str, Any] | None = None
+_PROGRESSION_TEMPLATES_UNAVAILABLE: bool = False
 
 
 @dataclass(frozen=True)
@@ -520,94 +527,272 @@ def _parse_core_targets(boxes: Sequence[OcrBox]) -> tuple[tuple[str, str], ...]:
     return tuple(pairs)
 
 
-def _detect_ring_lit_count(
-    arr,
-    lum,
-    w: int,
-    h: int,
-    search_box: tuple[int, int, int, int],
-    r_in: float,
-    r_out: float,
-    angle_offset_deg: float,
-) -> int | None:
-    """定位 6 瓣空心环（意识六芒星 / 武器改造六瓣环）并统计亮白瓣数（0~6）。"""
+def _load_square_icon_rgba(path: Path) -> Any:
+    """读取透明背景图标，按紧致包围盒裁剪后居中贴入正方形 RGBA 数组，确保旋转不改变尺度。"""
+    import numpy as np
+    from PIL import Image
+
+    with Image.open(path) as img:
+        rgba = img.convert("RGBA")
+        bbox = rgba.getbbox()
+        if bbox:
+            rgba = rgba.crop(bbox)
+        side = max(rgba.width, rgba.height)
+        square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+        square.paste(rgba, ((side - rgba.width) // 2, (side - rgba.height) // 2))
+        return np.asarray(square, dtype=np.uint8)
+
+
+def _rotate_square_array(arr: Any, angle_deg: float, *, is_mask: bool = False) -> Any:
+    """围绕中心顺时针旋转正方形图像/掩码，保持画布尺寸与图标尺度不变。"""
+    import numpy as np
+    from PIL import Image
+
+    if abs(angle_deg) < 1e-3:
+        return arr
+    mode = "L" if is_mask else "RGBA"
+    resample = Image.Resampling.BILINEAR if is_mask else Image.Resampling.BICUBIC
+    im = Image.fromarray(arr, mode=mode)
+    return np.asarray(im.rotate(-angle_deg, resample=resample, expand=False), dtype=np.uint8)
+
+
+def _load_progression_templates() -> dict[str, Any] | None:
+    """加载并缓存意识/武器改造 0~6 官方模板及单瓣内芯掩码。"""
+    global _PROGRESSION_TEMPLATES, _PROGRESSION_TEMPLATES_UNAVAILABLE
+    if _PROGRESSION_TEMPLATES is not None:
+        return _PROGRESSION_TEMPLATES
+    if _PROGRESSION_TEMPLATES_UNAVAILABLE:
+        return None
+    with _PROGRESSION_TEMPLATES_LOCK:
+        if _PROGRESSION_TEMPLATES is not None:
+            return _PROGRESSION_TEMPLATES
+        if _PROGRESSION_TEMPLATES_UNAVAILABLE:
+            return None
+        try:
+            import cv2
+            import numpy as np
+
+            if not PROGRESSION_ICONS_DIR.is_dir():
+                _PROGRESSION_TEMPLATES_UNAVAILABLE = True
+                logger.warning("未找到进化等级图标模板目录：%s", PROGRESSION_ICONS_DIR)
+                return None
+
+            awareness: list[Any] = []
+            weapon: list[Any] = []
+            for lvl in range(7):
+                aw_path = PROGRESSION_ICONS_DIR / f"consciousness-{lvl}.png"
+                wp_path = PROGRESSION_ICONS_DIR / f"weapon-{lvl}.png"
+                if not aw_path.is_file() or not wp_path.is_file():
+                    _PROGRESSION_TEMPLATES_UNAVAILABLE = True
+                    logger.warning("缺少进化等级图标模板文件（lvl=%d）", lvl)
+                    return None
+                awareness.append(_load_square_icon_rgba(aw_path))
+                weapon.append(_load_square_icon_rgba(wp_path))
+
+            # 由 consciousness-1 与 consciousness-0 差分提取单瓣精确内芯，并内缩消除描边串扰
+            c0 = awareness[0].astype(np.float32)
+            c1 = awareness[1].astype(np.float32)
+            l0 = 0.299 * c0[:, :, 0] + 0.587 * c0[:, :, 1] + 0.114 * c0[:, :, 2]
+            l1 = 0.299 * c1[:, :, 0] + 0.587 * c1[:, :, 1] + 0.114 * c1[:, :, 2]
+            raw_petal = ((awareness[1][:, :, 3] > 200) & ((l1 - l0) > 80.0)).astype(np.uint8) * 255
+            base_petal = cv2.erode(raw_petal, np.ones((7, 7), np.uint8))
+
+            _PROGRESSION_TEMPLATES = {
+                "awareness": tuple(awareness),
+                "weapon": tuple(weapon),
+                "awareness_petal_mask": base_petal,
+            }
+            return _PROGRESSION_TEMPLATES
+        except Exception as exc:  # noqa: BLE001
+            _PROGRESSION_TEMPLATES_UNAVAILABLE = True
+            logger.warning("加载进化等级图标模板失败（%s）", type(exc).__name__)
+            return None
+
+
+def _match_templates_in_roi(
+    roi_bgr: Any,
+    templates_by_level: Sequence[tuple[int, Any]],
+    angles: Sequence[float],
+    sizes: Sequence[int],
+    *,
+    use_sqdiff: bool = False,
+) -> dict[int, tuple[float, float, int, tuple[int, int]]]:
+    """在 ROI 内对指定模板执行多尺度、多角度 Alpha 掩码模板匹配，统一返回越大越优的相似度。"""
+    import cv2
     import numpy as np
 
-    sx0 = max(3, min(w - 4, search_box[0]))
-    sy0 = max(3, min(h - 4, search_box[1]))
-    sx1 = max(sx0 + 1, min(w - 3, search_box[2]))
-    sy1 = max(sy0 + 1, min(h - 3, search_box[3]))
-
-    angles = np.linspace(0.0, 2.0 * math.pi, 18, endpoint=False)
-    r_mid = (r_in + r_out) / 2.0
-    best_score = -1e9
-    best_xy: tuple[int, int] | None = None
-
-    step = 2 if (sx1 - sx0) * (sy1 - sy0) > 2500 else 1
-    for cy in range(sy0, sy1, step):
-        for cx in range(sx0, sx1, step):
-            if lum[cy, cx] > 55.0:
+    method = cv2.TM_SQDIFF_NORMED if use_sqdiff else cv2.TM_CCOEFF_NORMED
+    fill_val = 1.0 if use_sqdiff else -1.0
+    best: dict[int, tuple[float, float, int, tuple[int, int]]] = {}
+    roi_h, roi_w = roi_bgr.shape[:2]
+    for ang in angles:
+        rotated_list = [
+            (lvl, _rotate_square_array(tmpl, ang)) for lvl, tmpl in templates_by_level
+        ]
+        for sz in sizes:
+            if sz < 10 or sz >= roi_h or sz >= roi_w:
                 continue
-            inner = float(lum[cy - 2 : cy + 3, cx - 2 : cx + 3].mean())
-            if inner > 65.0:
-                continue
-            ring_vals = []
-            for a in angles:
-                ca, sa = math.cos(a), math.sin(a)
-                for r in (r_in, r_mid):
-                    px, py = int(round(cx + r * ca)), int(round(cy + r * sa))
-                    if 0 <= px < w and 0 <= py < h:
-                        ring_vals.append(float(lum[py, px]))
-            if not ring_vals:
-                continue
-            score = (sum(ring_vals) / len(ring_vals)) - inner * 1.5
-            if score > best_score:
-                best_score = score
-                best_xy = (cx, cy)
+            for lvl, rot_rgba in rotated_list:
+                resized = cv2.resize(rot_rgba, (sz, sz), interpolation=cv2.INTER_AREA)
+                t_bgr = resized[:, :, :3][:, :, ::-1]
+                mask = (resized[:, :, 3] > 128).astype(np.uint8) * 255
+                mask3 = cv2.merge([mask, mask, mask])
+                res = cv2.matchTemplate(roi_bgr, t_bgr, method, mask=mask3)
+                res = np.nan_to_num(res, nan=fill_val, posinf=fill_val, neginf=fill_val)
+                min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+                if use_sqdiff:
+                    score = 1.0 - float(min_val)
+                    loc = (int(min_loc[0]), int(min_loc[1]))
+                else:
+                    score = float(max_val)
+                    loc = (int(max_loc[0]), int(max_loc[1]))
+                prev = best.get(lvl)
+                if prev is None or score > prev[0]:
+                    best[lvl] = (score, float(ang), int(sz), loc)
+    return best
 
-    if best_xy is None or best_score < 35.0:
+
+def _detect_awareness_level(
+    rgb: Any,
+    bgr: Any,
+    w: int,
+    h: int,
+    header_lv: OcrBox,
+    tmpls: dict[str, Any],
+) -> int | None:
+    """结合模板精确定位 + 满命彩环检测 + 单瓣像素掩码统计识别角色意识（0~6 命）。"""
+    import cv2
+    import numpy as np
+
+    x1 = header_lv.nx1 * w
+    cy_lv = header_lv.ncy * h
+    lv_h = max(8.0, (header_lv.ny1 - header_lv.ny0) * h)
+    rx0 = max(0, int(x1 - 0.8 * lv_h))
+    ry0 = max(0, int(cy_lv - 3.6 * lv_h))
+    rx1 = min(w, int(x1 + 3.8 * lv_h))
+    ry1 = min(h, int(cy_lv + 1.2 * lv_h))
+    if rx1 - rx0 < 16 or ry1 - ry0 < 16:
         return None
 
-    cx, cy = best_xy
+    roi_bgr = bgr[ry0:ry1, rx0:rx1]
+    roi_rgb = rgb[ry0:ry1, rx0:rx1].astype(np.float32)
+    est = int(round(lv_h * 3.0))
+    sizes = sorted({s for s in (int(round(est * f)) for f in (0.85, 0.95, 1.05, 1.15)) if s >= 14})
+    aw_list = tmpls["awareness"]
+    loc_matches = _match_templates_in_roi(
+        roi_bgr,
+        [(0, aw_list[0]), (3, aw_list[3]), (6, aw_list[6])],
+        angles=(0.0, 12.0, 16.0, 20.0),
+        sizes=sizes,
+    )
+    if not loc_matches:
+        return None
+
+    top_lvl, (top_score, best_ang, sz, (mx, my)) = max(
+        loc_matches.items(), key=lambda kv: kv[1][0]
+    )
+    if top_score < 0.42:
+        return None
+
+    # 先判定 6 意识（满命独有的青紫粉幻彩渐变环）
+    cx = mx + sz * 0.5
+    cy = my + sz * 0.5
+    radius = sz * 0.5
+    rh, rw = roi_rgb.shape[:2]
+    lums_ring: list[float] = []
+    sats_ring: list[float] = []
+    for a in np.linspace(0.0, 2.0 * math.pi, 36, endpoint=False):
+        ca, sa = math.cos(a), math.sin(a)
+        for r in np.linspace(0.20 * radius, 0.72 * radius, 8):
+            px, py = int(round(cx + r * ca)), int(round(cy + r * sa))
+            if 0 <= px < rw and 0 <= py < rh:
+                rv, gv, bv = roi_rgb[py, px]
+                lums_ring.append(float(0.299 * rv + 0.587 * gv + 0.114 * bv))
+                sats_ring.append(float(max(rv, gv, bv) - min(rv, gv, bv)))
+    if lums_ring:
+        chrom_frac = sum(1 for lv, sv in zip(lums_ring, sats_ring) if sv >= 50.0 and lv >= 75.0) / len(
+            lums_ring
+        )
+        if top_lvl == 6 and chrom_frac >= 0.22:
+            return 6
+
+    # 非满命（0~5 意识）：在锁定星标位置上用精确单瓣掩码统计高白低饱和瓣数
+    patch = roi_rgb[my : my + sz, mx : mx + sz]
+    lum_p = 0.299 * patch[:, :, 0] + 0.587 * patch[:, :, 1] + 0.114 * patch[:, :, 2]
+    sat_p = patch.max(axis=2) - patch.min(axis=2)
+    base_petal = tmpls["awareness_petal_mask"]
+
+    # consciousness-1 原图亮瓣在 2 点钟方向（-30°），游戏左上角铭牌按 12 点钟起逆转 -60° 后叠加倾斜角
     lit = 0
-    for i in range(6):
-        a0 = math.radians(angle_offset_deg + i * 60.0 - 18.0)
-        a1 = math.radians(angle_offset_deg + i * 60.0 + 18.0)
-        lums = []
-        sats = []
-        for a in np.linspace(a0, a1, 9):
-            ca, sa = math.cos(a), math.sin(a)
-            for r in np.linspace(r_in, r_out, 7):
-                px, py = int(round(cx + r * ca)), int(round(cy + r * sa))
-                if 0 <= px < w and 0 <= py < h:
-                    R, G, B = arr[py, px]
-                    lums.append(0.299 * R + 0.587 * G + 0.114 * B)
-                    sats.append(max(R, G, B) - min(R, G, B))
-        if not lums:
+    for k in range(6):
+        rot_cw = -60.0 + k * 60.0 + best_ang
+        pm_rot = _rotate_square_array(base_petal, rot_cw, is_mask=True)
+        pm = cv2.resize(pm_rot, (sz, sz), interpolation=cv2.INTER_AREA) > 128
+        if not np.any(pm):
             continue
-        white_pct = sum(1 for lv, sv in zip(lums, sats) if lv >= 180.0 and sv <= 48.0) / len(lums)
-        p75 = float(np.percentile(lums, 75))
-        if white_pct >= 0.30 and p75 >= 185.0:
+        lv_vals = lum_p[pm]
+        sv_vals = sat_p[pm]
+        white_pct = float(((lv_vals >= 180.0) & (sv_vals <= 55.0)).mean())
+        med_lum = float(np.median(lv_vals))
+        if white_pct >= 0.35 and med_lum >= 175.0:
             lit += 1
     return lit
+
+
+def _detect_weapon_mod_level(
+    bgr: Any,
+    w: int,
+    h: int,
+    weapon_lv: OcrBox,
+    tmpls: dict[str, Any],
+) -> int | None:
+    """通过 0~6 官方武器改造徽章多尺度模板匹配识别武器改造等级。"""
+    x1 = weapon_lv.nx1 * w
+    y0 = weapon_lv.ny0 * h
+    y1 = weapon_lv.ny1 * h
+    lv_h = max(8.0, y1 - y0)
+    rx0 = max(0, int(x1 + 1.5 * lv_h))
+    ry0 = max(0, int(y0 - 3.2 * lv_h))
+    rx1 = min(w, int(x1 + 7.5 * lv_h))
+    ry1 = min(h, int(y1 + 1.0 * lv_h))
+    if rx1 - rx0 < 16 or ry1 - ry0 < 16:
+        return None
+
+    roi_bgr = bgr[ry0:ry1, rx0:rx1]
+    est = int(round(lv_h * 2.65))
+    sizes = sorted({s for s in (int(round(est * f)) for f in (0.85, 0.95, 1.05, 1.15)) if s >= 12})
+    wp_list = tmpls["weapon"]
+    matches = _match_templates_in_roi(
+        roi_bgr,
+        list(enumerate(wp_list)),
+        angles=(-5.0, 0.0, 5.0),
+        sizes=sizes,
+        use_sqdiff=True,
+    )
+    if not matches:
+        return None
+    best_lvl, (best_score, _, _, _) = max(matches.items(), key=lambda kv: kv[1][0])
+    return best_lvl if best_score >= 0.48 else None
 
 
 def _detect_awareness_and_weapon_mod(
     image_bytes: bytes, boxes: Sequence[OcrBox]
 ) -> tuple[int | None, int | None]:
-    """基于相对 OCR 锚点与像素亮度，纯本地识别角色意识（0~6 命）与武器改造等级（0~6 改）。"""
+    """基于官方图标模板多尺度匹配与星瓣校验，纯本地识别角色意识（0~6 命）与武器改造（0~6 改）。"""
+    tmpls = _load_progression_templates()
+    if tmpls is None:
+        return None, None
     try:
         import numpy as np
         from PIL import Image
 
         with Image.open(io.BytesIO(image_bytes)) as img:
-            rgb = img.convert("RGB")
-            w, h = rgb.size
-            arr = np.asarray(rgb, dtype=np.float32)
+            rgb_im = img.convert("RGB")
+            w, h = rgb_im.size
+            rgb = np.asarray(rgb_im, dtype=np.uint8)
+            bgr = rgb[:, :, ::-1].copy()
     except Exception:  # noqa: BLE001
         return None, None
-
-    lum = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
 
     header_lv = None
     weapon_lv = None
@@ -619,37 +804,8 @@ def _detect_awareness_and_weapon_mod(
         elif 0.27 <= b.nx0 <= 0.48 and 0.68 <= b.ny0 <= 0.85 and weapon_lv is None:
             weapon_lv = b
 
-    awareness: int | None = None
-    if header_lv is not None:
-        x1 = header_lv.nx1 * w
-        cy_lv = header_lv.ncy * h
-        lv_h = max(8.0, (header_lv.ny1 - header_lv.ny0) * h)
-        search = (
-            int(x1 - 0.1 * lv_h),
-            int(cy_lv - 2.3 * lv_h),
-            int(x1 + 2.2 * lv_h),
-            int(cy_lv + 0.2 * lv_h),
-        )
-        awareness = _detect_ring_lit_count(
-            arr, lum, w, h, search, r_in=lv_h * 0.45, r_out=lv_h * 1.08, angle_offset_deg=-75.0
-        )
-
-    weapon_mod: int | None = None
-    if weapon_lv is not None:
-        x1 = weapon_lv.nx1 * w
-        y0 = weapon_lv.ny0 * h
-        y1 = weapon_lv.ny1 * h
-        lv_h = max(8.0, y1 - y0)
-        search = (
-            int(x1 + 2.8 * lv_h),
-            int(y0 - 2.0 * lv_h),
-            int(x1 + 6.6 * lv_h),
-            int(y1 - 0.3 * lv_h),
-        )
-        weapon_mod = _detect_ring_lit_count(
-            arr, lum, w, h, search, r_in=lv_h * 0.48, r_out=lv_h * 1.10, angle_offset_deg=-60.0
-        )
-
+    awareness = _detect_awareness_level(rgb, bgr, w, h, header_lv, tmpls) if header_lv else None
+    weapon_mod = _detect_weapon_mod_level(bgr, w, h, weapon_lv, tmpls) if weapon_lv else None
     return awareness, weapon_mod
 
 

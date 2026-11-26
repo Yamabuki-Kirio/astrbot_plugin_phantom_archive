@@ -1,5 +1,8 @@
 # 夜幕档案
 
+v0.12.1：引入《p5x抽卡》官方 0~6 阶**意识与武器改造图标模板**辅助纯本地识别，修复 6 意识（满命幻彩环）/ 武器 6 改（满改幻彩环）与非满阶星瓣误识问题：
+- 新增 `data/assets/progression_icons/`（`consciousness-0..6.png`、`weapon-0..6.png`），通过多尺度多角度 Alpha 掩码模板匹配精确定位徽章，再结合幻彩检测与模板差分单瓣内芯掩码统计亮瓣，实测准确覆盖 0~6 命 / 0~6 改（仍 100% 本地推理，不传图给 LLM）。
+
 v0.12.0：新增**用户角色面板历史存档与成长对比反应**（独立可写库 `data/p5x_panel_history.sqlite3`，不触碰只读资料库 `p5x_zh.sqlite3`）：
 - 自动记录「同一用户 + 同一角色」的历次面板快照（综合评分、等级、意识命座、武器与改造阶数、启示卡、技能等级、各项属性与评级）。
 - 同一用户再次发送同一角色面板时，自动量化对比是否有提升、无变化或回调，并在点评卡片顶部、结构化文字以及当前人格 LLM 提示词中同步注入对比结论，让 Bot 按人设做出「夸奖提升 / 督促无变化 / 关心回调」的针对性反应。
@@ -78,7 +81,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.12.0-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.12.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 
