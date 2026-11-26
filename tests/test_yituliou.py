@@ -151,3 +151,29 @@ def test_guide_commands_prefer_yituliou_data(svc, guide_type):
     ritual = svc.guide_outcome("sp平野亚兰", "ritual")
     assert ritual.ok
     assert "我所描绘的" in ritual.text
+
+
+def test_yituliou_weapon_names_match_database_5star():
+    import sqlite3
+
+    repo = yituliou.load_repository()
+    conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
+    try:
+        slug_to_key = dict(conn.execute("SELECT slug, source_key FROM zh_characters").fetchall())
+        w5_by_key: dict[str, set[str]] = {}
+        for ck, wname, rar in conn.execute(
+            "SELECT character_key, name_zh, rarity FROM zh_weapons"
+        ).fetchall():
+            if rar == 5 and wname:
+                w5_by_key.setdefault(ck, set()).add(wname)
+    finally:
+        conn.close()
+
+    for entry in repo.entries:
+        ck = slug_to_key.get(entry.slug)
+        if not ck or ck not in w5_by_key:
+            continue
+        assert entry.weapon_name, f"{entry.name} ({entry.slug}) 缺少专武名"
+        assert (
+            entry.weapon_name in w5_by_key[ck]
+        ), f"{entry.name} ({entry.slug}) 专武 {entry.weapon_name!r} 与数据库 5★ 武器 {sorted(w5_by_key[ck])} 不一致"
