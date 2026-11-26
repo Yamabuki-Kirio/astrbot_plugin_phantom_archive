@@ -1,5 +1,9 @@
 # 夜幕档案
 
+v0.12.2：优化角色面板**武器名精扫校准**与**游戏内评级 TOP 档识别**：
+- 新增中下武器白底栏 `2×` 放大裁剪精扫，并与一图流已知专武库自动对照纠偏（同长单字形近错字自动吸附到专武正名，彻底过滤如「草！」等小字误识噪点）。
+- 新增右下角**游戏内练度评级**提取（兼容面具边缘多识前缀数字，如 `2138 → 138`、`146`、`149`），当评级达到 `145+`（如 `149`）时自动标为「游戏练度 TOP 档 / 顶级毕业」，并在点评文本与当前人格 LLM 提示词中明确肯定与赞许。
+
 v0.12.1：引入《p5x抽卡》官方 0~6 阶**意识与武器改造图标模板**辅助纯本地识别，修复 6 意识（满命幻彩环）/ 武器 6 改（满改幻彩环）与非满阶星瓣误识问题：
 - 新增 `data/assets/progression_icons/`（`consciousness-0..6.png`、`weapon-0..6.png`），通过多尺度多角度 Alpha 掩码模板匹配精确定位徽章，再结合幻彩检测与模板差分单瓣内芯掩码统计亮瓣，实测准确覆盖 0~6 命 / 0~6 改（仍 100% 本地推理，不传图给 LLM）。
 
@@ -81,7 +85,7 @@ v0.8.5：三套背景均使用原图比例的固定画布，黑黄为 1482×1062
 > 面向 AstrBot 的《女神异闻录：夜幕魅影》资料查询与每日运势插件。
 
 [![AstrBot](https://img.shields.io/badge/AstrBot-%3E%3D4.16%2C%3C5-6C63FF)](https://github.com/AstrBotDevs/AstrBot)
-[![Version](https://img.shields.io/badge/version-v0.12.1-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
+[![Version](https://img.shields.io/badge/version-v0.12.2-blue)](https://github.com/Yamabuki-Kirio/astrbot_plugin_phantom_archive/releases)
 
 ### 不带 `/` 的指令（v0.8.3）
 

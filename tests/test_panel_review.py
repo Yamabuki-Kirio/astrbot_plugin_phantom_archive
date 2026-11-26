@@ -421,3 +421,80 @@ def test_detect_progression_badges_returns_none_on_blank_roi():
     awareness, weapon_mod = panel_review._detect_awareness_and_weapon_mod(buf.getvalue(), boxes)
     assert awareness is None
     assert weapon_mod is None
+
+
+@pytest.mark.parametrize(
+    ("raw_text", "expected"),
+    [
+        ("149", 149),
+        ("146", 146),
+        ("131", 131),
+        ("2138", 138),
+    ],
+)
+def test_parse_rating_normal_and_mask_edge_prefixed(raw_text, expected):
+    boxes = [
+        panel_review.OcrBox("评级：", 0.98, 0.723, 0.748, 0.760, 0.802),
+        panel_review.OcrBox(raw_text, 0.95, 0.797, 0.663, 0.881, 0.780),
+        panel_review.OcrBox("综合评分：13076", 0.99, 0.777, 0.768, 0.888, 0.859),
+    ]
+    assert panel_review._parse_rating(boxes) == expected
+
+
+def test_top_tier_rating_reflected_in_review_and_persona_prompt():
+    repo = yituliou.load_repository()
+    parsed = panel_review.ParsedPanel(
+        character_name="佐仓双叶",
+        character_slug="navi",
+        level=100,
+        stats=(("生命值", "11017"), ("攻击力", "7149"), ("防御力", "1927")),
+        skill_levels=(13, 13, 13, 1),
+        revelation_set="【决心】&【职责】",
+        weapon_name="HACK专业型",
+        weapon_level=80,
+        total_score=14100,
+        anchor_hits=8,
+        awareness=6,
+        weapon_mod=6,
+        rating=149,
+    )
+    review = panel_review.evaluate_panel(parsed, repo)
+    rating_items = [it for it in review.items if it.category == "游戏评级"]
+    assert len(rating_items) == 1
+    assert rating_items[0].status == "pass"
+    assert "TOP 档" in rating_items[0].summary
+
+    text = panel_review.render_review_text(review)
+    assert "评级 149" in text
+    assert "TOP 档" in text
+
+    prompt = panel_review.build_persona_llm_prompt(review)
+    assert "游戏内练度评级：149（游戏练度 TOP 档 / 顶级毕业）" in prompt
+    assert "TOP 档" in prompt
+
+
+def test_parse_weapon_snaps_garbled_ocr_and_rejects_noise():
+    full_boxes = [
+        panel_review.OcrBox("Lv.80", 0.99, 0.307, 0.770, 0.341, 0.800),
+        panel_review.OcrBox("草！", 0.72, 0.350, 0.812, 0.387, 0.844),
+    ]
+    # 无可用已知专武对照时，带惊叹号噪点（「草！」）直接丢弃不输出乱码
+    w_noise, lv_noise = panel_review._parse_weapon(full_boxes)
+    assert w_noise == ""
+    assert lv_noise == 80
+
+    # 错别字形近误识对照组「月下领」 / 「天籁轻今」可自动吸附到一图流专武名
+    crop_phoebe = [panel_review.OcrBox("月下领", 0.90, 0.344, 0.810, 0.391, 0.845)]
+    w_ph, _ = panel_review._parse_weapon(
+        full_boxes, weapon_crop_boxes=crop_phoebe, known_weapons=("月下翎", "天籁轻吟")
+    )
+    assert w_ph == "月下翎"
+
+    crop_manaka = [panel_review.OcrBox("天籁轻今", 0.90, 0.344, 0.810, 0.391, 0.845)]
+    w_mk, _ = panel_review._parse_weapon(
+        full_boxes,
+        weapon_crop_boxes=crop_manaka,
+        known_weapons=("月下翎", "天籁轻吟"),
+        preferred_weapon="天籁轻吟",
+    )
+    assert w_mk == "天籁轻吟"

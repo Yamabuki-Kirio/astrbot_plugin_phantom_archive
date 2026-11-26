@@ -135,6 +135,7 @@ class ParsedPanel:
     core_targets: tuple[tuple[str, str], ...] = ()
     awareness: int | None = None
     weapon_mod: int | None = None
+    rating: int | None = None
 
     def stat_map(self) -> dict[str, str]:
         return dict(self.stats)
@@ -174,6 +175,7 @@ class PanelReview:
             "weapon_level": self.parsed.weapon_level,
             "awareness": self.parsed.awareness,
             "weapon_mod": self.parsed.weapon_mod,
+            "rating": self.parsed.rating,
             "total_score": self.parsed.total_score,
             "grade": self.grade,
             "headline": self.headline,
@@ -438,25 +440,109 @@ def _parse_revelation(boxes: Sequence[OcrBox]) -> str:
     return ""
 
 
-def _parse_weapon(boxes: Sequence[OcrBox]) -> tuple[str, int | None]:
-    """提取中下武器框（nx: 0.27~0.48, ny: 0.68~0.92）的武器等级与武器名。"""
+def _match_known_weapon(
+    raw_text: str,
+    known_weapons: Sequence[str],
+    preferred_weapon: str = "",
+) -> str:
+    """将武器 OCR 文本与一图流已知专武对齐纠偏，剔除纯粹误识噪点。"""
+    cleaned = raw_text.strip().strip(" ：:[]【】()（）「」『』|｜·•・")
+    norm_clean = yituliou.normalize_key(re.sub(r"[！!？?·•・|｜\[\]【】()（）]", "", cleaned))
+    if not norm_clean or len(norm_clean) < 2:
+        return ""
+
+    if preferred_weapon:
+        norm_pref = yituliou.normalize_key(preferred_weapon)
+        if norm_pref:
+            if norm_clean == norm_pref:
+                return preferred_weapon
+            if difflib.SequenceMatcher(None, norm_clean, norm_pref).ratio() >= 0.55:
+                return preferred_weapon
+
+    best_ratio = 0.0
+    best_name = ""
+    for kw in known_weapons:
+        norm_kw = yituliou.normalize_key(kw)
+        if not norm_kw:
+            continue
+        if norm_clean == norm_kw:
+            return kw
+        ratio = difflib.SequenceMatcher(None, norm_clean, norm_kw).ratio()
+        if (
+            len(norm_clean) == len(norm_kw)
+            and len(norm_clean) >= 3
+            and sum(a == b for a, b in zip(norm_clean, norm_kw)) == len(norm_clean) - 1
+        ):
+            ratio = max(ratio, 0.78)
+        if ratio > best_ratio:
+            best_ratio = ratio
+            best_name = kw
+    if best_ratio >= 0.72 and best_name:
+        return best_name
+
+    # 未命中已知武器且含感叹号/问号等明显误识符号时直接舍弃，避免输出乱码如「草！」
+    if any(ch in cleaned for ch in ("！", "!", "？", "?")):
+        return ""
+    stripped_punct = re.sub(r"[！!？?·•・|｜\[\]【】()（）]+", "", cleaned).strip()
+    if len(stripped_punct) < 2 or re.fullmatch(r"[\d.%+\-]+", stripped_punct):
+        return ""
+    return stripped_punct
+
+
+def _parse_weapon(
+    boxes: Sequence[OcrBox],
+    weapon_crop_boxes: Sequence[OcrBox] | None = None,
+    known_weapons: Sequence[str] = (),
+    preferred_weapon: str = "",
+) -> tuple[str, int | None]:
+    """提取中下武器框的武器等级与武器名，优先采用 2× 精扫结果并对照一图流校准。"""
     weapon_level: int | None = None
-    weapon_name = ""
-    region = [b for b in boxes if 0.27 <= b.nx0 <= 0.48 and 0.68 <= b.ny0 <= 0.92]
-    for b in sorted(region, key=lambda item: item.ny0):
+    for b in sorted(
+        (x for x in boxes if 0.27 <= x.nx0 <= 0.48 and 0.68 <= x.ny0 <= 0.85),
+        key=lambda item: item.ny0,
+    ):
         m_lv = re.search(r"^lv\.?\s*(\d{1,3})$", b.text.strip(), re.I)
         if m_lv:
             weapon_level = int(m_lv.group(1))
-            continue
-        if any(skip in b.text for skip in ("心象", "点击", "【", "&", "技能")):
-            continue
-        if len(b.text.strip()) >= 2:
-            weapon_name = b.text.strip()
+            break
+
+    def _pick_candidates(src: Sequence[OcrBox]) -> list[OcrBox]:
+        out: list[OcrBox] = []
+        for b in sorted(src, key=lambda item: item.ny0):
+            txt = b.text.strip()
+            if not txt or re.search(r"^lv\.?\s*\d{1,3}$", txt, re.I):
+                continue
+            if any(skip in txt for skip in ("心象", "点击", "【", "&", "技能")):
+                continue
+            if re.fullmatch(r"[\W_]+", txt) or len(re.sub(r"[\W_]+", "", txt)) < 2:
+                continue
+            out.append(b)
+        return out
+
+    crop_region = [
+        b
+        for b in (weapon_crop_boxes or ())
+        if 0.27 <= b.nx0 <= 0.45 and 0.78 <= b.ny0 <= 0.88
+    ]
+    cands = _pick_candidates(crop_region)
+    if not cands:
+        full_region = [
+            b for b in boxes if 0.28 <= b.nx0 <= 0.45 and 0.78 <= b.ny0 <= 0.88
+        ]
+        cands = _pick_candidates(full_region)
+
+    weapon_name = ""
+    if cands:
+        weapon_name = _match_known_weapon(
+            cands[-1].text, known_weapons=known_weapons, preferred_weapon=preferred_weapon
+        )
     return weapon_name, weapon_level
 
 
-def _run_stats_crop_ocr(image_bytes: bytes) -> list[OcrBox]:
-    """对左侧属性框区域做 2× 放大裁剪再精扫一次，补全首行易漏数字（如生命值）。"""
+def _run_crop_ocr(
+    image_bytes: bytes, rx0: float, ry0: float, rw: float, rh: float
+) -> list[OcrBox]:
+    """对指定归一化矩形区域做 2× 放大裁剪并执行 RapidOCR，映射回全图归一化坐标。"""
     ocr = _get_ocr()
     if ocr is None:
         return []
@@ -465,7 +551,10 @@ def _run_stats_crop_ocr(image_bytes: bytes) -> list[OcrBox]:
 
         with Image.open(io.BytesIO(image_bytes)) as img:
             w, h = img.size
-            x0, y0, x1, y1 = int(w * 0.10), int(h * 0.24), int(w * 0.46), int(h * 0.52)
+            x0, y0 = int(w * rx0), int(h * ry0)
+            x1, y1 = int(w * (rx0 + rw)), int(h * (ry0 + rh))
+            if x1 - x0 < 8 or y1 - y0 < 8:
+                return []
             crop = img.crop((x0, y0, x1, y1))
             crop = crop.resize((crop.width * 2, crop.height * 2), Image.Resampling.LANCZOS)
             buf = io.BytesIO()
@@ -479,7 +568,6 @@ def _run_stats_crop_ocr(image_bytes: bytes) -> list[OcrBox]:
         return []
 
     cw, ch = crop.width, crop.height
-    rx0, ry0, rw, rh = 0.10, 0.24, 0.36, 0.28
     boxes: list[OcrBox] = []
     for raw_box, text, score in result:
         clean = str(text or "").strip()
@@ -498,6 +586,32 @@ def _run_stats_crop_ocr(image_bytes: bytes) -> list[OcrBox]:
             )
         )
     return boxes
+
+
+def _run_stats_crop_ocr(image_bytes: bytes) -> list[OcrBox]:
+    """对左侧属性框区域做 2× 放大裁剪精扫，补全首行易漏数字。"""
+    return _run_crop_ocr(image_bytes, 0.10, 0.24, 0.36, 0.28)
+
+
+def _run_weapon_crop_ocr(image_bytes: bytes) -> list[OcrBox]:
+    """对中下武器名称白底栏区域做 2× 放大裁剪精扫，避免小字错字。"""
+    return _run_crop_ocr(image_bytes, 0.28, 0.79, 0.16, 0.09)
+
+
+def _parse_rating(boxes: Sequence[OcrBox]) -> int | None:
+    """提取右下角游戏内练度评级（如 131、146、149），兼容面具边缘多识一位前缀数字。"""
+    for b in boxes:
+        if not (0.76 <= b.nx0 <= 0.92 and 0.63 <= b.ny0 <= 0.80):
+            continue
+        if "综合评分" in b.text or "评分" in b.text:
+            continue
+        for num in re.findall(r"\d+", b.text):
+            val = int(num)
+            if len(num) <= 3 and 50 <= val <= 180:
+                return val
+            if len(num) == 4 and 100 <= int(num[-3:]) <= 165:
+                return int(num[-3:])
+    return None
 
 
 def _parse_core_targets(boxes: Sequence[OcrBox]) -> tuple[tuple[str, str], ...]:
@@ -814,6 +928,7 @@ def parse_panel_ocr(
     repo: yituliou.YituliouRepository,
     extra_characters: Sequence[tuple[str, str]] = (),
     stats_override_boxes: Sequence[OcrBox] | None = None,
+    weapon_crop_boxes: Sequence[OcrBox] | None = None,
     awareness: int | None = None,
     weapon_mod: int | None = None,
 ) -> ParsedPanel | None:
@@ -836,7 +951,8 @@ def parse_panel_ocr(
                 char_level = int(m.group(1))
                 break
 
-    # 综合评分
+    # 游戏内评级与综合评分
+    rating = _parse_rating(boxes)
     total_score: int | None = None
     for b in boxes:
         m = re.search(r"综合评分[:：]?\s*(\d{3,6})", b.text)
@@ -854,7 +970,18 @@ def parse_panel_ocr(
     core_targets = _parse_core_targets(boxes)
     skill_levels = _parse_skill_levels(boxes)
     revelation_set = _parse_revelation(boxes)
-    weapon_name, weapon_level = _parse_weapon(boxes)
+
+    slug_entries = repo.find_all_by_slug(char_slug)
+    preferred_weapon = slug_entries[0].weapon_name if slug_entries else ""
+    known_weapons = tuple(
+        dict.fromkeys(e.weapon_name for e in repo.entries if e.weapon_name)
+    )
+    weapon_name, weapon_level = _parse_weapon(
+        boxes,
+        weapon_crop_boxes=weapon_crop_boxes,
+        known_weapons=known_weapons,
+        preferred_weapon=preferred_weapon,
+    )
 
     # 至少解析出 1 项核心练度字段（属性 / 技能 / 启示卡 / 武器）才算有效面板
     if not (stats or skill_levels or revelation_set or weapon_name):
@@ -874,6 +1001,7 @@ def parse_panel_ocr(
         core_targets=core_targets,
         awareness=awareness,
         weapon_mod=weapon_mod,
+        rating=rating,
     )
 
 
@@ -1340,6 +1468,35 @@ def evaluate_panel(
                 )
             )
 
+    # 4.6 游戏内练度评级（如 149 已属游戏 TOP 档）
+    if parsed.rating is not None:
+        if parsed.rating >= 145:
+            pass_count += 1
+            items.append(
+                ReviewItem(
+                    "游戏评级",
+                    "pass",
+                    f"游戏内评级 {parsed.rating}（游戏练度 TOP 档 / 顶级毕业）",
+                )
+            )
+        elif parsed.rating >= 135:
+            pass_count += 1
+            items.append(
+                ReviewItem(
+                    "游戏评级",
+                    "pass",
+                    f"游戏内评级 {parsed.rating}（高练度毕业档）",
+                )
+            )
+        else:
+            items.append(
+                ReviewItem(
+                    "游戏评级",
+                    "info",
+                    f"游戏内评级 {parsed.rating}",
+                )
+            )
+
     # 5. 综合练度评级
     if warn_count == 0 and pass_count >= 3:
         grade = "S"
@@ -1376,14 +1533,16 @@ def analyze_panel_image(
     if not boxes or _count_anchors(boxes) < MIN_ANCHOR_HITS:
         return None
     active_repo = repo if repo is not None else yituliou.load_repository()
-    # 确认是 P5X 面板后，对左侧属性栏做 2× 局部精扫补齐易漏数字（如生命值），并识别意识/武器改造环
+    # 确认是 P5X 面板后，对左侧属性栏与中下武器名栏做 2× 局部精扫，并识别意识/武器改造环
     stats_crop_boxes = _run_stats_crop_ocr(image_bytes)
+    weapon_crop_boxes = _run_weapon_crop_ocr(image_bytes)
     awareness, weapon_mod = _detect_awareness_and_weapon_mod(image_bytes, boxes)
     parsed = parse_panel_ocr(
         boxes,
         active_repo,
         extra_characters=extra_characters,
         stats_override_boxes=stats_crop_boxes or None,
+        weapon_crop_boxes=weapon_crop_boxes or None,
         awareness=awareness,
         weapon_mod=weapon_mod,
     )
@@ -1399,6 +1558,7 @@ def render_review_text(review: PanelReview) -> str:
         f"Lv.{p.level}" if p.level else "",
         f"{p.awareness}意识" if p.awareness is not None else "",
         f"武器{p.weapon_mod}改" if p.weapon_mod is not None else "",
+        f"评级 {p.rating}" if p.rating is not None else "",
         f"综合评分 {p.total_score}" if p.total_score else "",
         f"练度评级 {review.grade}",
     ]
@@ -1467,6 +1627,14 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
     if p.awareness is not None:
         high_aw = "（高命座）" if p.awareness >= 3 else ""
         facts.append(f"- 角色意识（命座）：{p.awareness}命（{p.awareness}意识）{high_aw}")
+    if p.rating is not None:
+        if p.rating >= 145:
+            rating_tag = "（游戏练度 TOP 档 / 顶级毕业）"
+        elif p.rating >= 135:
+            rating_tag = "（高练度毕业档）"
+        else:
+            rating_tag = ""
+        facts.append(f"- 游戏内练度评级：{p.rating}{rating_tag}")
     if p.total_score:
         facts.append(f"- 游戏内综合评分：{p.total_score}")
     if p.stats:
@@ -1556,7 +1724,7 @@ def build_persona_llm_prompt(review: PanelReview) -> str:
         "1. 严格保持你当前扮演的人格、语气、称呼、口癖与性格，像真正亲自查看了这张面板一样自然点评，不要跳出人设。",
         "2. 严禁提及“OCR”“识别结果”“一图流攻略”“系统提供的数据”“数据库/快照”等出戏或机械词，直接把这些当作你自己的记忆与判断。",
         "3. 严格遵守 P5X 站街口径：截图中均为未进战斗的站街数值，不含角色技能自拐、意识（命座）、专武特效、启示卡触发与队友提供的暴击率/穿透/攻击加成。严禁仅凭站街暴击率看起来偏低（如 20%~40%）就批评“暴击率缺口大/太低”！",
-        "4. 只能针对【练度对标结果】中明确标为 `[可优化]` 的项目指出不足，不要擅自把未标 `[可优化]` 的属性数值当成缺点批斗；若意识达到 3 命及以上或武器达到高改造等级，请自然提及并给予符合人设的评价/赞许。",
+        "4. 只能针对【练度对标结果】中明确标为 `[可优化]` 的项目指出不足，不要擅自把未标 `[可优化]` 的属性数值当成缺点批斗；若意识达到 3 命及以上或武器达到高改造等级，请自然提及并给予符合人设的评价/赞许；若游戏内练度评级达到 TOP 档（如 145+、149），说明这名角色的练度已处于全游戏顶尖毕业水平，请明确肯定与赞许，避免吹毛求疵。",
     ]
     if progress_rule:
         rules.append(progress_rule)
